@@ -73,8 +73,8 @@ MelodyMine is a revolutionary system for Minecraft servers where players can sim
 
 - 🧩 **Spigot**: Discover MelodyMine on [Spigot](https://www.spigotmc.org/resources/melodymine-minecraft-voice-plugin.112938/)
 - 💼 **Modrinth**: Find MelodyMine on [Modrinth](https://modrinth.com/plugin/melodymine)
-- 🌐 **Polymart**: Check out MelodyMine on [Polymart](https://polymart-link)
-- 💬 **Hangar**: Discover MelodyMine on [Hangar](https://forum-link)
+- 🌐 **Polymart**: Check out MelodyMine on [Polymart](https://polymart.org/resource/melodymine.4875)
+- 💬 **Hangar**: Discover MelodyMine on [Hangar](https://hangar.papermc.io/TAHER7/MelodyMine)
 
 ## Get Started 🚀
 
