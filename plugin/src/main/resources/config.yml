@@ -1,0 +1,84 @@
+# ----- Database configs -----
+database:
+  host: "localhost"
+  port: "3306"
+  user: 'root'
+  password: ''
+  database_name: 'melody'
+
+# ----- Basic configs -----
+
+# game mode name.
+server: "Lobby" # must be unique!
+
+# website url
+website: "http://localhost:3000"
+
+# websocket url
+websocket-url: "ws://localhost:4000"
+
+# websocket auth security key !!! (important) change that after install plugin !!!
+websocket-auth-key: "" # must be the same in web server auth key
+
+# distance that players can hear each other.
+hear-distance: 35
+
+# update player distance time (as Long)
+update-distance-time: 10 # must be Long (10L = 0.5s, 20L = 1s,...)
+
+# increase & decrease sound in hear-distance.
+hear-lazy: true
+
+# users must be online in website and active voice chat.
+force-voice: false
+
+
+
+# ----- Message configs -----
+
+# main plugin prefix.
+prefix: "<gradient:#FFF4E4:#DDB216>MelodyMine</gradient> <#FFF4E4><bold>|</bold>"
+
+# open website link message.
+website-message: "Click to open website and start voice chat."
+
+# Logger messages | placeholder {PLAYER}
+website-join-logger: "{PLAYER} has join the website."
+website-leave-logger: "{PLAYER} has left the website."
+website-start-voice-logger: "{PLAYER} has start voice."
+website-end-voice-logger: "{PLAYER} has end voice."
+
+# Commands description message
+reload-description: "Reload all configuration file."
+adminmode-description: "Conversation with players in voice."
+start-description: "Get link to start voice chat."
+mute-description: "Mute player in voice chat."
+unmute-description: "Unmute player in voice chat."
+
+# Placeholder Messages
+placeholder-web-online-true: "Online"
+placeholder-web-online-false: "Offline"
+placeholder-voice-active-true: "Active"
+placeholder-voice-active-false: "Inactive"
+placeholder-adminmode-true: "On"
+placeholder-adminmode-false: "Off"
+placeholder-mute-true: "Mute"
+placeholder-mute-false: "Unmute"
+
+# website status messages, placeholders {PLAYER}
+
+# join website
+join-website-message: "You have connected to the website."
+join-website-message-type: "message" # message or actionbar
+
+# leave website
+leave-website-message: "You have disconnected from the website."
+leave-website-message-type: "message" # message or actionbar
+
+# start voice
+start-voice-message: "You have start the voice chat."
+start-voice-message-type: "message" # message or actionbar
+
+# end voice
+end-voice-message: "You have end the voice chat."
+end-voice-message-type: "message" # message or actionbar

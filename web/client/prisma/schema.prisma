@@ -1,0 +1,49 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model authme {
+  id         Int     @id @default(autoincrement()) @db.UnsignedMediumInt
+  username   String  @unique(map: "username") @db.VarChar(255)
+  realname   String  @db.VarChar(255)
+  password   String  @db.VarChar(255)
+  ip         String? @db.VarChar(40)
+  lastlogin  BigInt?
+  x          Float   @default(0)
+  y          Float   @default(0)
+  z          Float   @default(0)
+  world      String  @default("world") @db.VarChar(255)
+  regdate    BigInt  @default(0)
+  regip      String? @db.VarChar(40)
+  yaw        Float?  @db.Float
+  pitch      Float?  @db.Float
+  email      String? @db.VarChar(255)
+  isLogged   Int     @default(0) @db.SmallInt
+  hasSession Int     @default(0) @db.SmallInt
+  totp       String? @db.VarChar(32)
+  uuid       String? @db.VarChar(36)
+}
+
+model melodymine {
+  id               Int       @id @default(autoincrement())
+  uuid             String?   @unique(map: "uuid") @db.VarChar(36)
+  name             String?   @db.VarChar(36)
+  socketID         String?   @unique(map: "socketID") @db.VarChar(36)
+  verifyCode       String?   @unique(map: "verifyCode") @db.VarChar(36)
+  server           String?   @db.VarChar(36)
+  serverIp         String?   @db.VarChar(36)
+  webIp            String?   @db.VarChar(36)
+  isActiveVoice    Boolean?  @default(false)
+  isMute           Boolean?  @default(false)
+  serverIsOnline   Boolean?  @default(false)
+  webIsOnline      Boolean?  @default(false)
+  serverLastLogin  DateTime? @db.DateTime(0)
+  serverLastLogout DateTime? @db.DateTime(0)
+  webLastLogin     DateTime? @db.DateTime(0)
+  webLastLogout    DateTime? @db.DateTime(0)
+}

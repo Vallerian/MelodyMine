@@ -1,0 +1,46 @@
+name: MelodyMine
+version: '${version}'
+main: ir.taher7.melodymine.MelodyMine
+api-version: '1.13'
+author: taher7
+softdepend:
+  - PlaceholderAPI
+commands:
+  melodymine:
+    description: main plugin command.
+    usage: /<command>
+permissions:
+  melodymine.*:
+    description: permission that you can use all Melodymine commands
+    children:
+      melodymine.admin: true
+  melodymine.admin:
+    description: melodymine admin permission.
+    default: op
+    children:
+      melodymine.reload: true
+      melodymine.adminmode: true
+      melodymine.mute: true
+      melodymine.unmute: true
+      melodymine.toggle: true
+  melodymine.start:
+    description: Get website link to establish a voice connection.
+    default: true
+  melodymine.reload:
+    description: Reload all configuration file.
+    default: op
+  melodymine.adminmode:
+    description: start listen and speck with all of players in the voice.
+    default: op
+  melodymine.mute:
+    description: Mute player in voice chat.
+    default: op
+  melodymine.unmute:
+    description: Unmute player in voice chat.
+    default: op
+  melodymine.toggle:
+    description: voice join and leave message log
+    default: op
+  melodymine.force:
+    description: ignore force join voice
+    default: false
