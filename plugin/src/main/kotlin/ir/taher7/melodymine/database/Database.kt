@@ -64,7 +64,7 @@ object Database {
             override fun run() {
                 try {
                     val statement = connection.prepareStatement(
-                        "INSERT INTO melodymine(uuid,name,verifyCode,server,serverIp,serverIsOnline) VALUES (?,?,?,?,?,?)"
+                        "INSERT INTO melodymine(uuid,name,verifyCode,server,serverIsOnline) VALUES (?,?,?,?,?)"
                     )
 
                     val melodyPlayer = MelodyPlayer(
@@ -72,7 +72,6 @@ object Database {
                         uuid = player.player?.uniqueId.toString(),
                         name = player.name,
                         verifyCode = Utils.getVerifyCode(),
-                        serverIp = player.address?.address?.hostAddress,
                         server = Storage.server,
                         serverIsOnline = true,
                     )
@@ -81,8 +80,7 @@ object Database {
                     statement.setString(2, melodyPlayer.name)
                     statement.setString(3, melodyPlayer.verifyCode)
                     statement.setString(4, melodyPlayer.server)
-                    statement.setString(5, melodyPlayer.serverIp)
-                    statement.setBoolean(6, melodyPlayer.serverIsOnline)
+                    statement.setBoolean(5, melodyPlayer.serverIsOnline)
                     statement.executeUpdate()
                     statement.close()
                     consumer.accept(melodyPlayer)
@@ -108,8 +106,6 @@ object Database {
                                 name = result.getString("name"),
                                 server = result.getString("server"),
                                 socketID = result.getString("socketID"),
-                                serverIp = result.getString("serverIp"),
-                                webIp = result.getString("webIp"),
                                 verifyCode = result.getString("verifyCode"),
                                 serverIsOnline = result.getBoolean("serverIsOnline"),
                                 webIsOnline = result.getBoolean("webIsOnline"),
@@ -135,26 +131,24 @@ object Database {
                 try {
                     if (!leave) {
                         val statement = connection.prepareStatement(
-                            "UPDATE melodymine SET verifyCode = ?,server = ?, serverIp = ?,serverIsOnline = ?,isMute = ? WHERE uuid = ? LIMIT 1"
+                            "UPDATE melodymine SET verifyCode = ?,server = ?, serverIsOnline = ?,isMute = ? WHERE uuid = ? LIMIT 1"
                         )
                         statement.setString(1, player.verifyCode)
                         statement.setString(2, player.server)
-                        statement.setString(3, player.serverIp)
-                        statement.setBoolean(4, player.serverIsOnline)
-                        statement.setBoolean(5, player.isMute)
-                        statement.setString(6, player.uuid)
+                        statement.setBoolean(3, player.serverIsOnline)
+                        statement.setBoolean(4, player.isMute)
+                        statement.setString(5, player.uuid)
                         statement.executeUpdate()
                     } else {
                         val statement = connection.prepareStatement(
-                            "UPDATE melodymine SET verifyCode = ?,server = ?, serverIp = ?,serverIsOnline = ?,isMute = ? WHERE uuid = ? AND server = ? LIMIT 1"
+                            "UPDATE melodymine SET verifyCode = ?,server = ?, serverIsOnline = ?,isMute = ? WHERE uuid = ? AND server = ? LIMIT 1"
                         )
                         statement.setString(1, player.verifyCode)
                         statement.setString(2, player.server)
-                        statement.setString(3, player.serverIp)
-                        statement.setBoolean(4, player.serverIsOnline)
-                        statement.setBoolean(5, player.isMute)
-                        statement.setString(6, player.uuid)
-                        statement.setString(7, Storage.server)
+                        statement.setBoolean(3, player.serverIsOnline)
+                        statement.setBoolean(4, player.isMute)
+                        statement.setString(5, player.uuid)
+                        statement.setString(6, Storage.server)
                         statement.executeUpdate()
                     }
 

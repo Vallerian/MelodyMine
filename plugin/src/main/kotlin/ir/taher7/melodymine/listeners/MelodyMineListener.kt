@@ -27,7 +27,6 @@ class MelodyMineListener : Listener {
                 }
             } else {
                 result.player = event.player
-                result.serverIp = event.player.address?.address?.hostAddress
                 result.serverIsOnline = true
                 result.server = Storage.server
                 result.verifyCode = Utils.getVerifyCode()
@@ -111,5 +110,6 @@ class MelodyMineListener : Listener {
             }
         }
     }
+
 }
 

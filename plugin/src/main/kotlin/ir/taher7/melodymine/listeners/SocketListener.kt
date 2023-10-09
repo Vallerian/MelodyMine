@@ -4,6 +4,7 @@ import com.google.gson.GsonBuilder
 import io.socket.client.Socket
 import ir.taher7.melodymine.MelodyMine
 import ir.taher7.melodymine.api.events.*
+import ir.taher7.melodymine.core.MelodyManager
 import ir.taher7.melodymine.models.MelodyPlayer
 import ir.taher7.melodymine.storage.Storage
 import ir.taher7.melodymine.utils.AdventureUtils.sendActionbar
@@ -223,14 +224,14 @@ class SocketListener(private val socket: Socket) {
                                             if (!player.isSendOffer.contains(result.uuid)) {
                                                 player.isSendOffer.add(result.uuid)
                                                 if (!result.isSendOffer.contains(player.uuid)) {
-                                                    socket.emit(
-                                                        "onPlayerInDistancePlugin", mapOf(
-                                                            "name" to result.name,
-                                                            "uuid" to result.uuid,
-                                                            "server" to result.server,
-                                                            "socketID" to player.socketID
+                                                    player.socketID?.let {
+                                                        MelodyManager.enableVoice(
+                                                            result.name,
+                                                            result.uuid,
+                                                            result.server,
+                                                            it
                                                         )
-                                                    )
+                                                    }
                                                 }
                                             }
 
@@ -249,25 +250,20 @@ class SocketListener(private val socket: Socket) {
                                                     volume = 0.0
                                                 }
 
-
-                                                socket.emit(
-                                                    "onPlayerVolumePlugin", mapOf<String, Any>(
-                                                        "uuid" to player.uuid,
-                                                        "volume" to volume,
-                                                        "socketID" to resultSocketID
-                                                    )
+                                                MelodyManager.setVolume(
+                                                    player.uuid,
+                                                    volume,
+                                                    resultSocketID
                                                 )
                                             }
                                         } else {
                                             val socketID = result.socketID
                                             if (socketID != null && player.isSendOffer.contains(result.uuid)) {
-                                                socket.emit(
-                                                    "onPlayerOutDistancePlugin", mapOf(
-                                                        "name" to player.name,
-                                                        "uuid" to player.uuid,
-                                                        "server" to player.server,
-                                                        "socketID" to socketID
-                                                    )
+                                                MelodyManager.disableVoice(
+                                                    player.name,
+                                                    player.uuid,
+                                                    player.server,
+                                                    socketID
                                                 )
                                                 player.isSendOffer.remove(result.uuid)
                                             }
@@ -281,7 +277,7 @@ class SocketListener(private val socket: Socket) {
                         ex.printStackTrace()
                     }
                 }
-            }.runTaskTimerAsynchronously(MelodyMine.instance, 0L, Storage.updateDistanceTime)
+            }.runTaskTimer(MelodyMine.instance, 0L, Storage.updateDistanceTime)
         }
     }
 }

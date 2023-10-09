@@ -37,7 +37,7 @@ class Mute : SubCommand() {
             return
         }
 
-        MelodyManager.mute(targetPlayer)
+        MelodyManager.mute(targetPlayer.uniqueId.toString())
 
         melodyPlayer.player?.sendMessage("<prefix>You have muted in voice chat.".toComponent())
         player.sendMessage("<prefix>${targetPlayer.name} has mute in voice chat.".toComponent())

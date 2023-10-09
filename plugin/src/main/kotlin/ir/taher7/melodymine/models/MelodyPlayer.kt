@@ -10,8 +10,6 @@ data class MelodyPlayer(
     @Expose var server: String,
     @Expose var socketID: String? = null,
     @Expose var verifyCode: String? = null,
-    @Expose var serverIp: String? = null,
-    @Expose var webIp: String? = null,
     @Expose var isActiveVoice: Boolean = false,
     @Expose var serverIsOnline: Boolean = false,
     @Expose var webIsOnline: Boolean = false,
@@ -25,7 +23,6 @@ data class MelodyPlayer(
         socketID = player.socketID
         isActiveVoice = player.isActiveVoice
         verifyCode = player.verifyCode
-        webIp = player.webIp
         webIsOnline = player.webIsOnline
     }
 

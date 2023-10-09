@@ -80,24 +80,24 @@ io.on("connection", async (socket: CustomSocket) => {
 
     })
 
-    socket.on("onPlayerVolumePlugin", data => {
-        io.to(data.socketID).emit("onPlayerVolumeReceivePlugin", {
-            uuid: data.uuid,
-            volume: data.volume,
-        })
-    })
-
-    socket.on("onPlayerInDistancePlugin", data => {
-        io.to(data.socketID).emit("onPlayerInDistanceReceive", encrypt({
+    socket.on("onEnableVoicePlugin", data => {
+        io.to(data.socketID).emit("onEnableVoiceReceive", encrypt({
             uuid: data.uuid,
             server: data.server
         }))
     })
 
-    socket.on("onPlayerOutDistancePlugin", data => {
-        io.to(data.socketID).emit("onPlayerOutDistanceReceive", encrypt({
+    socket.on("onDisableVoicePlugin", data => {
+        io.to(data.socketID).emit("onDisableVoiceReceive", encrypt({
             uuid: data.uuid,
         }))
+    })
+
+    socket.on("onSetVolumePlugin", data => {
+        io.to(data.socketID).emit("onSetVolumeReceive", {
+            uuid: data.uuid,
+            volume: data.volume,
+        })
     })
 
     socket.on("onAdminModeEnablePlugin", data => {
@@ -136,7 +136,6 @@ io.on("connection", async (socket: CustomSocket) => {
                 const result = await prisma.melodymine.update({
                     where: {uuid: data.uuid},
                     data: {
-                        webIp: socket.handshake.address.replace("::ffff:", ""),
                         socketID: socket.id,
                         isActiveVoice: false,
                         webIsOnline: true,
@@ -294,7 +293,6 @@ io.on("connection", async (socket: CustomSocket) => {
                 server: socket.melodyClient.server
             }))
         }
-
     })
 })
 
