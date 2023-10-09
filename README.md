@@ -168,3 +168,5 @@ Ready to harmonize your Minecraft server experience? Join the MelodyMine communi
 
 
 🌐 Visit our [GitHub repository](https://github.com/vallerian/melodymine) for updates, bug reports, and contributions. 🛠️🐞
+
+<img style="mix-blend-mode: overlay;border-radius: 5px" src="https://bstats.org/signatures/bukkit/MelodyMine.svg"/>

@@ -7,6 +7,7 @@ import ir.taher7.melodymine.listeners.MelodyMineListener
 import ir.taher7.melodymine.services.Websocket
 import ir.taher7.melodymine.utils.Placeholder
 import ir.taher7.melodymine.utils.Utils
+import org.bstats.bukkit.Metrics
 import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
 
@@ -26,6 +27,8 @@ class MelodyMine : JavaPlugin() {
         getCommand("melodymine")?.setExecutor(CommandManager())
         getCommand("melodymine")?.tabCompleter = TabCompletionManager()
 
+
+        Metrics(this, 20020)
     }
 
     override fun onDisable() {
