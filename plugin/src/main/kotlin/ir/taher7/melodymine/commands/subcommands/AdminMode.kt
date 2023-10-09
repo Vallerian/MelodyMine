@@ -1,9 +1,8 @@
 package ir.taher7.melodymine.commands.subcommands
 
-import io.socket.client.SocketIOException
+
 import ir.taher7.melodymine.commands.SubCommand
 import ir.taher7.melodymine.core.MelodyManager
-import ir.taher7.melodymine.services.Websocket
 import ir.taher7.melodymine.storage.Storage
 import ir.taher7.melodymine.utils.AdventureUtils.sendMessage
 import ir.taher7.melodymine.utils.AdventureUtils.toComponent

@@ -2,7 +2,6 @@ package ir.taher7.melodymine.models
 
 import com.google.gson.annotations.Expose
 import org.bukkit.entity.Player
-import java.sql.Timestamp
 
 data class MelodyPlayer(
     @Expose(deserialize = false) var player: Player? = null,
@@ -19,10 +18,6 @@ data class MelodyPlayer(
     @Expose var adminMode: Boolean = false,
     @Expose var isMute: Boolean = false,
     @Expose var isToggle: Boolean = false,
-    @Expose var serverLastLogin: Timestamp? = null,
-    @Expose var serverLastLogout: Timestamp? = null,
-    @Expose var webLastLogin: Timestamp? = null,
-    @Expose var webLastLogout: Timestamp? = null,
     @Expose(deserialize = false) var isSendOffer: ArrayList<String> = arrayListOf(),
 ) {
 
@@ -32,8 +27,6 @@ data class MelodyPlayer(
         verifyCode = player.verifyCode
         webIp = player.webIp
         webIsOnline = player.webIsOnline
-        webLastLogin = player.webLastLogin
-        webLastLogout = player.webLastLogout
     }
 
 }

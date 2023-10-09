@@ -10,7 +10,6 @@ import org.bukkit.scheduler.BukkitRunnable
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.SQLException
-import java.sql.Timestamp
 import java.util.function.Consumer
 
 object Database {
@@ -53,7 +52,7 @@ object Database {
     private fun initialize() {
         try {
             val statement = connection.createStatement()
-            statement.execute("CREATE TABLE IF NOT EXISTS melodymine(id INTEGER AUTO_INCREMENT PRIMARY KEY ,uuid VARCHAR(36) UNIQUE ,name VARCHAR(36),socketID VARCHAR(36) UNIQUE ,verifyCode VARCHAR(36) UNIQUE ,server VARCHAR(36),serverIp VARCHAR(36),webIp VARCHAR(36),isActiveVoice BOOLEAN default FALSE,isMute BOOLEAN default FALSE,serverIsOnline BOOLEAN default FALSE, webIsOnline BOOLEAN default FALSE, serverLastLogin DATETIME, serverLastLogout DATETIME, webLastLogin DATETIME, webLastLogout DATETIME)")
+            statement.execute("CREATE TABLE IF NOT EXISTS melodymine(id INTEGER AUTO_INCREMENT PRIMARY KEY ,uuid VARCHAR(36) UNIQUE ,name VARCHAR(36),socketID VARCHAR(36) UNIQUE ,verifyCode VARCHAR(36) UNIQUE ,server VARCHAR(36),serverIp VARCHAR(36),webIp VARCHAR(36),isActiveVoice BOOLEAN default FALSE,isMute BOOLEAN default FALSE,serverIsOnline BOOLEAN default FALSE, webIsOnline BOOLEAN default FALSE)")
             statement.close()
         } catch (ex: SQLException) {
             ex.printStackTrace()
@@ -65,7 +64,7 @@ object Database {
             override fun run() {
                 try {
                     val statement = connection.prepareStatement(
-                        "INSERT INTO melodymine(uuid,name,verifyCode,server,serverIp,serverIsOnline,serverLastLogin) VALUES (?,?,?,?,?,?,?)"
+                        "INSERT INTO melodymine(uuid,name,verifyCode,server,serverIp,serverIsOnline) VALUES (?,?,?,?,?,?)"
                     )
 
                     val melodyPlayer = MelodyPlayer(
@@ -76,7 +75,6 @@ object Database {
                         serverIp = player.address?.address?.hostAddress,
                         server = Storage.server,
                         serverIsOnline = true,
-                        serverLastLogin = Timestamp(System.currentTimeMillis()),
                     )
 
                     statement.setString(1, melodyPlayer.uuid)
@@ -85,7 +83,6 @@ object Database {
                     statement.setString(4, melodyPlayer.server)
                     statement.setString(5, melodyPlayer.serverIp)
                     statement.setBoolean(6, melodyPlayer.serverIsOnline)
-                    statement.setTimestamp(7, melodyPlayer.serverLastLogin)
                     statement.executeUpdate()
                     statement.close()
                     consumer.accept(melodyPlayer)
@@ -118,10 +115,6 @@ object Database {
                                 webIsOnline = result.getBoolean("webIsOnline"),
                                 isActiveVoice = result.getBoolean("isActiveVoice"),
                                 isMute = result.getBoolean("isMute"),
-                                serverLastLogin = result.getTimestamp("serverLastLogin"),
-                                serverLastLogout = result.getTimestamp("serverLastLogout"),
-                                webLastLogin = result.getTimestamp("webLastLogin"),
-                                webLastLogout = result.getTimestamp("webLastLogout"),
                             )
                         )
                     } else {
@@ -142,30 +135,26 @@ object Database {
                 try {
                     if (!leave) {
                         val statement = connection.prepareStatement(
-                            "UPDATE melodymine SET verifyCode = ?,server = ?, serverIp = ?,serverIsOnline = ?,isMute = ?,serverLastLogin = ?, serverLastLogout = ? WHERE uuid = ? LIMIT 1"
+                            "UPDATE melodymine SET verifyCode = ?,server = ?, serverIp = ?,serverIsOnline = ?,isMute = ? WHERE uuid = ? LIMIT 1"
                         )
                         statement.setString(1, player.verifyCode)
                         statement.setString(2, player.server)
                         statement.setString(3, player.serverIp)
                         statement.setBoolean(4, player.serverIsOnline)
                         statement.setBoolean(5, player.isMute)
-                        statement.setTimestamp(6, player.serverLastLogin)
-                        statement.setTimestamp(7, player.serverLastLogin)
-                        statement.setString(8, player.uuid)
+                        statement.setString(6, player.uuid)
                         statement.executeUpdate()
                     } else {
                         val statement = connection.prepareStatement(
-                            "UPDATE melodymine SET verifyCode = ?,server = ?, serverIp = ?,serverIsOnline = ?,isMute = ?,serverLastLogin = ?, serverLastLogout = ? WHERE uuid = ? AND server = ? LIMIT 1"
+                            "UPDATE melodymine SET verifyCode = ?,server = ?, serverIp = ?,serverIsOnline = ?,isMute = ? WHERE uuid = ? AND server = ? LIMIT 1"
                         )
                         statement.setString(1, player.verifyCode)
                         statement.setString(2, player.server)
                         statement.setString(3, player.serverIp)
                         statement.setBoolean(4, player.serverIsOnline)
                         statement.setBoolean(5, player.isMute)
-                        statement.setTimestamp(6, player.serverLastLogin)
-                        statement.setTimestamp(7, player.serverLastLogin)
-                        statement.setString(8, player.uuid)
-                        statement.setString(9, Storage.server)
+                        statement.setString(6, player.uuid)
+                        statement.setString(7, Storage.server)
                         statement.executeUpdate()
                     }
 

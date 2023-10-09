@@ -3,11 +3,11 @@ import {getAuthSession} from "@/utils/auth";
 import {prisma} from "@/utils/connect";
 import CryptoJS from "crypto-js";
 
+
 export const GET = async () => {
 
     const session = await getAuthSession()
     if (session) {
-
         try {
             const player = await prisma.melodymine.findUnique({
                 select: {
@@ -17,11 +17,7 @@ export const GET = async () => {
                     isMute: true,
                     isActiveVoice: true,
                     serverIsOnline: true,
-                    serverLastLogin: true,
-                    serverLastLogout: true,
                     webIsOnline: true,
-                    webLastLogin: true,
-                    webLastLogout: true
                 },
                 where: {
                     uuid: session.user.uuid

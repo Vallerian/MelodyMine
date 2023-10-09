@@ -10,10 +10,6 @@ import org.bukkit.entity.Player
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import org.bukkit.scheduler.BukkitRunnable
-import java.sql.Timestamp
-import java.text.SimpleDateFormat
-import java.util.*
-import kotlin.math.abs
 import kotlin.random.Random
 
 
@@ -38,25 +34,6 @@ object Utils {
             stringBuilder.append(digit)
         }
         return stringBuilder.toString()
-    }
-
-    fun timeAgo(timestamp: Timestamp): String {
-        val currentTime = System.currentTimeMillis()
-        val timestampTime = timestamp.time
-        val timeDifference = abs(currentTime - timestampTime)
-
-        val seconds = timeDifference / 1000
-        val minutes = seconds / 60
-        val hours = minutes / 60
-        val days = hours / 24
-
-        return when {
-            days > 7 -> SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(timestamp)
-            days > 0 -> "$days days ago"
-            hours > 0 -> "$hours hours ago"
-            minutes > 0 -> "$minutes minutes ago"
-            else -> "Just now"
-        }
     }
 
     fun forceVoice(player: MelodyPlayer) {

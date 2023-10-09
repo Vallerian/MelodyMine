@@ -5,7 +5,6 @@ import {prisma} from "./utils/connect";
 import {CustomSocket, IClient} from "./interfaces";
 import {decrypt, encrypt} from "./utils";
 
-
 const app = express()
 const server = http.createServer(app)
 const PORT = process.env.PORT || 4000
@@ -141,7 +140,6 @@ io.on("connection", async (socket: CustomSocket) => {
                         socketID: socket.id,
                         isActiveVoice: false,
                         webIsOnline: true,
-                        webLastLogin: new Date()
                     }
                 })
                 socket.to("plugin").emit("onPlayerJoinToWeb", result)
@@ -272,7 +270,6 @@ io.on("connection", async (socket: CustomSocket) => {
                             socketID: null,
                             webIsOnline: false,
                             isActiveVoice: false,
-                            webLastLogout: new Date()
                         },
                     })
                     socket.broadcast.except("plugin").emit("onNewPlayerLeave", encrypt({
