@@ -2,8 +2,6 @@ package ir.taher7.melodymine.commands.subcommands
 
 import ir.taher7.melodymine.commands.SubCommand
 import ir.taher7.melodymine.core.MelodyManager
-import ir.taher7.melodymine.database.Database
-import ir.taher7.melodymine.services.Websocket
 import ir.taher7.melodymine.storage.Storage
 import ir.taher7.melodymine.utils.AdventureUtils.sendMessage
 import ir.taher7.melodymine.utils.AdventureUtils.toComponent
@@ -34,7 +32,7 @@ class Unmute : SubCommand() {
         }
         val targetPlayer = filter[0]
         if (!targetPlayer.isMute) {
-            player.sendMessage("<prefix>Player is not mute.".toComponent())
+            player.sendMessage("<prefix>${targetPlayer.name} is not mute.".toComponent())
             return
         }
 

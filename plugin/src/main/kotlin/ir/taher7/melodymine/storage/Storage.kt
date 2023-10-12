@@ -4,14 +4,20 @@ import ir.taher7.melodymine.MelodyMine
 import ir.taher7.melodymine.commands.SubCommand
 import ir.taher7.melodymine.models.MelodyPlayer
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 object Storage {
     // config yml data
+    lateinit var host: String
+    lateinit var port: String
+    lateinit var user: String
+    lateinit var password: String
+    lateinit var dbName: String
+
     lateinit var server: String
     lateinit var website: String
     lateinit var websocket: String
+
     var hearDistance: Int = 20
     var hearLazy: Boolean = true
     var forceVoice: Boolean = false
@@ -61,6 +67,7 @@ object Storage {
     val subCommands = ArrayList<SubCommand>()
     val muteCoolDown = hashMapOf<UUID, Long>()
 
+
     init {
         reload()
     }
@@ -68,6 +75,16 @@ object Storage {
     fun reload() {
         MelodyMine.instance.reloadConfig()
         val config = MelodyMine.instance.config
+        val database = MelodyMine.instance.config.getConfigurationSection("database")
+        if (database == null) {
+            MelodyMine.instance.logger.severe("Database Config not found, Plugin disabled.")
+            return
+        }
+        host = database.getString("host").toString()
+        port = database.getString("port").toString()
+        user = database.getString("user").toString()
+        password = database.getString("password").toString()
+        dbName = database.getString("database_name").toString()
         server = config.getString("server") ?: ""
         website = config.getString("website") ?: ""
         websocket = config.getString("websocket-url") ?: ""

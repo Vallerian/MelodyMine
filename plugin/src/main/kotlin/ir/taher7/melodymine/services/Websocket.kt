@@ -31,7 +31,7 @@ object Websocket {
             SocketListener(socket)
 
             socket.on(Socket.EVENT_CONNECT) {
-                MelodyMine.instance.logger.info("Websocket connected")
+                MelodyMine.instance.logger.info("Successfully connected to Websocket.")
                 Database.updateSocketPlayer()
             }
 

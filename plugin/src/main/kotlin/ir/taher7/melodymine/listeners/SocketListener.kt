@@ -29,7 +29,7 @@ class SocketListener(private val socket: Socket) {
 
         socket.on("onPlayerJoinToWeb") { args ->
             val melodyPlayer = gson.fromJson(args[0].toString(), MelodyPlayer::class.java)
-
+            if (melodyPlayer.server != Storage.server) return@on
             updateMelodyPlayer(melodyPlayer)
             Storage.onlinePlayers[melodyPlayer.uuid]?.isSendOffer = arrayListOf()
             Storage.onlinePlayers.values.forEach { player ->
@@ -52,16 +52,25 @@ class SocketListener(private val socket: Socket) {
 
                     else -> {}
                 }
+                object : BukkitRunnable() {
+                    override fun run() {
+                        Utils.removeMap(player)
+                    }
+                }.runTask(MelodyMine.instance)
             }
             object : BukkitRunnable() {
                 override fun run() {
-                    Bukkit.getServer().pluginManager.callEvent(PlayerJoinWebEvent(Storage.onlinePlayers[melodyPlayer.uuid]!!))
+                    val hasPlayer = Storage.onlinePlayers[melodyPlayer.uuid]
+                    if (hasPlayer != null) {
+                        Bukkit.getServer().pluginManager.callEvent(PlayerJoinWebEvent(hasPlayer))
+                    }
                 }
             }.runTask(MelodyMine.instance)
         }
 
         socket.on("onNewPlayerLeaveWeb") { args ->
             val melodyPlayer = gson.fromJson(args[0].toString(), MelodyPlayer::class.java)
+            if (melodyPlayer.server != Storage.server) return@on
             updateMelodyPlayer(melodyPlayer)
 
             Storage.onlinePlayers[melodyPlayer.uuid]?.let { Utils.forceVoice(it) }
@@ -88,13 +97,17 @@ class SocketListener(private val socket: Socket) {
             }
             object : BukkitRunnable() {
                 override fun run() {
-                    Bukkit.getServer().pluginManager.callEvent(PlayerLeaveWebEvent(Storage.onlinePlayers[melodyPlayer.uuid]!!))
+                    val hasPlayer = Storage.onlinePlayers[melodyPlayer.uuid]
+                    if (hasPlayer != null) {
+                        Bukkit.getServer().pluginManager.callEvent(PlayerLeaveWebEvent(hasPlayer))
+                    }
                 }
             }.runTask(MelodyMine.instance)
         }
 
         socket.on("onPlayerStartVoiceWeb") { args ->
             val melodyPlayer = gson.fromJson(args[0].toString(), MelodyPlayer::class.java)
+            if (melodyPlayer.server != Storage.server) return@on
             updateMelodyPlayer(melodyPlayer)
             Storage.onlinePlayers[melodyPlayer.uuid]?.isSendOffer = arrayListOf()
             Storage.onlinePlayers[melodyPlayer.uuid]?.adminMode = false
@@ -128,13 +141,17 @@ class SocketListener(private val socket: Socket) {
             }
             object : BukkitRunnable() {
                 override fun run() {
-                    Bukkit.getServer().pluginManager.callEvent(PlayerStartVoiceEvent(Storage.onlinePlayers[melodyPlayer.uuid]!!))
+                    val hasPlayer = Storage.onlinePlayers[melodyPlayer.uuid]
+                    if (hasPlayer != null) {
+                        Bukkit.getServer().pluginManager.callEvent(PlayerStartVoiceEvent(hasPlayer))
+                    }
                 }
             }.runTask(MelodyMine.instance)
         }
 
         socket.on("onPlayerEndVoiceWeb") { args ->
             val melodyPlayer = gson.fromJson(args[0].toString(), MelodyPlayer::class.java)
+            if (melodyPlayer.server != Storage.server) return@on
             Storage.onlinePlayers[melodyPlayer.uuid]?.isSendOffer = arrayListOf()
             Storage.onlinePlayers.values.forEach { player ->
                 if (player.isSendOffer.contains(melodyPlayer.uuid)) {
@@ -161,7 +178,10 @@ class SocketListener(private val socket: Socket) {
             }
             object : BukkitRunnable() {
                 override fun run() {
-                    Bukkit.getServer().pluginManager.callEvent(PlayerEndVoiceEvent(Storage.onlinePlayers[melodyPlayer.uuid]!!))
+                    val hasPlayer = Storage.onlinePlayers[melodyPlayer.uuid]
+                    if (hasPlayer != null) {
+                        Bukkit.getServer().pluginManager.callEvent(PlayerEndVoiceEvent(hasPlayer))
+                    }
                 }
             }.runTask(MelodyMine.instance)
         }
@@ -178,6 +198,7 @@ class SocketListener(private val socket: Socket) {
                 }
                 sendPlayerData(melodyPlayer)
                 Utils.sendMessageLog("<prefix>${melodyPlayer.name} is active voice.", melodyPlayer)
+
             } else {
                 if (Storage.onlinePlayers.containsKey(melodyPlayer.uuid)) {
                     Storage.onlinePlayers.remove(melodyPlayer.uuid)

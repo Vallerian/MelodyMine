@@ -102,7 +102,6 @@ class MelodyMineListener : Listener {
     @EventHandler
     fun onPlayerSendMessage(event: AsyncPlayerChatEvent) {
         if (!Storage.forceVoice || event.player.player?.hasPermission("melodymine.force") == true) return
-
         val melodyPlayer = Storage.onlinePlayers[event.player.uniqueId.toString()]
         if (melodyPlayer != null) {
             if (!melodyPlayer.isActiveVoice) {

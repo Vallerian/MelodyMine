@@ -33,7 +33,7 @@ class Mute : SubCommand() {
 
         val melodyPlayer = Storage.onlinePlayers[player.uniqueId.toString()] ?: return
         if (melodyPlayer.isMute) {
-            player.sendMessage("<prefix>Player is already muted.".toComponent())
+            player.sendMessage("<prefix>${melodyPlayer.name} is already muted.".toComponent())
             return
         }
 

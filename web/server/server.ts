@@ -14,7 +14,8 @@ const io = new Server(server, {
         origin: "*",
     },
     pingInterval: 2500,
-    pingTimeout: 5000
+    pingTimeout: 5000,
+
 })
 
 io.use((socket: CustomSocket, next) => {

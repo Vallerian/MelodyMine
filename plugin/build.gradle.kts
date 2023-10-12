@@ -18,6 +18,8 @@ repositories {
     mavenLocal()
     mavenCentral()
 
+    maven("https://jitpack.io")
+
     maven("https://repo.maven.apache.org/maven2/")
 
     // Velocity-API / PaperLib / Folia
@@ -62,6 +64,10 @@ dependencies {
     // Socket Io
     implementation("io.socket:socket.io-client:2.1.0")
 
+    implementation("com.github.kenglxn.QRGen:javase:3.0.1")
+
+    implementation("com.zaxxer:HikariCP:5.0.1")
+
 }
 
 
@@ -71,7 +77,6 @@ tasks {
     runServer {
         minecraftVersion("1.20.1")
     }
-
 
 
     val relocate = task<ConfigureShadowRelocation>("relocateShadowJar") {

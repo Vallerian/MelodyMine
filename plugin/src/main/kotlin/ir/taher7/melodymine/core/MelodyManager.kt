@@ -1,13 +1,18 @@
 package ir.taher7.melodymine.core
 
+import ir.taher7.melodymine.MelodyMine
 import ir.taher7.melodymine.api.events.*
 import ir.taher7.melodymine.database.Database
 import ir.taher7.melodymine.services.Websocket
 import ir.taher7.melodymine.storage.Storage
 import ir.taher7.melodymine.utils.AdventureUtils.sendMessage
 import ir.taher7.melodymine.utils.AdventureUtils.toComponent
+import ir.taher7.melodymine.utils.QRCodeRenderer
+import ir.taher7.melodymine.utils.Utils
+import net.glxn.qrgen.javase.QRCode
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
+import org.bukkit.scheduler.BukkitRunnable
 
 
 object MelodyManager {
@@ -50,6 +55,38 @@ object MelodyManager {
     fun sendStartLink(player: Player) {
         Database.getVerifyCode(player) { result ->
             player.sendMessage("<click:open_url:'${Storage.website}/login?verifyCode=${result}'><hover:show_text:'<hover_text>Click to open'><prefix>${Storage.websiteMessage}</hover></click>".toComponent())
+        }
+    }
+
+    fun sendStartQRCode(player: Player, slot: Int, offhand: Boolean = false) {
+        Database.getVerifyCode(player) { result ->
+            object : BukkitRunnable() {
+                override fun run() {
+                    val preSendQRCodeEvent = PreSendQRCodeEvent(player)
+                    Bukkit.getServer().pluginManager.callEvent(preSendQRCodeEvent)
+                    if (!preSendQRCodeEvent.isCancelled) {
+
+                        val view = Bukkit.createMap(player.world)
+                        view.renderers.clear()
+                        view.addRenderer(
+                            QRCodeRenderer(
+                                QRCode.from("${Storage.website}/login?verifyCode=${result}").file()
+                            )
+                        )
+
+                        val map = Utils.createQRCodeMap(view)
+                        if (offhand) {
+                            player.inventory.setItemInOffHand(map)
+                        } else {
+                            player.inventory.setItem(slot, map)
+                            player.inventory.heldItemSlot = slot
+                        }
+
+                        player.sendMessage("<prefix>Scan the QRCode.".toComponent())
+                        Bukkit.getServer().pluginManager.callEvent(PostSendQRCodeEvent(player))
+                    }
+                }
+            }.runTask(MelodyMine.instance)
         }
     }
 
