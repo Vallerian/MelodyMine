@@ -5,7 +5,6 @@ import {prisma} from "./utils/connect";
 import {CustomSocket, IClient} from "./interfaces";
 import {decrypt, encrypt} from "./utils";
 
-
 const app = express()
 const server = http.createServer(app)
 const PORT = process.env.PORT || 4000
@@ -15,7 +14,8 @@ const io = new Server(server, {
         origin: "*",
     },
     pingInterval: 2500,
-    pingTimeout: 5000
+    pingTimeout: 5000,
+
 })
 
 io.use((socket: CustomSocket, next) => {
@@ -81,24 +81,24 @@ io.on("connection", async (socket: CustomSocket) => {
 
     })
 
-    socket.on("onPlayerVolumePlugin", data => {
-        io.to(data.socketID).emit("onPlayerVolumeReceivePlugin", {
-            uuid: data.uuid,
-            volume: data.volume,
-        })
-    })
-
-    socket.on("onPlayerInDistancePlugin", data => {
-        io.to(data.socketID).emit("onPlayerInDistanceReceive", encrypt({
+    socket.on("onEnableVoicePlugin", data => {
+        io.to(data.socketID).emit("onEnableVoiceReceive", encrypt({
             uuid: data.uuid,
             server: data.server
         }))
     })
 
-    socket.on("onPlayerOutDistancePlugin", data => {
-        io.to(data.socketID).emit("onPlayerOutDistanceReceive", encrypt({
+    socket.on("onDisableVoicePlugin", data => {
+        io.to(data.socketID).emit("onDisableVoiceReceive", encrypt({
             uuid: data.uuid,
         }))
+    })
+
+    socket.on("onSetVolumePlugin", data => {
+        io.to(data.socketID).emit("onSetVolumeReceive", {
+            uuid: data.uuid,
+            volume: data.volume,
+        })
     })
 
     socket.on("onAdminModeEnablePlugin", data => {
@@ -137,11 +137,9 @@ io.on("connection", async (socket: CustomSocket) => {
                 const result = await prisma.melodymine.update({
                     where: {uuid: data.uuid},
                     data: {
-                        webIp: socket.handshake.address.replace("::ffff:", ""),
                         socketID: socket.id,
                         isActiveVoice: false,
                         webIsOnline: true,
-                        webLastLogin: new Date()
                     }
                 })
                 socket.to("plugin").emit("onPlayerJoinToWeb", result)
@@ -272,7 +270,6 @@ io.on("connection", async (socket: CustomSocket) => {
                             socketID: null,
                             webIsOnline: false,
                             isActiveVoice: false,
-                            webLastLogout: new Date()
                         },
                     })
                     socket.broadcast.except("plugin").emit("onNewPlayerLeave", encrypt({
@@ -297,7 +294,6 @@ io.on("connection", async (socket: CustomSocket) => {
                 server: socket.melodyClient.server
             }))
         }
-
     })
 })
 

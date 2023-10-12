@@ -104,10 +104,13 @@ const SoundControl = () => {
                 <button disabled={disconnectButton} onClick={handleCloseConnection}
                         className="text-amber-300 flex items-center justify-center">
                     {disconnectButton ? (
-                        <span className="pr-5 pl-2 self-center">
+                        <span className="pr-5 pl-2 self-center absolute mt-2">
                             <Progress/>
                         </span>
-                    ) : <VscDebugDisconnect/>}
+                    ) : ""}
+                    <span className={`${disconnectButton ? "invisible" : ""}`}>
+                        <VscDebugDisconnect/>
+                    </span>
                 </button>
             </ul>
         </div>

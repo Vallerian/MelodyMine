@@ -10,15 +10,24 @@ class TabCompletionManager : TabCompleter {
         sender: CommandSender,
         command: Command,
         label: String,
-        args: Array<out String>
+        args: Array<out String>,
     ): List<String>? {
-
         when (args.size) {
             1 -> {
                 return Storage.subCommands
                     .filter { subCommand -> sender.hasPermission(subCommand.permission) }
                     .map { subCommand -> subCommand.name }
                     .filter { name -> name.contains(args[0], true) }
+            }
+
+            2 -> {
+                if (args[0].equals("start", true)) {
+                    return if (sender.hasPermission("melodymine.qrcode")) {
+                        listOf("link", "qrcode")
+                    } else {
+                        listOf("link")
+                    }
+                }
             }
 
             else -> {}

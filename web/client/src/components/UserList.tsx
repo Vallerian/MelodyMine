@@ -54,14 +54,21 @@ const UserList = () => {
             addUser(user)
         })
 
-        socket?.on("onPlayerInDistanceReceive", (token: string) => {
+        socket?.on("onEnableVoiceReceive", (token: string) => {
             const user = decrypt(token) as IOnlineUsers
             createOffer(user.uuid!, user.server!)
         })
 
-        socket?.on("onPlayerOutDistanceReceive", (token: string) => {
+        socket?.on("onDisableVoiceReceive", (token: string) => {
             const user = decrypt(token) as IOnlineUsers
             removePeer(user.uuid!)
+        })
+
+        socket?.on("onSetVolumeReceive", (data: {
+            uuid: string,
+            volume: string
+        }) => {
+            setVolume(data.uuid, data.volume)
         })
 
         socket?.on("onReceiveOffer", (token: string) => {
@@ -107,13 +114,6 @@ const UserList = () => {
                 removeUser(user.uuid!)
                 removeAll()
             }
-        })
-
-        socket?.on("onPlayerVolumeReceivePlugin", (data: {
-            uuid: string,
-            volume: string
-        }) => {
-            setVolume(data.uuid, data.volume)
         })
 
         socket?.on("onPluginDisabled", (token: string) => {

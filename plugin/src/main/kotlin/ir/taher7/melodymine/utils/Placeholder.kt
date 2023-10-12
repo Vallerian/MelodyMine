@@ -55,22 +55,6 @@ class Placeholder : PlaceholderExpansion() {
                 return Storage.placeholderAdminModeFalse
             }
 
-            "weblogin" -> {
-                return melodyPlayer.webLastLogin.toString()
-            }
-
-            "weblogin_ago" -> {
-                return melodyPlayer.webLastLogin?.let { Utils.timeAgo(it) }
-            }
-
-            "weblogout" -> {
-                return melodyPlayer.webLastLogout.toString()
-            }
-
-            "weblogout_ago" -> {
-                return melodyPlayer.webLastLogout?.let { Utils.timeAgo(it) }
-            }
-
             "status" -> {
                 if (melodyPlayer.isMute) return Storage.placeholderMuteTrue
                 if (melodyPlayer.isActiveVoice) return Storage.placeholderVoiceActiveTrue

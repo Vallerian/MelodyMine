@@ -86,7 +86,7 @@ const UserInfo = ({user, websocketKey, iceServers}: UserInfoProps) => {
                         </h3>
                     </div>
                 </div>
-                <div className="flex flex-col justify-between mt-1 text-white">
+                <div className="flex flex-col justify-between my-1.5 text-white">
                     <div className="flex justify-end">
                         <button disabled={status == "loading"} className="text-red-500 cursor-pointer text-xl"
                                 onClick={() => signOut({

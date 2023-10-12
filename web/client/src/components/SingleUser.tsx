@@ -114,8 +114,8 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
                 <div className="flex justify-center items-center w-2/12">
                     <Image
                         src={`https://mc-heads.net/avatar/${user.name}`}
-                        alt={`${user.name} avatar`} width={60} height={60}
-                        className={`object-contain opacity-30 rounded ${instant > 0.00 && audioRef?.current?.volume != 0 && soundIsActive && !user.isMute && !isUserMute ? "soundAnimationSingle" : ""}`}
+                        alt={`${user.name} avatar`} width={50} height={50}
+                        className={` opacity-30 rounded ${instant > 0.00 && audioRef?.current?.volume != 0 && soundIsActive && !user.isMute && !isUserMute ? "soundAnimationSingle" : ""}`}
                     />
                 </div>
                 <div className="flex flex-col ml-3 w-10/12">

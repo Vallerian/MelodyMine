@@ -44,3 +44,6 @@ permissions:
   melodymine.force:
     description: ignore force join voice
     default: false
+  melodymine.qrcode:
+    description: can get qrcode
+    default: true

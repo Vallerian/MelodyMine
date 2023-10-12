@@ -47,6 +47,7 @@ export const authOptions: NextAuthOptions = {
                 },
                 async authorize(credentials) {
                     try {
+
                         if (!credentials?.verifyCode) {
                             if (credentials?.username.length! > 20) throw "username"
                             if (credentials?.password.length! > 50) throw "password"
@@ -79,10 +80,8 @@ export const authOptions: NextAuthOptions = {
                                 uuid: hasUser.uuid
                             } as any
                         }
-
                     } catch (err) {
-                        console.log(err)
-                        throw "server error"
+                        throw new Error(`${err}`)
                     }
                 }
             }

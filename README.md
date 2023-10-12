@@ -24,7 +24,7 @@ MelodyMine is a revolutionary system for Minecraft servers where players can sim
 
 ## Key Features 🌟
 
-<img style="margin-bottom:10px;border-radius: 5px" src="https://cdn.discordapp.com/attachments/1159034838783893567/1159037980346949713/image.png?ex=651e6dbc&is=651d1c3c&hm=3f2b28bd78ea6cec536e96a13dd18b680a3d03f6da9eb7084f575505b2af2940&"/>
+<img style="margin-bottom:10px;border-radius: 5px" src="https://media.discordapp.net/attachments/1159034838783893567/1162011387829174292/image.png?ex=653a626f&is=6527ed6f&hm=5fc4194ca54828ba22772866445b1b22cf69e1b09d058109ee19a75f5ea0a00b&="/>
 
 - 🗣️ **Admin Mode:** Admins can communicate with players across the entire server and listen to their conversations, even from a distance. Maintain control and ensure a safe environment. 🔊🔒
 
@@ -47,6 +47,10 @@ MelodyMine is a revolutionary system for Minecraft servers where players can sim
 - 🌐 **Automatic Login:** Users can obtain an automatic login link by using the `/melodymine start` command, simplifying website login and reducing hassle. 🌐🚪
 
 <img style="margin-bottom:10px;border-radius: 5px" src="https://cdn.discordapp.com/attachments/1159034838783893567/1159041197218746379/image.png?ex=651e70bb&is=651d1f3b&hm=dd83a23900e58a03fd6732ee1db6baf39e2b8d496f2139a1be21357d3c105b65&"/>
+
+- 🌐 **QRCode Automatic Login:** Players can obtain a QR code by using the command `/melodymine start qrcode`, and by scanning it, they can enter the website. 🌍✨
+
+<img style="margin-bottom:10px;border-radius: 5px" src="https://cdn.discordapp.com/attachments/1159034838783893567/1161726011247968276/melody-qrcode.png?ex=653958a8&is=6526e3a8&hm=a512f1de25c741d6da891b2254fc2e2a7ed39ffd4e519c3c4eba0ea16788cf6c&"/>
 
 - 🛠️ **Comprehensive API:** Developers have access to a comprehensive API, including events like `PlayerJoinWebEvent` and `PlayerLeaveWebEvent`, enabling the creation of custom plugins and expanding the possibilities of your server. 📚👩‍💻
 
@@ -168,3 +172,5 @@ Ready to harmonize your Minecraft server experience? Join the MelodyMine communi
 
 
 🌐 Visit our [GitHub repository](https://github.com/vallerian/melodymine) for updates, bug reports, and contributions. 🛠️🐞
+
+<img style="border-radius: 5px" src="https://bstats.org/signatures/bukkit/MelodyMine.svg"/>

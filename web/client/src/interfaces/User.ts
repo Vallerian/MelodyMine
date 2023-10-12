@@ -11,11 +11,7 @@ export interface IMelodyPlayer {
     isAdminMode?: boolean
     isActiveVoice: boolean
     serverIsOnline: boolean
-    serverLastLogin?: Date | null
-    serverLastLogout?: Date | null
     webIsOnline: boolean
-    webLastLogin?: Date | null
-    webLastLogout?: Date | null
 }
 
 export interface IOnlineUsers {

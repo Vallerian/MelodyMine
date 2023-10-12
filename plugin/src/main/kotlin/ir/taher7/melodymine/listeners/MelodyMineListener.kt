@@ -14,7 +14,7 @@ import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerMoveEvent
 import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.scheduler.BukkitRunnable
-import java.sql.Timestamp
+
 
 class MelodyMineListener : Listener {
     @EventHandler
@@ -27,11 +27,9 @@ class MelodyMineListener : Listener {
                 }
             } else {
                 result.player = event.player
-                result.serverIp = event.player.address?.address?.hostAddress
                 result.serverIsOnline = true
                 result.server = Storage.server
                 result.verifyCode = Utils.getVerifyCode()
-                result.serverLastLogin = Timestamp(System.currentTimeMillis())
                 Database.updatePlayer(result, false)
                 Utils.forceVoice(result)
                 Storage.onlinePlayers[result.uuid] = result
@@ -62,7 +60,6 @@ class MelodyMineListener : Listener {
                     if (result != null && Bukkit.getPlayerExact(result.name) == null) {
                         result.serverIsOnline = false
                         result.verifyCode = Utils.getVerifyCode()
-                        result.serverLastLogout = Timestamp(System.currentTimeMillis())
                         Database.updatePlayer(result, true)
                         if (result.isActiveVoice && result.webIsOnline) {
                             val data = mutableMapOf<String, String>()
@@ -105,7 +102,6 @@ class MelodyMineListener : Listener {
     @EventHandler
     fun onPlayerSendMessage(event: AsyncPlayerChatEvent) {
         if (!Storage.forceVoice || event.player.player?.hasPermission("melodymine.force") == true) return
-
         val melodyPlayer = Storage.onlinePlayers[event.player.uniqueId.toString()]
         if (melodyPlayer != null) {
             if (!melodyPlayer.isActiveVoice) {
@@ -113,5 +109,6 @@ class MelodyMineListener : Listener {
             }
         }
     }
+
 }
 

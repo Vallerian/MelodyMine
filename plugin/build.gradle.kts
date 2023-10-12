@@ -18,6 +18,8 @@ repositories {
     mavenLocal()
     mavenCentral()
 
+    maven("https://jitpack.io")
+
     maven("https://repo.maven.apache.org/maven2/")
 
     // Velocity-API / PaperLib / Folia
@@ -44,7 +46,7 @@ dependencies {
     compileOnly("org.spigotmc:spigot-api:1.19.3-R0.1-SNAPSHOT")
     compileOnly("me.clip:placeholderapi:2.11.3")
 
-
+    implementation("org.bstats:bstats-bukkit:3.0.2")
 
     implementation("com.google.code.gson:gson:2.10.1")
 
@@ -62,6 +64,10 @@ dependencies {
     // Socket Io
     implementation("io.socket:socket.io-client:2.1.0")
 
+    implementation("com.github.kenglxn.QRGen:javase:3.0.1")
+
+    implementation("com.zaxxer:HikariCP:5.0.1")
+
 }
 
 
@@ -71,7 +77,6 @@ tasks {
     runServer {
         minecraftVersion("1.20.1")
     }
-
 
 
     val relocate = task<ConfigureShadowRelocation>("relocateShadowJar") {
