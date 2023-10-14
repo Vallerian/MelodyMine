@@ -14,11 +14,14 @@ import {usePeersStore} from "@/store/PeersStore";
 import {useLoadingStore} from "@/store/LoadingStore";
 import {decrypt, encrypt} from "@/utils";
 import {DefaultEventsMap} from "@socket.io/component-emitter";
+import {useControlStore} from "@/store/ControlStore";
+import {MdOutlineNoiseAware} from "react-icons/md";
 
 const StartButton = () => {
 
     const {status} = useSession()
     const user = useUserStore(state => state)
+    const {noiseSuppression, setNoiseSuppression} = useControlStore(state => state)
     const {socket, setSocket, disconnectSocket} = useSocketStore(state => state)
     const {addUser, removeAllOnline, setAdminModeAll} = useOnlineUsersStore(state => state)
     const {removeAll} = usePeersStore(state => state)
@@ -109,7 +112,7 @@ const StartButton = () => {
 
         const {token} = await res.json()
         const {player: data} = decrypt(token)
-        user.initUser(data)
+        user.initUser({...data, isActiveVoice: true})
 
         if (!data.serverIsOnline) {
             setError("serverIsOnline")
@@ -118,7 +121,11 @@ const StartButton = () => {
         }
 
         try {
-            const stream = await navigator.mediaDevices.getUserMedia({audio: true, video: false})
+            const stream = await navigator.mediaDevices.getUserMedia({
+                audio: {
+                    noiseSuppression,
+                }, video: false
+            })
             initStream(stream)
             setValidate(true)
             addUser({
@@ -126,6 +133,10 @@ const StartButton = () => {
                 uuid: data.uuid,
                 server: data.server,
                 isMute: data.isMute
+            })
+
+            stream.getAudioTracks().forEach(track => {
+                track.getSettings().noiseSuppression = true
             })
 
             socket?.emit("onPlayerStartVoice", encrypt({
@@ -142,7 +153,19 @@ const StartButton = () => {
         }
     }
 
-    if (isValidate) return
+    if (isValidate) return (
+        <>
+            <button
+                className={`cursor-pointer text-sm ${noiseSuppression ? "text-cyan-500" : "text-neutral-400"} flex gap-1 justify-center items-center p-1 rounded ring-1 ${noiseSuppression ? "ring-cyan-700" : "ring-neutral-700"} shadow ${noiseSuppression ? "shadow-cyan-600" : "shadow-neutral-600"}`}
+                onClick={() => setNoiseSuppression(!noiseSuppression)}
+            >
+                <span className="text-xl">
+                    <MdOutlineNoiseAware/>
+                </span>
+                Noise Suppression
+            </button>
+        </>
+    )
 
     return (
         <div className="flex self-center">

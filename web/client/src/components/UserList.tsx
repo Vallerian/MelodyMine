@@ -26,8 +26,7 @@ const UserList = () => {
         setAdminModeAll
     } = useOnlineUsersStore(state => state)
     const {socket} = useSocketStore(state => state)
-    const {uuid, server} = useUserStore(state => state)
-    const {changeUserServer, changeUserIsMute, changeUserAdminMode} = useUserStore(state => state)
+    const {uuid, server, changeUserServer, changeUserIsMute, changeUserAdminMode} = useUserStore(state => state)
     const {setVolume} = useVolumeStore(state => state)
     const {setValidate, setError} = useValidateStore(state => state)
     const {closeStream} = useStreamStore(state => state)
@@ -113,6 +112,7 @@ const UserList = () => {
                 closeStream()
                 removeUser(user.uuid!)
                 removeAll()
+                changeUserAdminMode(false)
             }
         })
 
@@ -125,6 +125,7 @@ const UserList = () => {
             closeStream()
             removeAllOnline(data.server)
             removeAll()
+            changeUserAdminMode(false)
         })
 
         socket?.on("onPlayerChangeServer", (token: string) => {

@@ -73,6 +73,7 @@ const SoundControl = () => {
         removeAll()
         setAdminModeAll()
         user.changeUserAdminMode(false)
+        user.changeActiveVoice(false)
         socket?.emit("onPlayerEndVoice", encrypt({
             name: user.name,
             uuid: user.uuid,
@@ -95,7 +96,7 @@ const SoundControl = () => {
                 </li>
                 <li className={`${!micIsActive && 'text-red-500'} cursor-pointer flex justify-center items-center`}
                     onClick={() => handleToggle("mic")}>
-                    {instant > 0.00 ? (<>
+                    {instant > 0.00 && micIsActive ? (<>
                         <div className="soundAnimation">
                         </div>
                     </>) : ''}
