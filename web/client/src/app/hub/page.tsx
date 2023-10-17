@@ -7,7 +7,7 @@ import {redirect} from "next/navigation";
 import {IUser} from "@/interfaces/User";
 
 const checkMulti = async () => {
-    const res = await fetch("http://localhost:3000/api/user/data", {
+    const res = await fetch(`${process.env.NEXTAUTH_URL}/api/user/data`, {
         method: "GET",
         headers: {"Content-Type": "application/json"},
     })
