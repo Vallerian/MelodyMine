@@ -1,5 +1,5 @@
 "use client"
-import {IOnlineUsers} from "@/interfaces/User";
+import {IOnlineUsers, IVolume} from "@/interfaces";
 import {useOnlineUsersStore} from "@/store/OnlineUsersStore";
 import {useEffect, useState} from "react";
 import {useSocketStore} from "@/store/SocketStore";
@@ -26,8 +26,7 @@ const UserList = () => {
         setAdminModeAll
     } = useOnlineUsersStore(state => state)
     const {socket} = useSocketStore(state => state)
-    const {uuid, server} = useUserStore(state => state)
-    const {changeUserServer, changeUserIsMute, changeUserAdminMode} = useUserStore(state => state)
+    const {uuid, server, changeUserServer, changeUserIsMute, changeUserAdminMode} = useUserStore(state => state)
     const {setVolume} = useVolumeStore(state => state)
     const {setValidate, setError} = useValidateStore(state => state)
     const {closeStream} = useStreamStore(state => state)
@@ -64,11 +63,8 @@ const UserList = () => {
             removePeer(user.uuid!)
         })
 
-        socket?.on("onSetVolumeReceive", (data: {
-            uuid: string,
-            volume: string
-        }) => {
-            setVolume(data.uuid, data.volume)
+        socket?.on("onSetVolumeReceive", (data: IVolume) => {
+            setVolume(data)
         })
 
         socket?.on("onReceiveOffer", (token: string) => {
@@ -113,6 +109,7 @@ const UserList = () => {
                 closeStream()
                 removeUser(user.uuid!)
                 removeAll()
+                changeUserAdminMode(false)
             }
         })
 
@@ -125,6 +122,7 @@ const UserList = () => {
             closeStream()
             removeAllOnline(data.server)
             removeAll()
+            changeUserAdminMode(false)
         })
 
         socket?.on("onPlayerChangeServer", (token: string) => {
@@ -155,7 +153,7 @@ const UserList = () => {
                 removePeer(data.uuid)
                 createOffer(data.uuid!, data.server)
                 setAdminMode(data.uuid, true)
-                setVolume(data.uuid, "1.0")
+                setVolume({uuid: data.uuid!, volume: "1.0"})
             } else {
                 changeUserAdminMode(true)
                 setAdminMode(data.uuid, true)
@@ -181,7 +179,7 @@ const UserList = () => {
             const data = decrypt(token) as IOnlineUsers
             createOffer(data.uuid!, data.server!)
             setAdminMode(data.uuid!, true)
-            setVolume(data.uuid!, "1.0")
+            setVolume({uuid: data.uuid!, volume: "1.0"})
         })
 
         socket?.on("onPlayerMuteReceive", (token: string) => {

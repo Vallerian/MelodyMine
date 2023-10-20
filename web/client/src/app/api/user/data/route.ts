@@ -9,7 +9,7 @@ export const GET = async () => {
     const session = await getAuthSession()
     if (session) {
         try {
-            const player = await prisma.melodymine.findUnique({
+            const player = await prisma.melodymine.findFirst({
                 select: {
                     uuid: true,
                     name: true,
@@ -20,7 +20,7 @@ export const GET = async () => {
                     webIsOnline: true,
                 },
                 where: {
-                    uuid: session.user.uuid
+                    name: session.user.name
                 },
             })
             if (player) {

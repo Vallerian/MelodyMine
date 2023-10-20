@@ -20,7 +20,7 @@ export default [
         "errorMessage": "The server you were online on has gone offline. Please try again, and if you encounter any issues, contact us for assistance."
     },
     {
-        errorType: "invalidVerifyCode",
-        errorMessage: "Authentication failed because your verification code is missing. Please enter the server (%serverIp%) and obtain a new link using the /melodymine start command, or you can enter your username and password on this page."
+        "errorType": "invalidVerifyCode",
+        "errorMessage": "Authentication failed because your verification code is missing. Please enter the server (%serverIp%) and obtain a new link using the /melodymine start command, or you can enter your username and password on this page."
     }
 ]

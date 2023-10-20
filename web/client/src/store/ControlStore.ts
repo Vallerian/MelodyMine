@@ -8,34 +8,39 @@ interface userMute {
 }
 
 interface State {
-    users: userMute[]
+    muteUsers: userMute[]
+    noiseSuppression: boolean
 }
 
 interface Actions extends State {
-    setSelfMute: (uuid: string, value: boolean) => void
+    setUserMute: (uuid: string, value: boolean) => void
+    setNoiseSuppression: (value: boolean) => void
 }
 
 
-export const useMuteStore = createWithEqualityFn(
+export const useControlStore = createWithEqualityFn(
     persist<Actions>(
         (setState, getState) => ({
-            users: [],
-            setSelfMute: (uuid, value) => {
-                const users = [...getState().users]
+            muteUsers: [],
+            noiseSuppression: false,
+            setUserMute: (uuid, value) => {
+                const users = [...getState().muteUsers]
                 const index = users.findIndex(item => item.uuid == uuid)
                 const user = users[index]
                 if (user) {
                     user.isSelfMute = value
                     users[index] = user
-                    setState(() => ({users}))
+                    setState(() => ({muteUsers: users}))
                 } else {
                     users.push({
                         uuid: uuid,
                         isSelfMute: value
                     })
-                    setState(() => ({users}))
+                    setState(() => ({muteUsers: users}))
                 }
-            }
+            },
+            setNoiseSuppression: async value => setState(() => ({noiseSuppression: value}))
+
         }),
         {
             name: 'selfMute-storage',

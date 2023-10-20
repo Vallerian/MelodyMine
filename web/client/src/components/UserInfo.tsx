@@ -7,7 +7,7 @@ import StartButton from "@/components/StartButton";
 import {signOut, useSession} from "next-auth/react";
 import {useUserStore} from "@/store/UserStore";
 import {useValidateStore} from "@/store/ValidateStore";
-import {IUser} from "@/interfaces/User";
+import {IUser} from "@/interfaces";
 import {BsFillMicMuteFill, BsFillPeopleFill} from "react-icons/bs";
 import {useOnlineUsersStore} from "@/store/OnlineUsersStore";
 import {useEffect} from "react";

@@ -1,5 +1,5 @@
 "use client"
-import {IOnlineUsers} from "@/interfaces/User";
+import {IOnlineUsers} from "@/interfaces";
 import Image from "next/image";
 import {usePeersStore} from "@/store/PeersStore";
 import {useEffect, useRef, useState} from "react";
@@ -8,17 +8,16 @@ import {useStreamStore} from "@/store/StreamStore";
 import {useVolumeStore} from "@/store/VolumeStore";
 import {BsFillMicFill, BsFillMicMuteFill} from "react-icons/bs";
 import {useUserStore} from "@/store/UserStore";
-import {useMuteStore} from "@/store/MuteStore";
+import {useControlStore} from "@/store/ControlStore";
 import {BiSolidRightArrow, BiSolidUserVoice} from "react-icons/bi";
 import {RiVoiceprintFill} from "react-icons/ri";
 import {ImUserTie} from "react-icons/im";
 
-
 const SingleUser = ({user}: { user: IOnlineUsers }) => {
 
-    const {isAdminMode, uuid, server} = useUserStore(state => state)
+    const {isAdminMode, uuid, server, serverIsOnline, isActiveVoice} = useUserStore(state => state)
     const {peers} = usePeersStore(state => state)
-    const {setSelfMute, users: userMute} = useMuteStore(state => state)
+    const {setUserMute, muteUsers} = useControlStore(state => state)
     const {stream} = useStreamStore(state => state)
     const {soundIsActive} = useStreamStore(state => state)
     const {volumes} = useVolumeStore(state => state)
@@ -52,11 +51,10 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
     useEffect(() => {
         let interval: any
         let soundMaster: any
-        let audioContext = new AudioContext()
+        const audioContext = new AudioContext()
 
         if (userStream) {
             soundMaster = new SoundMeter(audioContext)
-
             soundMaster.connectToSource(userStream, (event: any) => {
                 if (!event) {
                     interval = setInterval(() => {
@@ -67,10 +65,7 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
         }
 
         return () => {
-            if (soundMaster) {
-                soundMaster.stop()
-            }
-            audioContext.close()
+            if (soundMaster) soundMaster.stop()
             clearInterval(interval)
         }
     }, [userStream])
@@ -97,9 +92,9 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
     }, [isAdminMode])
 
     useEffect(() => {
-        const isMute = userMute.find(item => item.uuid == user.uuid)
+        const isMute = muteUsers.find(item => item.uuid == user.uuid)
         if (isMute) setIsUserMute(isMute.isSelfMute)
-    }, [userMute])
+    }, [muteUsers])
 
 
     return (
@@ -108,7 +103,8 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
                 muted={!soundIsActive || (isUserMute || user.isMute && user.uuid != uuid) || (!voiceBack && user.uuid == uuid)}
                 ref={audioRef}
                 autoPlay
-                playsInline>
+                playsInline
+            >
             </audio>
             <div className="flex items-center bg-neutral-800 px-1 py-1 rounded-xl shadow-xl">
                 <div className="flex justify-center items-center w-2/12">
@@ -160,7 +156,7 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
                     </div>
                     <div className="flex items-center justify-between w-full">
                         <span
-                            className={`${user.server == server ? "text-green-500" : "text-neutral-400"} font-bold flex items-center gap-1`}>
+                            className={`${user.server == server && serverIsOnline && isActiveVoice ? "text-green-500" : "text-neutral-400"} font-bold flex items-center gap-1`}>
                             <BiSolidRightArrow/>
                             {user.server}
                         </span>
@@ -168,7 +164,7 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
                             <span
                                 className={`cursor-pointer ${isUserMute ? "text-red-500" : "text-neutral-400"} flex gap-1 justify-center text-sm items-center px-1 rounded ring-1 ${isUserMute ? "ring-red-700" : "ring-neutral-700"} shadow ${isUserMute ? "shadow-red-600" : "shadow-neutral-600"}`}
                                 onClick={() => {
-                                    if (uuid != user.uuid) setSelfMute(user.uuid!, !isUserMute)
+                                    if (uuid != user.uuid) setUserMute(user.uuid!, !isUserMute)
                                 }}
                             >
                                 {isUserMute ? (<>

@@ -42,6 +42,7 @@ export const useStreamStore = createWithEqualityFn<State & Actions>((setState, g
         stream?.getTracks().forEach(track => {
             track.stop()
         })
+        setState(() => ({stream: null}))
     }
 }), shallow)
 

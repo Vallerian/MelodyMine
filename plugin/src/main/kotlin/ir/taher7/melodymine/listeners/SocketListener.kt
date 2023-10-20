@@ -270,11 +270,12 @@ class SocketListener(private val socket: Socket) {
                                                 if (player.isMute) {
                                                     volume = 0.0
                                                 }
-
                                                 MelodyManager.setVolume(
                                                     player.uuid,
                                                     volume,
-                                                    resultSocketID
+                                                    resultSocketID,
+                                                    player.player?.location!!,
+                                                    result.player?.location!!
                                                 )
                                             }
                                         } else {

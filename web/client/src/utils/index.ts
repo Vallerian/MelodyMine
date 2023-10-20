@@ -1,5 +1,5 @@
 import * as crypto from 'crypto';
-import {randomInt} from "crypto";
+import {randomInt} from 'crypto';
 import {useUserStore} from "@/store/UserStore";
 import CryptoJS from 'crypto-js';
 
@@ -41,3 +41,5 @@ export const decrypt = (token: string) => {
         return {}
     }
 }
+
+

@@ -11,6 +11,7 @@ import ir.taher7.melodymine.utils.QRCodeRenderer
 import ir.taher7.melodymine.utils.Utils
 import net.glxn.qrgen.javase.QRCode
 import org.bukkit.Bukkit
+import org.bukkit.Location
 import org.bukkit.entity.Player
 import org.bukkit.scheduler.BukkitRunnable
 
@@ -190,16 +191,36 @@ object MelodyManager {
         )
     }
 
-    fun setVolume(playerUuid: String, volume: Double, targetSocketID: String) {
+    fun setVolume(
+        playerUuid: String,
+        volume: Double,
+        targetSocketID: String,
+        playerLocation: Location,
+        targetLocation: Location,
+    ) {
         val preSetVolumeEvent = PreSetVolumeEvent(playerUuid, volume, targetSocketID)
         Bukkit.getServer().pluginManager.callEvent(preSetVolumeEvent)
         if (preSetVolumeEvent.isCancelled) return
 
         Websocket.socket.emit(
-            "onSetVolumePlugin", mapOf<String, Any>(
+            "onSetVolumePlugin", mapOf(
                 "uuid" to playerUuid,
                 "volume" to volume,
-                "socketID" to targetSocketID
+                "socketID" to targetSocketID,
+                "selfLocation" to mapOf(
+                    "yaw" to targetLocation.yaw,
+                    "pitch" to targetLocation.pitch,
+                    "x" to targetLocation.x,
+                    "y" to targetLocation.y,
+                    "z" to targetLocation.z,
+                ),
+                "targetLocation" to mapOf(
+                    "yaw" to playerLocation.yaw,
+                    "pitch" to playerLocation.pitch,
+                    "x" to playerLocation.x,
+                    "y" to playerLocation.y,
+                    "z" to playerLocation.z,
+                )
             )
         )
 

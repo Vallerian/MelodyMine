@@ -118,8 +118,10 @@ class QRCodeListeners : Listener {
     fun onPlayerDeath(event: PlayerDeathEvent) {
         val player = event.entity.player ?: return
         if (player.inventory.firstEmpty() == -1) return
-        val item = event.drops.filter { itemStack -> Utils.isMap(itemStack) }[0] ?: return
-        event.drops.remove(item)
+        if (event.drops.any { itemStack -> Utils.isMap(itemStack) }) {
+            val item = event.drops.filter { itemStack -> Utils.isMap(itemStack) }[0]
+            event.drops.remove(item)
+        }
     }
 
     @EventHandler

@@ -22,13 +22,27 @@ export interface IOnlineUsers {
     isAdminMode?: boolean
 }
 
-export interface IVolume {
-    uuid: string
-    volume: string
-}
-
 export interface IPeer {
     uuid: string
     server?: string
     peer: RTCPeerConnection
+}
+
+export interface IVolume {
+    uuid: string
+    volume: string
+    selfLocation?: {
+        yaw: number
+        pitch: number
+        x: number
+        y: number
+        z: number
+    }
+    targetLocation?: {
+        yaw: number
+        pitch: number
+        x: number
+        y: number
+        z: number
+    }
 }
