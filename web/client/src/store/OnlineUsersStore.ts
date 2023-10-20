@@ -1,4 +1,4 @@
-import {IOnlineUsers} from "@/interfaces/User";
+import {IOnlineUsers} from "@/interfaces";
 import {createWithEqualityFn} from "zustand/traditional";
 import {shallow} from "zustand/shallow";
 import {useUserStore} from "@/store/UserStore";

@@ -1,5 +1,5 @@
 "use client"
-import {IOnlineUsers} from "@/interfaces/User";
+import {IOnlineUsers, IVolume} from "@/interfaces";
 import {useOnlineUsersStore} from "@/store/OnlineUsersStore";
 import {useEffect, useState} from "react";
 import {useSocketStore} from "@/store/SocketStore";
@@ -63,11 +63,8 @@ const UserList = () => {
             removePeer(user.uuid!)
         })
 
-        socket?.on("onSetVolumeReceive", (data: {
-            uuid: string,
-            volume: string
-        }) => {
-            setVolume(data.uuid, data.volume)
+        socket?.on("onSetVolumeReceive", (data: IVolume) => {
+            setVolume(data)
         })
 
         socket?.on("onReceiveOffer", (token: string) => {
@@ -156,7 +153,7 @@ const UserList = () => {
                 removePeer(data.uuid)
                 createOffer(data.uuid!, data.server)
                 setAdminMode(data.uuid, true)
-                setVolume(data.uuid, "1.0")
+                setVolume({uuid: data.uuid!, volume: "1.0"})
             } else {
                 changeUserAdminMode(true)
                 setAdminMode(data.uuid, true)
@@ -182,7 +179,7 @@ const UserList = () => {
             const data = decrypt(token) as IOnlineUsers
             createOffer(data.uuid!, data.server!)
             setAdminMode(data.uuid!, true)
-            setVolume(data.uuid!, "1.0")
+            setVolume({uuid: data.uuid!, volume: "1.0"})
         })
 
         socket?.on("onPlayerMuteReceive", (token: string) => {

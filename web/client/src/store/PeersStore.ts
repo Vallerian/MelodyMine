@@ -3,7 +3,7 @@ import {shallow} from "zustand/shallow";
 import {createPeer} from "@/utils/createPeer";
 import {useSocketStore} from "@/store/SocketStore";
 import {useValidateStore} from "@/store/ValidateStore";
-import {IPeer} from "@/interfaces/User";
+import {IPeer} from "@/interfaces";
 import {encrypt} from "@/utils";
 import {useUserStore} from "@/store/UserStore";
 

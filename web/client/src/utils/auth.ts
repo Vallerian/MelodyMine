@@ -1,9 +1,8 @@
-import {getServerSession, NextAuthOptions, User} from "next-auth"
+import {getServerSession, NextAuthOptions} from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 import {PrismaAdapter} from "@next-auth/prisma-adapter"
 import {prisma} from "./connect"
 import {checkPass, verifyCode} from "@/utils/index";
-
 
 declare module "next-auth" {
     interface Session {
@@ -47,7 +46,6 @@ export const authOptions: NextAuthOptions = {
                 },
                 async authorize(credentials) {
                     try {
-
                         if (!credentials?.verifyCode) {
                             if (credentials?.username.length! > 20) throw "username"
                             if (credentials?.password.length! > 50) throw "password"
@@ -61,14 +59,13 @@ export const authOptions: NextAuthOptions = {
                             if (!isPasswordCorrect) throw "password"
                             return {
                                 name: user.realname,
-                                uuid: user.uuid
                             } as any
 
                         } else {
                             if (credentials?.verifyCode.length != 20) throw "invalidVerifyCode"
                             if (!Number(credentials?.verifyCode)) throw "invalidVerifyCode"
                             const hasUser = await prisma.melodymine.findUnique({
-                                where: {verifyCode: credentials?.verifyCode}
+                                where: {verifyCode: credentials?.verifyCode},
                             })
                             if (!hasUser) throw "invalidVerifyCode"
                             await prisma.melodymine.update({

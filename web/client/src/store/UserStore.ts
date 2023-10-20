@@ -1,4 +1,4 @@
-import {IMelodyPlayer, IOnlineUsers} from "@/interfaces/User";
+import {IMelodyPlayer, IOnlineUsers} from "@/interfaces";
 import {createWithEqualityFn} from "zustand/traditional";
 import {shallow} from "zustand/shallow";
 

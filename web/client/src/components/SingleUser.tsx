@@ -1,5 +1,5 @@
 "use client"
-import {IOnlineUsers} from "@/interfaces/User";
+import {IOnlineUsers} from "@/interfaces";
 import Image from "next/image";
 import {usePeersStore} from "@/store/PeersStore";
 import {useEffect, useRef, useState} from "react";
@@ -12,7 +12,6 @@ import {useControlStore} from "@/store/ControlStore";
 import {BiSolidRightArrow, BiSolidUserVoice} from "react-icons/bi";
 import {RiVoiceprintFill} from "react-icons/ri";
 import {ImUserTie} from "react-icons/im";
-
 
 const SingleUser = ({user}: { user: IOnlineUsers }) => {
 
@@ -52,11 +51,10 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
     useEffect(() => {
         let interval: any
         let soundMaster: any
-        let audioContext = new AudioContext()
+        const audioContext = new AudioContext()
 
         if (userStream) {
             soundMaster = new SoundMeter(audioContext)
-
             soundMaster.connectToSource(userStream, (event: any) => {
                 if (!event) {
                     interval = setInterval(() => {
@@ -67,10 +65,7 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
         }
 
         return () => {
-            if (soundMaster) {
-                soundMaster.stop()
-            }
-            audioContext.close()
+            if (soundMaster) soundMaster.stop()
             clearInterval(interval)
         }
     }, [userStream])
@@ -108,7 +103,8 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
                 muted={!soundIsActive || (isUserMute || user.isMute && user.uuid != uuid) || (!voiceBack && user.uuid == uuid)}
                 ref={audioRef}
                 autoPlay
-                playsInline>
+                playsInline
+            >
             </audio>
             <div className="flex items-center bg-neutral-800 px-1 py-1 rounded-xl shadow-xl">
                 <div className="flex justify-center items-center w-2/12">
@@ -182,7 +178,7 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
                         ) : ""}
                         {user.uuid == uuid ? (
                             <span
-                                className={`cursor-pointer ${voiceBack ? "text-cyan-400" : "text-neutral-400"} flex gap-1 justify-center text-sm items-center px-1 rounded ring-1 ${voiceBack ? "ring-cyan-700" : "ring-neutral-700"} shadow ${voiceBack ? "shadow-cyan-600" : "shadow-neutral-600"}`}
+                                className={`cursor-pointer ${voiceBack ? "text-green-400" : "text-neutral-400"} flex gap-1 justify-center text-sm items-center px-1 rounded ring-1 ${voiceBack ? "ring-green-700" : "ring-neutral-700"} shadow ${voiceBack ? "shadow-green-600" : "shadow-neutral-600"}`}
                                 onClick={() => setVoiceBack(!voiceBack)}
                             >
                             <RiVoiceprintFill/>

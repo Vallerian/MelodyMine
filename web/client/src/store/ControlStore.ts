@@ -1,7 +1,6 @@
 import {createJSONStorage, persist} from "zustand/middleware";
 import {createWithEqualityFn} from "zustand/traditional";
 import {shallow} from "zustand/shallow";
-import {useStreamStore} from "@/store/StreamStore";
 
 interface userMute {
     uuid: string
@@ -40,26 +39,8 @@ export const useControlStore = createWithEqualityFn(
                     setState(() => ({muteUsers: users}))
                 }
             },
-            setNoiseSuppression: async value => {
-                const stream = useStreamStore.getState().stream
-                const {micIsActive} = useStreamStore.getState()
-                if (stream) {
-                    stream.getAudioTracks().forEach(track => {
-                        stream.removeTrack(track)
-                    })
-                    const newStream = await navigator.mediaDevices.getUserMedia({
-                        audio: {
-                            noiseSuppression: value,
-                        }, video: false
-                    })
-                    newStream.getAudioTracks().forEach(track => {
-                        stream.addTrack(track)
-                        track.enabled = micIsActive
+            setNoiseSuppression: async value => setState(() => ({noiseSuppression: value}))
 
-                    })
-                    setState(() => ({noiseSuppression: value}))
-                }
-            }
         }),
         {
             name: 'selfMute-storage',

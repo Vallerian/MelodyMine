@@ -4,19 +4,29 @@ import UserInfo from "@/components/UserInfo";
 import UserList from "@/components/UserList";
 import {getAuthSession} from "@/utils/auth";
 import {redirect} from "next/navigation";
-import {IUser} from "@/interfaces/User";
+import {IUser} from "@/interfaces";
+import {prisma} from "@/utils/connect";
 
-const checkMulti = async () => {
-    const res = await fetch("http://localhost:3000/api/user/data", {
-        method: "GET",
-        headers: {"Content-Type": "application/json"},
+const checkMulti = async (name: string) => {
+    const player = await prisma.melodymine.findFirst({
+        select: {
+            uuid: true,
+            name: true,
+            server: true,
+            isMute: true,
+            isActiveVoice: true,
+            serverIsOnline: true,
+            webIsOnline: true,
+        },
+        where: {
+            name: name
+        },
     })
-
-    if (!res.ok) return
-
-    const data = await res.json()
-    return data.webIsOnline
-
+    if (player) {
+        return !!player.webIsOnline
+    } else {
+        return false
+    }
 }
 
 export const metadata: Metadata = {
@@ -25,9 +35,10 @@ export const metadata: Metadata = {
 const Page = async () => {
     const session = await getAuthSession()
 
-    const isMulti = await checkMulti()
-    if (!session?.user) redirect('/')
+    if (!session?.user) redirect('/login')
+    const isMulti = await checkMulti(session?.user.name!!)
     if (isMulti) redirect("/?error=multiUser")
+
     return (
         <>
             <div className="h-screen w-full flex flex-col text-white justify-center items-center">

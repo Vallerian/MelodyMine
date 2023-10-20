@@ -1,12 +1,11 @@
 export function SoundMeter(context) {
-    this.context = context;
-    this.instant = 0.0;
-    this.slow = 0.0;
-    this.clip = 0.0;
-    this.script = context.createScriptProcessor(2048, 1, 1);
+    this.context = context
+    this.instant = 0.0
+    this.slow = 0.0
+    this.script = context.createScriptProcessor(2048, 1, 1)
     const that = this;
     this.script.onaudioprocess = function (event) {
-        const input = event.inputBuffer.getChannelData(0);
+        const input = event.inputBuffer.getChannelData(0)
         let i;
         let sum = 0.0;
         let clipCount = 0;
@@ -19,21 +18,20 @@ export function SoundMeter(context) {
         that.instant = Math.sqrt(sum / input.length);
         that.slow = 0.95 * that.slow + 0.05 * that.instant;
         that.clip = clipCount / input.length;
-    };
+    }
 }
 
 SoundMeter.prototype.connectToSource = function (stream, callback) {
     try {
-        this.mic = this.context.createMediaStreamSource(stream);
-        this.mic.connect(this.script);
-        this.script.connect(this.context.destination);
+        this.mic = this.context.createMediaStreamSource(stream)
+        this.mic.connect(this.script)
+        this.script.connect(this.context.destination)
         if (typeof callback !== 'undefined') {
-            callback(null);
+            callback(null)
         }
     } catch (e) {
-        console.error(e);
         if (typeof callback !== 'undefined') {
-            callback(e);
+            callback(e)
         }
     }
 };
