@@ -44,7 +44,7 @@ MelodyMine is a revolutionary system for Minecraft servers where players can sim
 
 <img style="margin-bottom:10px;border-radius: 5px" src="https://cdn.discordapp.com/attachments/1159034838783893567/1159040820444414003/image.png?ex=651e7061&is=651d1ee1&hm=e50a9d3d80701c47f25a9ce54a6028ad5aaee1725e884d5268a30299c7eb6de1&"/>
 
-- 🌐 **Automatic Login:** Users can obtain an automatic login link by using the `/melodymine start` command, simplifying website login and reducing hassle. 🌐🚪
+- 🌐 **Automatic Login:** Users can obtain an automatic login link by using the `/melodymine start link` command, simplifying website login and reducing hassle. 🌐🚪
 
 <img style="margin-bottom:10px;border-radius: 5px" src="https://cdn.discordapp.com/attachments/1159034838783893567/1159041197218746379/image.png?ex=651e70bb&is=651d1f3b&hm=dd83a23900e58a03fd6732ee1db6baf39e2b8d496f2139a1be21357d3c105b65&"/>
 
@@ -54,7 +54,7 @@ MelodyMine is a revolutionary system for Minecraft servers where players can sim
 
 - 🛠️ **Comprehensive API:** Developers have access to a comprehensive API, including events like `PlayerJoinWebEvent` and `PlayerLeaveWebEvent`, enabling the creation of custom plugins and expanding the possibilities of your server. 📚👩‍💻
 
-- 📝 **Simple Plugin config.yml:** Customize plugin settings and messages easily with the user-friendly config.yml. 📝✉️
+- 📝 **Simple Plugin config.yml:** Customize plugin settings and messages easily with the user-friendly config.yml. 📝
 
 ```yaml
 # ----- Database configs -----

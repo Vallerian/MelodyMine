@@ -7,6 +7,7 @@ import {redirect} from "next/navigation";
 import {IUser} from "@/interfaces";
 import {prisma} from "@/utils/connect";
 
+
 const checkMulti = async (name: string) => {
     const player = await prisma.melodymine.findFirst({
         select: {
