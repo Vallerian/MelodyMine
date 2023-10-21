@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "ssl": "node server.js 3000"
   },
   "dependencies": {
     "@mediapipe/tasks-vision": "^0.10.7",
