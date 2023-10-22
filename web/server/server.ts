@@ -51,7 +51,7 @@ io.use((socket: CustomSocket, next) => {
         } else {
             const key = socket.handshake.auth.key
             if (key) {
-                if (key == process.env.WEBSOCKE_PLUGIN_AUTH_KEY) {
+                if (key == process.env.WEBSOCKET_PLUGIN_AUTH_KEY) {
                     socket.melodyClient = {
                         from: socket.handshake.auth.from,
                         server: socket.handshake.auth.server,

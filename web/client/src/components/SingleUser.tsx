@@ -13,7 +13,7 @@ import {BiSolidRightArrow, BiSolidUserVoice} from "react-icons/bi";
 import {RiVoiceprintFill} from "react-icons/ri";
 import {ImUserTie} from "react-icons/im";
 
-const SingleUser = ({user}: { user: IOnlineUsers }) => {
+const SingleUser = ({user, audioContext}: { user: IOnlineUsers, audioContext: AudioContext }) => {
 
     const {isAdminMode, uuid, server, serverIsOnline, isActiveVoice} = useUserStore(state => state)
     const {peers} = usePeersStore(state => state)
@@ -51,7 +51,6 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
     useEffect(() => {
         let interval: any
         let soundMaster: any
-        const audioContext = new AudioContext()
 
         if (userStream) {
             soundMaster = new SoundMeter(audioContext)

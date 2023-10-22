@@ -6,9 +6,9 @@ const fs = require("fs")
 const app = next({dev: false})
 const handle = app.getRequestHandler()
 
-const privateKeyPath = "./ssl/privkey1.pem"
-const certPath = "./ssl/cert1.pem"
-const chainPath = "./ssl/chain1.pem"
+const privateKeyPath = "./ssl/privkey.pem"
+const certPath = "./ssl/cert.pem"
+const chainPath = "./ssl/chain.pem"
 const port = process.argv[2] || 3000
 
 app.prepare().then(() => {
