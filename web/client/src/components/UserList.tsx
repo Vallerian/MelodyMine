@@ -1,7 +1,7 @@
 "use client"
 import {IOnlineUsers, IVolume} from "@/interfaces";
 import {useOnlineUsersStore} from "@/store/OnlineUsersStore";
-import {useEffect, useState} from "react";
+import {useEffect, useMemo, useState} from "react";
 import {useSocketStore} from "@/store/SocketStore";
 import {usePeersStore} from "@/store/PeersStore";
 import {useSession} from "next-auth/react";
@@ -40,7 +40,7 @@ const UserList = () => {
     } = usePeersStore(state => state)
     const [userOnline, setUserOnline] = useState<IOnlineUsers[]>()
     const {data: session} = useSession()
-
+    const audioContext = useMemo(() => new AudioContext(), [])
     useEffect(() => {
 
         socket?.on("onPlayerJoinReceive", (token: string) => {
@@ -226,7 +226,7 @@ const UserList = () => {
 
                 return serverComparison || uuidComparison || adminComparison;
             })?.map(user => (
-                <SingleUser key={user.uuid} user={user}/>
+                <SingleUser key={user.uuid} user={user} audioContext={audioContext}/>
             ))}
         </div>
     )

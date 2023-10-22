@@ -22,7 +22,7 @@ export const useControlStore = createWithEqualityFn(
     persist<Actions>(
         (setState, getState) => ({
             muteUsers: [],
-            noiseSuppression: false,
+            noiseSuppression: true,
             setUserMute: (uuid, value) => {
                 const users = [...getState().muteUsers]
                 const index = users.findIndex(item => item.uuid == uuid)
