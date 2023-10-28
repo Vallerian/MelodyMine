@@ -1,5 +1,5 @@
-![image](https://github.com/Vallerian/MelodyMine/assets/76476837/6db7c2b0-84ec-44ff-8b8c-88d4aaa2e15e)<p align="center">
-  <img style="width:100px;" src="https://cdn.discordapp.com/attachments/1159034838783893567/1167663071733501982/Screenshot_2023-10-28_064520.png?ex=654ef1fa&is=653c7cfa&hm=40805122fb6c87db42abcd6ae11e65283b8180d91e91a189e61297e8ae786c76&" alt="MelodyMine Logo">
+<p align="center">
+  <img style="width:100px;" src="https://cdn.discordapp.com/attachments/1159034838783893567/1159035012260319242/melody-logo.png?ex=651e6af8&is=651d1978&hm=1ef9304af11367211103a9fa1cd7329b29c3408f2399cff73cdb842fe108efcf" alt="MelodyMine Logo">
 </p>
 
 <h1 align="center" style="font-size: 36px; color: #7E3FAA; background: linear-gradient(to right, #8D5E8D, #7E3FAA); padding: 16px 0; border-radius: 8px;color:white">MelodyMine (Minecraft Voice Plugin) </h1>
@@ -24,7 +24,7 @@ MelodyMine is a revolutionary system for Minecraft servers where players can sim
 
 ## Key Features 🌟
 
-<img style="margin-bottom:10px;border-radius: 5px" src="https://media.discordapp.net/attachments/1159034838783893567/1162011387829174292/image.png?ex=653a626f&is=6527ed6f&hm=5fc4194ca54828ba22772866445b1b22cf69e1b09d058109ee19a75f5ea0a00b&="/>
+<img style="margin-bottom:10px;border-radius: 5px" src="https://cdn.discordapp.com/attachments/1159034838783893567/1167663071733501982/Screenshot_2023-10-28_064520.png?ex=654ef1fa&is=653c7cfa&hm=40805122fb6c87db42abcd6ae11e65283b8180d91e91a189e61297e8ae786c76&"/>
 
 - 🗣️ **Admin Mode:** Admins can communicate with players across the entire server and listen to their conversations, even from a distance. Maintain control and ensure a safe environment. 🔊🔒
 
