@@ -1,5 +1,5 @@
-<p align="center">
-  <img style="width:100px;" src="https://cdn.discordapp.com/attachments/1159034838783893567/1159035012260319242/melody-logo.png?ex=651e6af8&is=651d1978&hm=1ef9304af11367211103a9fa1cd7329b29c3408f2399cff73cdb842fe108efcf" alt="MelodyMine Logo">
+![image](https://github.com/Vallerian/MelodyMine/assets/76476837/6db7c2b0-84ec-44ff-8b8c-88d4aaa2e15e)<p align="center">
+  <img style="width:100px;" src="https://cdn.discordapp.com/attachments/1159034838783893567/1167663071733501982/Screenshot_2023-10-28_064520.png?ex=654ef1fa&is=653c7cfa&hm=40805122fb6c87db42abcd6ae11e65283b8180d91e91a189e61297e8ae786c76&" alt="MelodyMine Logo">
 </p>
 
 <h1 align="center" style="font-size: 36px; color: #7E3FAA; background: linear-gradient(to right, #8D5E8D, #7E3FAA); padding: 16px 0; border-radius: 8px;color:white">MelodyMine (Minecraft Voice Plugin) </h1>
@@ -54,7 +54,7 @@ MelodyMine is a revolutionary system for Minecraft servers where players can sim
 
 - 🛠️ **Comprehensive API:** Developers have access to a comprehensive API, including events like `PlayerJoinWebEvent` and `PlayerLeaveWebEvent`, enabling the creation of custom plugins and expanding the possibilities of your server. 📚👩‍💻
 
-- 📝 **Simple Plugin config.yml:** Customize plugin settings and messages easily with the user-friendly config.yml. 📝
+- 📝 **Simple Plugin config.yml:** Customize plugin settings and messages easily with the user-friendly config.yml.
 
 ```yaml
 # ----- Database configs -----
@@ -93,75 +93,6 @@ force-voice: false
 
 # shortcut for toggle self mute in website (Shift + F)
 mute-toggle-shortcut: true
-
-# ----- Message configs -----
-
-# main plugin prefix.
-prefix: "<gradient:#FFF4E4:#DDB216>MelodyMine</gradient> <#FFF4E4><bold>|</bold>"
-
-# open website link message.
-website-message: "Click to open website and start voice chat."
-
-# Logger messages | placeholder {PLAYER}
-website-join-logger: "{PLAYER} has join the website."
-website-leave-logger: "{PLAYER} has left the website."
-website-start-voice-logger: "{PLAYER} has start voice."
-website-end-voice-logger: "{PLAYER} has end voice."
-
-# Commands description message
-reload-description: "Reload all configuration file."
-adminmode-description: "Conversation with players in voice."
-start-description: "Get link to start voice chat."
-mute-description: "Mute player in voice chat."
-unmute-description: "Unmute player in voice chat."
-
-# Placeholder Messages
-placeholder-web-online-true: "Online"
-placeholder-web-online-false: "Offline"
-placeholder-voice-active-true: "Active"
-placeholder-voice-active-false: "Inactive"
-placeholder-adminmode-true: "On"
-placeholder-adminmode-false: "Off"
-placeholder-mute-true: "Server Mute"
-placeholder-mute-false: "Server Unmute"
-placeholder-self-mute: "Mute"
-placeholder-self-unmute: "unMute"
-placeholder-self-deafen: "Deafen"
-placeholder-self-undeafen: "UnDeafen"
-
-
-# website status messages, placeholders {PLAYER}
-
-# join website
-join-website-message: "You have connected to the website."
-join-website-message-type: "message" # message or actionbar
-
-# leave website
-leave-website-message: "You have disconnected from the website."
-leave-website-message-type: "message" # message or actionbar
-
-# start voice
-start-voice-message: "You have start the voice chat."
-start-voice-message-type: "message" # message or actionbar
-
-# end voice
-end-voice-message: "You have end the voice chat."
-end-voice-message-type: "message" # message or actionbar
-
-
-# force voice
-force-voice-message: "<click:run_command:'/melodymine start link'><hover:show_text:'<hover_text>Click to run this command <i>/melodymine start link</i>'><prefix>You must active your voice chat. do <i>/melodymine start link</i></hover></click>"
-
-# force voice title
-force-voice-title: true
-force-voice-title-message: "<hover_text>Force Voice"
-force-voice-subtitle-message: "<text>do <u>/melodymine start link</u> to start"
-
-# control messages
-mute-toggle-message: "<prefix>You have Mute from website."
-unmute-toggle-message: "<prefix>You have unMute from website."
-deafen-toggle-message: "<prefix>You have Deafen from website."
-un-deafen-toggle-message: "<prefix>You have unDeafen from website."
 ```
 
 - 🐞 **Robust System:** MelodyMine is a highly reliable and secure system with minimal bugs. Any discovered bugs are promptly addressed and fixed, ensuring a smooth and hassle-free experience for all users. Be part of a community that values your experience and offers continuous improvement. Find announcements and updates on our [GitHub repository](https://github.com/vallerian/MelodyMine). 🛠️🐛
