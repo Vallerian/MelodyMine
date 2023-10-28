@@ -21,7 +21,7 @@ websocket-url: "ws://localhost:4000"
 websocket-auth-key: "" # must be the same in web server auth key
 
 # distance that players can hear each other.
-hear-distance: 35
+hear-distance: 32
 
 # update player distance time (as Long)
 update-distance-time: 10 # must be Long (10L = 0.5s, 20L = 1s,...)
@@ -32,7 +32,8 @@ hear-lazy: true
 # users must be online in website and active voice chat.
 force-voice: false
 
-
+# shortcut for toggle self mute in website (Shift + F)
+mute-toggle-shortcut: true
 
 # ----- Message configs -----
 
@@ -62,8 +63,13 @@ placeholder-voice-active-true: "Active"
 placeholder-voice-active-false: "Inactive"
 placeholder-adminmode-true: "On"
 placeholder-adminmode-false: "Off"
-placeholder-mute-true: "Mute"
-placeholder-mute-false: "Unmute"
+placeholder-mute-true: "Server Mute"
+placeholder-mute-false: "Server Unmute"
+placeholder-self-mute: "Mute"
+placeholder-self-unmute: "unMute"
+placeholder-self-deafen: "Deafen"
+placeholder-self-undeafen: "UnDeafen"
+
 
 # website status messages, placeholders {PLAYER}
 
@@ -82,3 +88,20 @@ start-voice-message-type: "message" # message or actionbar
 # end voice
 end-voice-message: "You have end the voice chat."
 end-voice-message-type: "message" # message or actionbar
+
+
+# force voice
+force-voice-message: "<click:run_command:'/melodymine start link'><hover:show_text:'<hover_text>Click to run this command <i>/melodymine start link</i>'><prefix>You must active your voice chat. do <i>/melodymine start link</i></hover></click>"
+
+# force voice title
+force-voice-title: true
+force-voice-title-message: "<hover_text>Force Voice"
+force-voice-subtitle-message: "<text>do <u>/melodymine start link</u> to start"
+
+# control messages
+mute-toggle-message: "<prefix>You have Mute from website."
+unmute-toggle-message: "<prefix>You have unMute from website."
+deafen-toggle-message: "<prefix>You have Deafen from website."
+un-deafen-toggle-message: "<prefix>You have unDeafen from website."
+
+

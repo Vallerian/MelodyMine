@@ -28,6 +28,14 @@ class TabCompletionManager : TabCompleter {
                         listOf("link")
                     }
                 }
+
+                if (args[0].equals("control", true)) {
+                    return if (sender.hasPermission("melodymine.control")) {
+                        listOf("mute", "deafen")
+                    } else {
+                        null
+                    }
+                }
             }
 
             else -> {}

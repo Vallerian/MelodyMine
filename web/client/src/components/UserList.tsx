@@ -1,10 +1,9 @@
 "use client"
 import {IOnlineUsers, IVolume} from "@/interfaces";
 import {useOnlineUsersStore} from "@/store/OnlineUsersStore";
-import {useEffect, useMemo, useState} from "react";
+import {useEffect, useState} from "react";
 import {useSocketStore} from "@/store/SocketStore";
 import {usePeersStore} from "@/store/PeersStore";
-import {useSession} from "next-auth/react";
 import {useValidateStore} from "@/store/ValidateStore";
 import {useStreamStore} from "@/store/StreamStore";
 import {useVolumeStore} from "@/store/VolumeStore";
@@ -26,7 +25,14 @@ const UserList = () => {
         setAdminModeAll
     } = useOnlineUsersStore(state => state)
     const {socket} = useSocketStore(state => state)
-    const {uuid, server, changeUserServer, changeUserIsMute, changeUserAdminMode} = useUserStore(state => state)
+    const {setMicActive, setSoundActive} = useStreamStore(state => state)
+    const {
+        uuid,
+        server,
+        changeUserServer,
+        changeUserIsMute,
+        changeUserAdminMode
+    } = useUserStore(state => state)
     const {setVolume} = useVolumeStore(state => state)
     const {setValidate, setError} = useValidateStore(state => state)
     const {closeStream} = useStreamStore(state => state)
@@ -39,10 +45,9 @@ const UserList = () => {
         removeAll
     } = usePeersStore(state => state)
     const [userOnline, setUserOnline] = useState<IOnlineUsers[]>()
-    const {data: session} = useSession()
-    const audioContext = useMemo(() => new AudioContext(), [])
-    useEffect(() => {
 
+
+    useEffect(() => {
         socket?.on("onPlayerJoinReceive", (token: string) => {
             const data = decrypt(token) as IOnlineUsers[]
             initUsers(data)
@@ -100,12 +105,12 @@ const UserList = () => {
 
         socket?.on("onPlayerLeaveReceivePlugin", (token: string) => {
             const user = decrypt(token) as IOnlineUsers
-            if (user.uuid != session?.user.uuid) {
+            if (user.uuid != uuid) {
                 removeUser(user.uuid!)
                 removePeer(user.uuid!)
             } else {
-                setError("playerLeaveServer")
                 setValidate(false)
+                setError("playerLeaveServer")
                 closeStream()
                 removeUser(user.uuid!)
                 removeAll()
@@ -131,12 +136,14 @@ const UserList = () => {
                 uuid: string,
                 server: string
             }
-            if (data.uuid == session?.user.uuid) {
+            if (data.uuid == uuid) {
                 updateUser(data)
                 changeUserServer(data)
                 removeAll(true)
                 setAdminModeAll(true)
                 changeUserAdminMode(false)
+                setMicActive(true)
+                setSoundActive(true)
             } else {
                 updateUser(data)
                 removePeer(data.uuid, true)
@@ -149,7 +156,7 @@ const UserList = () => {
                 uuid: string,
                 server: string
             }
-            if (data.uuid != session?.user.uuid) {
+            if (data.uuid != uuid) {
                 removePeer(data.uuid)
                 createOffer(data.uuid!, data.server)
                 setAdminMode(data.uuid, true)
@@ -165,7 +172,7 @@ const UserList = () => {
             const data = decrypt(token) as {
                 uuid: string
             }
-            if (data.uuid == session?.user.uuid) {
+            if (data.uuid == uuid) {
                 changeUserAdminMode(false)
                 setAdminMode(data.uuid, false)
                 removeAll()
@@ -186,7 +193,7 @@ const UserList = () => {
             const data = decrypt(token) as {
                 uuid: string
             }
-            if (data.uuid == session?.user.uuid) {
+            if (data.uuid == uuid) {
                 changeUserIsMute(true)
                 setMute(data.uuid, true)
             } else {
@@ -198,7 +205,7 @@ const UserList = () => {
             const data = decrypt(token) as {
                 uuid: string
             }
-            if (data.uuid == session?.user.uuid) {
+            if (data.uuid == uuid) {
                 changeUserIsMute(false)
                 setMute(data.uuid, false)
             } else {
@@ -206,7 +213,27 @@ const UserList = () => {
             }
         })
 
-    }, [socket])
+        return () => {
+            socket?.off("onPlayerJoinReceive")
+            socket?.off("onPlayerStartVoiceReceive")
+            socket?.off("onEnableVoiceReceive")
+            socket?.off("onDisableVoiceReceive")
+            socket?.off("onSetVolumeReceive")
+            socket?.off("onReceiveOffer")
+            socket?.off("onReceiveAnswer")
+            socket?.off("onReceiveCandidate")
+            socket?.off("onNewPlayerLeave")
+            socket?.off("onPlayerLeaveReceivePlugin")
+            socket?.off("onPluginDisabled")
+            socket?.off("onPlayerChangeServer")
+            socket?.off("onAdminModeEnableReceive")
+            socket?.off("onAdminModeDisableReceive")
+            socket?.off("onPlayerInitAdminModeReceive")
+            socket?.off("onPlayerMuteReceive")
+            socket?.off("onPlayerUnmuteReceive")
+        }
+
+    }, [socket, uuid])
 
     useEffect(() => {
         setUserOnline(users)
@@ -226,7 +253,7 @@ const UserList = () => {
 
                 return serverComparison || uuidComparison || adminComparison;
             })?.map(user => (
-                <SingleUser key={user.uuid} user={user} audioContext={audioContext}/>
+                <SingleUser key={user.uuid} user={user}/>
             ))}
         </div>
     )

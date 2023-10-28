@@ -10,8 +10,10 @@ import {useValidateStore} from "@/store/ValidateStore";
 import {IUser} from "@/interfaces";
 import {BsFillMicMuteFill, BsFillPeopleFill} from "react-icons/bs";
 import {useOnlineUsersStore} from "@/store/OnlineUsersStore";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import {ImUserTie} from "react-icons/im";
+import {decrypt} from "@/utils";
+import {useSocketStore} from "@/store/SocketStore";
 
 
 interface UserInfoProps {
@@ -21,15 +23,60 @@ interface UserInfoProps {
 }
 
 const UserInfo = ({user, websocketKey, iceServers}: UserInfoProps) => {
-    const userState = useUserStore(state => state)
+    const {socket} = useSocketStore(state => state)
+    const {uuid, server, setSecretKey, setIceServers} = useUserStore(state => state)
     const {isValidate} = useValidateStore(state => state)
     const {users} = useOnlineUsersStore(state => state)
     const {status} = useSession()
+    const [isAdminMode, setIsAdminMode] = useState<boolean>(false)
+    const [isMute, setIsMute] = useState<boolean>()
+    useEffect(() => {
+        setSecretKey(websocketKey!!)
+        setIceServers(iceServers!!)
+        setIsMute(isMute)
+    }, [])
 
     useEffect(() => {
-        userState.setSecretKey(websocketKey!!)
-        userState.setIceServers(iceServers!!)
-    }, [])
+        if (!uuid) return
+        socket?.on("onAdminModeEnableReceive", (token: string) => {
+            const data = decrypt(token) as {
+                uuid: string,
+                server: string
+            }
+            if (data.uuid == uuid) {
+                setIsAdminMode(true)
+            }
+        })
+
+        socket?.on("onAdminModeDisableReceive", (token: string) => {
+            const data = decrypt(token) as {
+                uuid: string
+            }
+            if (data.uuid == uuid) {
+                setIsAdminMode(false)
+            }
+        })
+
+
+        socket?.on("onPlayerMuteReceive", (token: string) => {
+            const data = decrypt(token) as {
+                uuid: string
+            }
+            if (data.uuid == uuid) {
+                setIsMute(true)
+            }
+        })
+
+        socket?.on("onPlayerUnmuteReceive", (token: string) => {
+            const data = decrypt(token) as {
+                uuid: string
+            }
+            if (data.uuid == uuid) {
+                setIsMute(false)
+            }
+        })
+
+    }, [socket, uuid])
 
     return (
         <div className="flex flex-col rounded px-3 py-1 bg-custom shadow-xl w-full">
@@ -49,7 +96,7 @@ const UserInfo = ({user, websocketKey, iceServers}: UserInfoProps) => {
                                 {user.name}
                             </span>
                             <div className="flex items-center">
-                                {userState.isMute ? (
+                                {isMute ? (
                                     <div className="ms-2 self-center">
                                         <span
                                             className="whitespace-nowrap ring-1 ring-red-900 text-xs font-medium mr-2 px-1.5 py-0.5 rounded dark:bg-red-500 dark:text-white flex">
@@ -60,7 +107,7 @@ const UserInfo = ({user, websocketKey, iceServers}: UserInfoProps) => {
                                         </span>
                                     </div>
                                 ) : ""}
-                                {userState.isAdminMode ? (
+                                {isAdminMode ? (
                                     <div className="ms-2 self-center">
                                     <span
                                         className="ring-1 ring-cyan-900 text-xs font-medium mr-2 px-1.5 py-0.5 rounded dark:bg-cyan-500 dark:text-white flex">
@@ -108,13 +155,13 @@ const UserInfo = ({user, websocketKey, iceServers}: UserInfoProps) => {
                     Connected to:
                     {isValidate ? (<>
                         <span className="ml-1 font-bold text-green-500">
-                            {isValidate ? userState.server : ""}
+                            {isValidate ? server : ""}
                         </span>
                         <span className="ms-1">
                             <BsFillPeopleFill/>
                         </span>
                         <span className="ms-1">
-                            {users.filter(item => item.server == userState.server).length}
+                            {users.filter(item => item.server == server).length}
                         </span>
                     </>) : ""}
                 </h3>

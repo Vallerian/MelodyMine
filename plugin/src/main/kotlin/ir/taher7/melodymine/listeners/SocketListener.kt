@@ -4,7 +4,7 @@ import com.google.gson.GsonBuilder
 import io.socket.client.Socket
 import ir.taher7.melodymine.MelodyMine
 import ir.taher7.melodymine.api.events.*
-import ir.taher7.melodymine.core.MelodyManager
+import ir.taher7.melodymine.models.MelodyControl
 import ir.taher7.melodymine.models.MelodyPlayer
 import ir.taher7.melodymine.storage.Storage
 import ir.taher7.melodymine.utils.AdventureUtils.sendActionbar
@@ -13,7 +13,6 @@ import ir.taher7.melodymine.utils.AdventureUtils.toComponent
 import ir.taher7.melodymine.utils.Utils
 import org.bukkit.Bukkit
 import org.bukkit.scheduler.BukkitRunnable
-import java.io.IOException
 
 
 class SocketListener(private val socket: Socket) {
@@ -111,7 +110,9 @@ class SocketListener(private val socket: Socket) {
             updateMelodyPlayer(melodyPlayer)
             Storage.onlinePlayers[melodyPlayer.uuid]?.isSendOffer = arrayListOf()
             Storage.onlinePlayers[melodyPlayer.uuid]?.adminMode = false
-            sendPlayerData(melodyPlayer)
+            Storage.onlinePlayers[melodyPlayer.uuid]?.isSelfMute = true
+            Storage.onlinePlayers[melodyPlayer.uuid]?.isDeafen = true
+
             Storage.onlinePlayers.values.forEach { player ->
                 if (player.uuid != melodyPlayer.uuid && player.adminMode) {
                     socket.emit(
@@ -138,6 +139,7 @@ class SocketListener(private val socket: Socket) {
 
                     else -> {}
                 }
+                player.resetTitle()
             }
             object : BukkitRunnable() {
                 override fun run() {
@@ -196,7 +198,6 @@ class SocketListener(private val socket: Socket) {
                         player.isSendOffer.remove(melodyPlayer.uuid)
                     }
                 }
-                sendPlayerData(melodyPlayer)
                 Utils.sendMessageLog("<prefix>${melodyPlayer.name} is active voice.", melodyPlayer)
 
             } else {
@@ -210,6 +211,19 @@ class SocketListener(private val socket: Socket) {
                 }
             }.runTask(MelodyMine.instance)
         }
+
+        socket.on("onPlayerChangeControlReceive") { args ->
+            val melodyControl = gson.fromJson(args[0].toString(), MelodyControl::class.java)
+            if (melodyControl.server != Storage.server) return@on
+            val melodyPlayer = Storage.onlinePlayers[melodyControl.uuid] ?: return@on
+            melodyPlayer.updateControl(melodyControl)
+
+            object : BukkitRunnable() {
+                override fun run() {
+                    Bukkit.getServer().pluginManager.callEvent(PlayerChangeControlWebEvent(melodyPlayer, melodyControl))
+                }
+            }.runTask(MelodyMine.instance)
+        }
     }
 
     private fun updateMelodyPlayer(melodyPlayer: MelodyPlayer) {
@@ -218,88 +232,4 @@ class SocketListener(private val socket: Socket) {
         }
     }
 
-    private fun sendPlayerData(melodyPlayer: MelodyPlayer) {
-        if (melodyPlayer.server == Storage.server) {
-            object : BukkitRunnable() {
-                override fun run() {
-                    try {
-                        val player = Storage.onlinePlayers[melodyPlayer.uuid]
-                        if (player == null) {
-                            cancel()
-                            return
-                        }
-
-                        if (!player.isActiveVoice || !player.webIsOnline) cancel()
-
-                        Storage.onlinePlayers.values.forEach { result: MelodyPlayer ->
-                            if (result.uuid != player.uuid && result.webIsOnline && result.isActiveVoice && !result.adminMode && !player.adminMode) {
-                                if (
-                                    result.player?.location != null && player.player?.location != null &&
-                                    result.player?.location!!.world == player.player?.location!!.world
-                                ) {
-                                    val distance = player.player?.location?.distance(result.player?.location!!)
-                                    if (distance != null) {
-                                        val hearDistance = Storage.hearDistance
-                                        var volume: Double
-                                        if (distance < hearDistance) {
-                                            if (!player.isSendOffer.contains(result.uuid)) {
-                                                player.isSendOffer.add(result.uuid)
-                                                if (!result.isSendOffer.contains(player.uuid)) {
-                                                    player.socketID?.let {
-                                                        MelodyManager.enableVoice(
-                                                            result.name,
-                                                            result.uuid,
-                                                            result.server,
-                                                            it
-                                                        )
-                                                    }
-                                                }
-                                            }
-
-                                            volume = if (Storage.hearLazy) {
-                                                (hearDistance - distance) / hearDistance
-                                            } else {
-                                                1.0
-                                            }
-                                            val resultSocketID = result.socketID
-                                            if (resultSocketID != null) {
-                                                if (player.adminMode) {
-                                                    volume = 1.0
-                                                }
-
-                                                if (player.isMute) {
-                                                    volume = 0.0
-                                                }
-                                                MelodyManager.setVolume(
-                                                    player.uuid,
-                                                    volume,
-                                                    resultSocketID,
-                                                    player.player?.location!!,
-                                                    result.player?.location!!
-                                                )
-                                            }
-                                        } else {
-                                            val socketID = result.socketID
-                                            if (socketID != null && player.isSendOffer.contains(result.uuid)) {
-                                                MelodyManager.disableVoice(
-                                                    player.name,
-                                                    player.uuid,
-                                                    player.server,
-                                                    socketID
-                                                )
-                                                player.isSendOffer.remove(result.uuid)
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
-                    } catch (ex: IOException) {
-                        ex.printStackTrace()
-                    }
-                }
-            }.runTaskTimer(MelodyMine.instance, 0L, Storage.updateDistanceTime)
-        }
-    }
 }

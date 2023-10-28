@@ -5,7 +5,6 @@ import ir.taher7.melodymine.core.MelodyManager
 import ir.taher7.melodymine.storage.Storage
 import ir.taher7.melodymine.utils.AdventureUtils.sendMessage
 import ir.taher7.melodymine.utils.AdventureUtils.toComponent
-import ir.taher7.melodymine.utils.Utils
 import org.bukkit.entity.Player
 import java.util.*
 
@@ -54,12 +53,17 @@ class Start : SubCommand() {
                     return
                 }
 
-                Utils.sendHelpMessage(player)
+                sendStartHelpMessage(player)
             }
 
             else -> {
-                Utils.sendHelpMessage(player)
+                sendStartHelpMessage(player)
             }
         }
+    }
+
+    private fun sendStartHelpMessage(player: Player) {
+        player.sendMessage("<click:run_command:'/melodymine start link'><hover:show_text:'<hover_text>Click to run this command <i>/melodymine start link</i>'><prefix>Use: <i>/melodymine start link</i> (PC)</hover></click>".toComponent())
+        player.sendMessage("<click:run_command:'/melodymine start qrcode'><hover:show_text:'<hover_text>Click to run this command <i>/melodymine start qrcode</i>'><prefix>Use: <i>/melodymine start qrcode</i> (Phone)</hover></click>".toComponent())
     }
 }

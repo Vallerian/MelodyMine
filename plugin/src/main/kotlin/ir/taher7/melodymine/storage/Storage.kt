@@ -4,6 +4,7 @@ import ir.taher7.melodymine.MelodyMine
 import ir.taher7.melodymine.commands.SubCommand
 import ir.taher7.melodymine.models.MelodyPlayer
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 object Storage {
@@ -50,6 +51,10 @@ object Storage {
     lateinit var placeholderVoiceActiveFalse: String
     lateinit var placeholderMuteTrue: String
     lateinit var placeholderMuteFalse: String
+    lateinit var placeholderSelfMute: String
+    lateinit var placeholderSelfUnMute: String
+    lateinit var placeholderDeafen: String
+    lateinit var placeholderUnDeafen: String
 
     // website status
     lateinit var joinWebsiteMessage: String
@@ -62,10 +67,26 @@ object Storage {
     lateinit var startVoiceType: String
     lateinit var leaveEndType: String
 
+    // force voice
+    lateinit var forceVoiceMessage: String
+    var forceVoiceTitle: Boolean = true
+    lateinit var forceVoiceTitleMessage: String
+    lateinit var forceVoiceSubtitleMessage: String
+
+    // shortcut
+    var muteToggleShortcut: Boolean = true
+
+    // control messages
+    lateinit var muteToggleMessage: String
+    lateinit var unMuteToggleMessage: String
+    lateinit var deafenToggleMessage: String
+    lateinit var unDeafenToggleMessage: String
+
     // plugin data
     val onlinePlayers = hashMapOf<String, MelodyPlayer>()
     val subCommands = ArrayList<SubCommand>()
     val muteCoolDown = hashMapOf<UUID, Long>()
+    val playerMuteShortcut = ArrayList<UUID>()
 
 
     init {
@@ -117,6 +138,10 @@ object Storage {
         placeholderVoiceActiveFalse = config.getString("placeholder-voice-active-false") ?: ""
         placeholderMuteTrue = config.getString("placeholder-mute-true") ?: ""
         placeholderMuteFalse = config.getString("placeholder-mute-false") ?: ""
+        placeholderSelfMute = config.getString("placeholder-self-mute") ?: ""
+        placeholderSelfUnMute = config.getString("placeholder-self-unmute") ?: ""
+        placeholderDeafen = config.getString("placeholder-self-deafen") ?: ""
+        placeholderUnDeafen = config.getString("placeholder-self-undeafen") ?: ""
 
         joinWebsiteMessage = config.getString("join-website-message") ?: ""
         leaveWebsiteMessage = config.getString("leave-website-message") ?: ""
@@ -127,6 +152,18 @@ object Storage {
         leaveWebsiteType = config.getString("leave-website-message-type") ?: ""
         startVoiceType = config.getString("start-voice-message-type") ?: ""
         leaveEndType = config.getString("end-voice-message-type") ?: ""
+
+        forceVoiceMessage = config.getString("force-voice-message") ?: ""
+        forceVoiceTitle = config.getBoolean("force-voice-title")
+        forceVoiceTitleMessage = config.getString("force-voice-title-message") ?: ""
+        forceVoiceSubtitleMessage = config.getString("force-voice-subtitle-message") ?: ""
+
+        muteToggleShortcut = config.getBoolean("mute-toggle-shortcut")
+
+        muteToggleMessage = config.getString("mute-toggle-message") ?: ""
+        unMuteToggleMessage = config.getString("unmute-toggle-message") ?: ""
+        deafenToggleMessage = config.getString("deafen-toggle-message") ?: ""
+        unDeafenToggleMessage = config.getString("un-deafen-toggle-message") ?: ""
 
     }
 

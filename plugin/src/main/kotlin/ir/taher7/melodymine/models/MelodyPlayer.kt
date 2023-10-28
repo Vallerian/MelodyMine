@@ -16,6 +16,8 @@ data class MelodyPlayer(
     @Expose var adminMode: Boolean = false,
     @Expose var isMute: Boolean = false,
     @Expose var isToggle: Boolean = false,
+    @Expose var isSelfMute: Boolean = true,
+    @Expose var isDeafen: Boolean = true,
     @Expose(deserialize = false) var isSendOffer: ArrayList<String> = arrayListOf(),
 ) {
 
@@ -24,6 +26,19 @@ data class MelodyPlayer(
         isActiveVoice = player.isActiveVoice
         verifyCode = player.verifyCode
         webIsOnline = player.webIsOnline
+    }
+
+    fun updateControl(control: MelodyControl) {
+        when (control.type) {
+            "mic" -> {
+                isSelfMute = control.value
+            }
+
+            "sound" -> {
+                isDeafen = control.value
+            }
+            else -> {}
+        }
     }
 
 }

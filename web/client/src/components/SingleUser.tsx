@@ -1,5 +1,5 @@
 "use client"
-import {IOnlineUsers} from "@/interfaces";
+import {IOnlineUsers, IReceiveControl} from "@/interfaces";
 import Image from "next/image";
 import {usePeersStore} from "@/store/PeersStore";
 import {useEffect, useRef, useState} from "react";
@@ -9,12 +9,14 @@ import {useVolumeStore} from "@/store/VolumeStore";
 import {BsFillMicFill, BsFillMicMuteFill} from "react-icons/bs";
 import {useUserStore} from "@/store/UserStore";
 import {useControlStore} from "@/store/ControlStore";
-import {BiSolidRightArrow, BiSolidUserVoice} from "react-icons/bi";
+import {BiSolidRightArrow, BiSolidUserVoice, BiSolidVolumeMute} from "react-icons/bi";
 import {RiVoiceprintFill} from "react-icons/ri";
 import {ImUserTie} from "react-icons/im";
+import {useSocketStore} from "@/store/SocketStore";
+import {decrypt} from "@/utils";
 
-const SingleUser = ({user, audioContext}: { user: IOnlineUsers, audioContext: AudioContext }) => {
-
+const SingleUser = ({user}: { user: IOnlineUsers }) => {
+    const {socket} = useSocketStore(state => state)
     const {isAdminMode, uuid, server, serverIsOnline, isActiveVoice} = useUserStore(state => state)
     const {peers} = usePeersStore(state => state)
     const {setUserMute, muteUsers} = useControlStore(state => state)
@@ -26,6 +28,34 @@ const SingleUser = ({user, audioContext}: { user: IOnlineUsers, audioContext: Au
     const [instant, setInstant] = useState(0.00)
     const [isUserMute, setIsUserMute] = useState<boolean>(false)
     const [voiceBack, setVoiceBack] = useState<boolean>(false)
+    const [isSelfMute, setIsSelfMute] = useState<boolean>(true)
+    const [isDeafen, setIsDeafen] = useState<boolean>(true)
+
+    useEffect(() => {
+        if (!uuid) return
+        socket?.on("onPlayerChangeControlReceive", (token: string) => {
+            const data = decrypt(token) as IReceiveControl
+            if (data.uuid == user.uuid) {
+                if (data.type == "mic") {
+                    setIsSelfMute(data.value)
+                } else {
+                    setIsDeafen(data.value)
+                }
+            }
+        })
+
+        socket?.on("onSetControlPluginReceive", (token: string) => {
+            const data = decrypt(token) as IReceiveControl
+            if (data.uuid == user.uuid && data.uuid != uuid) {
+                if (data.type == "mic") {
+                    setIsSelfMute(data.value)
+                } else {
+                    setIsDeafen(data.value)
+                }
+            }
+        })
+
+    }, [socket, uuid])
 
     useEffect(() => {
         if (user.uuid != uuid) {
@@ -51,7 +81,7 @@ const SingleUser = ({user, audioContext}: { user: IOnlineUsers, audioContext: Au
     useEffect(() => {
         let interval: any
         let soundMaster: any
-
+        const audioContext = new AudioContext()
         if (userStream) {
             soundMaster = new SoundMeter(audioContext)
             soundMaster.connectToSource(userStream, (event: any) => {
@@ -159,13 +189,37 @@ const SingleUser = ({user, audioContext}: { user: IOnlineUsers, audioContext: Au
                             <BiSolidRightArrow/>
                             {user.server}
                         </span>
-                        {user.uuid != uuid ? (
-                            <span
-                                className={`cursor-pointer ${isUserMute ? "text-red-500" : "text-neutral-400"} flex gap-1 justify-center text-sm items-center px-1 rounded ring-1 ${isUserMute ? "ring-red-700" : "ring-neutral-700"} shadow ${isUserMute ? "shadow-red-600" : "shadow-neutral-600"}`}
-                                onClick={() => {
-                                    if (uuid != user.uuid) setUserMute(user.uuid!, !isUserMute)
-                                }}
-                            >
+                        <div className="flex items-center gap-1">
+                            <div className="flex items-center">
+                                {!isSelfMute ? (
+                                    <div className="self-center">
+                                        <span
+                                            className="whitespace-nowrap text-sm font-medium mr-2 rounded dark:text-neutral-400 flex">
+                                            <span className="self-center hidden sm:block">
+                                                <BsFillMicMuteFill/>
+                                            </span>
+                                        </span>
+                                    </div>
+                                ) : ""}
+
+                                {!isDeafen ? (
+                                    <div className="self-center">
+                                        <span
+                                            className="whitespace-nowrap text-sm font-medium mr-2 rounded dark:text-neutral-400 flex">
+                                            <span className="self-center hidden sm:block">
+                                                <BiSolidVolumeMute/>
+                                            </span>
+                                        </span>
+                                    </div>
+                                ) : ""}
+                            </div>
+                            {user.uuid != uuid ? (
+                                <span
+                                    className={`cursor-pointer ${isUserMute ? "text-red-500" : "text-neutral-400"} flex gap-1 justify-center text-sm items-center px-1 rounded ring-1 ${isUserMute ? "ring-red-700" : "ring-neutral-700"} shadow ${isUserMute ? "shadow-red-600" : "shadow-neutral-600"}`}
+                                    onClick={() => {
+                                        if (uuid != user.uuid) setUserMute(user.uuid!, !isUserMute)
+                                    }}
+                                >
                                 {isUserMute ? (<>
                                     <BsFillMicFill/>
                                     UnMute
@@ -174,16 +228,17 @@ const SingleUser = ({user, audioContext}: { user: IOnlineUsers, audioContext: Au
                                     Mute
                                 </>)}
                         </span>
-                        ) : ""}
-                        {user.uuid == uuid ? (
-                            <span
-                                className={`cursor-pointer ${voiceBack ? "text-green-400" : "text-neutral-400"} flex gap-1 justify-center text-sm items-center px-1 rounded ring-1 ${voiceBack ? "ring-green-700" : "ring-neutral-700"} shadow ${voiceBack ? "shadow-green-600" : "shadow-neutral-600"}`}
-                                onClick={() => setVoiceBack(!voiceBack)}
-                            >
+                            ) : ""}
+                            {user.uuid == uuid ? (
+                                <span
+                                    className={`cursor-pointer ${voiceBack ? "text-green-400" : "text-neutral-400"} flex gap-1 justify-center text-sm items-center px-1 rounded ring-1 ${voiceBack ? "ring-green-700" : "ring-neutral-700"} shadow ${voiceBack ? "shadow-green-600" : "shadow-neutral-600"}`}
+                                    onClick={() => setVoiceBack(!voiceBack)}
+                                >
                             <RiVoiceprintFill/>
                             Voice Back
                         </span>
-                        ) : ""}
+                            ) : ""}
+                        </div>
                     </div>
                 </div>
                 <div className="relative ml-auto mb-auto">

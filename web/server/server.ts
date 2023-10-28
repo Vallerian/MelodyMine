@@ -113,8 +113,6 @@ io.on("connection", async (socket: CustomSocket) => {
         io.to(data.socketID).emit("onSetVolumeReceive", {
             uuid: data.uuid,
             volume: data.volume,
-            selfLocation: data.selfLocation,
-            targetLocation: data.targetLocation
         })
     })
 
@@ -143,7 +141,19 @@ io.on("connection", async (socket: CustomSocket) => {
     })
 
 
+    socket.on("onSetControlPlugin", data => {
+        socket.to("web").emit("onSetControlPluginReceive", encrypt(data))
+    })
+
+
     // Web Listeners
+    socket.on("onPlayerChangeControl", token => {
+        const data = decrypt(token)
+        socket.to("web").emit("onPlayerChangeControlReceive", encrypt(data))
+        socket.to("plugin").emit("onPlayerChangeControlReceive", data)
+
+    })
+
     socket.on("onPlayerJoin", async (token: string) => {
         const data = decrypt(token) as IClient
         try {
@@ -201,7 +211,7 @@ io.on("connection", async (socket: CustomSocket) => {
                 server: result.server,
                 isMute: result.isMute
             }))
-            socket.to("plugin").emit("onPlayerStartVoiceWeb", result)
+            socket.to("plugin").emit("onPlayerStartVoiceWeb", {...result, isActiveVoice: true})
         } catch (ex) {
             console.log(ex)
         }
@@ -265,7 +275,7 @@ io.on("connection", async (socket: CustomSocket) => {
                 data: {isActiveVoice: false}
             })
             socket.broadcast.except("plugin").emit("onNewPlayerLeave", encrypt(data))
-            socket.to("plugin").emit("onPlayerEndVoiceWeb", result)
+            socket.to("plugin").emit("onPlayerEndVoiceWeb", {...result, isActiveVoice: false})
         } catch (ex) {
             console.log(ex)
         }
