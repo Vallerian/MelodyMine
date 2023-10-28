@@ -12,13 +12,14 @@ import {useOnlineUsersStore} from "@/store/OnlineUsersStore";
 import {usePeersStore} from "@/store/PeersStore";
 import {useLoadingStore} from "@/store/LoadingStore";
 import Progress from "@/components/Porgress/Progress";
-import {encrypt} from "@/utils";
+import {decrypt, encrypt} from "@/utils";
 import {MdOutlineNoiseAware} from "react-icons/md";
 import {useControlStore} from "@/store/ControlStore";
+import {IReceiveControl} from "@/interfaces";
 
 const SoundControl = () => {
 
-    const user = useUserStore(state => state)
+    const {uuid, name, server, changeUserAdminMode, changeActiveVoice} = useUserStore(state => state)
     const {socket} = useSocketStore(state => state)
     const {removeUser, setAdminModeAll} = useOnlineUsersStore(state => state)
     const {removeAll} = usePeersStore(state => state)
@@ -63,6 +64,20 @@ const SoundControl = () => {
 
     }, [stream])
 
+    useEffect(() => {
+        if (!uuid) return
+        socket?.on("onSetControlPluginReceive", (token: string) => {
+            const data = decrypt(token) as IReceiveControl
+            if (data.uuid == uuid) {
+                if (data.type == "mic") {
+                    setMicActive(data.value, true)
+                } else {
+                    setSoundActive(data.value, true)
+                }
+            }
+        })
+
+    }, [socket, uuid])
 
     const handleToggle = (type: "mic" | "sound") => {
         type === "mic" ? setMicActive(!micIsActive) : setSoundActive(!soundIsActive)
@@ -71,15 +86,15 @@ const SoundControl = () => {
     const handleCloseConnection = () => {
         setValidate(false)
         closeStream()
-        removeUser(user.uuid)
+        removeUser(uuid)
         removeAll()
         setAdminModeAll()
-        user.changeUserAdminMode(false)
-        user.changeActiveVoice(false)
+        changeUserAdminMode(false)
+        changeActiveVoice(false)
         socket?.emit("onPlayerEndVoice", encrypt({
-            name: user.name,
-            uuid: user.uuid,
-            server: user.server,
+            name: name,
+            uuid: uuid,
+            server: server,
         }))
 
         setStartButton()

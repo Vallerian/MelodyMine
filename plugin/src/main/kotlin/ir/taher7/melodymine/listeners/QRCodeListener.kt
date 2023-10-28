@@ -9,7 +9,7 @@ import org.bukkit.event.inventory.*
 import org.bukkit.event.player.*
 
 
-class QRCodeListeners : Listener {
+class QRCodeListener : Listener {
 
     @EventHandler
     fun onPlayerJoin(event: PlayerJoinEvent) {

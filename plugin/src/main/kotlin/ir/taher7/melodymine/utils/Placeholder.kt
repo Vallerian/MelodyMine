@@ -61,6 +61,26 @@ class Placeholder : PlaceholderExpansion() {
                 return Storage.placeholderVoiceActiveFalse
             }
 
+
+            "self_mute" -> {
+                if (!melodyPlayer.isActiveVoice || !melodyPlayer.isSelfMute) return Storage.placeholderSelfMute
+                return Storage.placeholderSelfUnMute
+            }
+
+            "deafen" -> {
+                if (!melodyPlayer.isActiveVoice && !melodyPlayer.isSelfMute) return Storage.placeholderDeafen
+                return Storage.placeholderUnDeafen
+            }
+
+            "control" -> {
+                if (!melodyPlayer.isActiveVoice) return "${Storage.placeholderDeafen}${Storage.placeholderSelfMute}"
+                if (!melodyPlayer.isSelfMute && !melodyPlayer.isDeafen) return "${Storage.placeholderDeafen} ${Storage.placeholderSelfMute}"
+                if (!melodyPlayer.isDeafen) return Storage.placeholderDeafen
+                if (!melodyPlayer.isSelfMute) return Storage.placeholderSelfMute
+                return "${Storage.placeholderUnDeafen}${Storage.placeholderSelfUnMute}"
+
+            }
+
             else -> {}
         }
         return null

@@ -5,7 +5,9 @@ import ir.taher7.melodymine.commands.SubCommand
 import ir.taher7.melodymine.models.MelodyPlayer
 import ir.taher7.melodymine.storage.Storage
 import ir.taher7.melodymine.utils.AdventureUtils.sendMessage
+import ir.taher7.melodymine.utils.AdventureUtils.showTitle
 import ir.taher7.melodymine.utils.AdventureUtils.toComponent
+import net.kyori.adventure.title.Title
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
@@ -18,6 +20,7 @@ import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import org.bukkit.scheduler.BukkitRunnable
 import java.io.IOException
+import java.time.Duration
 import kotlin.random.Random
 
 
@@ -60,16 +63,30 @@ object Utils {
 
     fun forceVoice(player: MelodyPlayer) {
         if (!Storage.forceVoice || player.isActiveVoice || player.player?.hasPermission("melodymine.force") == true) return
+        if (Storage.forceVoiceTitle) {
+            player.player?.showTitle(
+                Title.title(
+                    Storage.forceVoiceTitleMessage.toComponent(),
+                    Storage.forceVoiceSubtitleMessage.toComponent(),
+                    Title.Times.times(
+                        Duration.ofMillis(100),
+                        Duration.ofDays(365),
+                        Duration.ofMillis(100)
+                    )
+                )
+            )
+        }
         object : BukkitRunnable() {
             override fun run() {
-                if (player.isActiveVoice || !Storage.forceVoice || player.player?.hasPermission("melodymine.force") == true) {
+                if (!Storage.forceVoice || player.isActiveVoice || player.player?.hasPermission("melodymine.force") == true) {
+                    player.player?.resetTitle()
                     cancel()
                     return
                 }
-
+                player.player?.sendMessage(Storage.forceVoiceMessage.toComponent())
                 object : BukkitRunnable() {
                     override fun run() {
-                        if (player.isActiveVoice || !Storage.forceVoice || player.player?.hasPermission("melodymine.force") == true) {
+                        if (!Storage.forceVoice || player.isActiveVoice || player.player?.hasPermission("melodymine.force") == true) {
                             player.player?.removePotionEffect(PotionEffectType.BLINDNESS)
                             cancel()
                             return
@@ -77,8 +94,6 @@ object Utils {
                         player.player?.addPotionEffect(PotionEffect(PotionEffectType.BLINDNESS, 200, 1))
                     }
                 }.runTaskTimer(MelodyMine.instance, 0L, 10L)
-
-                player.player?.sendMessage("<click:run_command:'/melodymine start'><hover:show_text:'<hover_text>Click to run this command <i>/melodymine start</i>'><prefix>You must active your voice chat. do <i>/melodymine start</i></hover></click>".toComponent())
             }
         }.runTaskTimer(MelodyMine.instance, 0L, 300L)
     }

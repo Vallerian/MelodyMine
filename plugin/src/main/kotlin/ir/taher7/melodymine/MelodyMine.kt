@@ -4,8 +4,10 @@ import ir.taher7.melodymine.commands.CommandManager
 import ir.taher7.melodymine.commands.TabCompletionManager
 import ir.taher7.melodymine.database.Database
 import ir.taher7.melodymine.listeners.MelodyMineListener
-import ir.taher7.melodymine.listeners.QRCodeListeners
+import ir.taher7.melodymine.listeners.QRCodeListener
+import ir.taher7.melodymine.listeners.ShortcutListener
 import ir.taher7.melodymine.services.Websocket
+import ir.taher7.melodymine.services.WebsocketRenewData
 import ir.taher7.melodymine.utils.Placeholder
 import ir.taher7.melodymine.utils.Utils
 import org.bstats.bukkit.Metrics
@@ -22,10 +24,12 @@ class MelodyMine : JavaPlugin() {
         saveDefaultConfig()
         Database.resetDate()
         Websocket.connect()
+        WebsocketRenewData()
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) Placeholder().register()
 
         server.pluginManager.registerEvents(MelodyMineListener(), this)
-        server.pluginManager.registerEvents(QRCodeListeners(), this)
+        server.pluginManager.registerEvents(QRCodeListener(), this)
+        server.pluginManager.registerEvents(ShortcutListener(), this)
 
         getCommand("melodymine")?.setExecutor(CommandManager())
         getCommand("melodymine")?.tabCompleter = TabCompletionManager()

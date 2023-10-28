@@ -45,5 +45,8 @@ permissions:
     description: ignore force join voice
     default: false
   melodymine.qrcode:
-    description: can get qrcode
+    description: player can get the qrcode
+    default: true
+  melodymine.control:
+    description: player can change mute / deafen in website
     default: true

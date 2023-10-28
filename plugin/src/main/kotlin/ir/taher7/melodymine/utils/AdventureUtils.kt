@@ -8,6 +8,7 @@ import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.MiniMessage
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
+import net.kyori.adventure.title.Title
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
@@ -49,6 +50,10 @@ object AdventureUtils {
 
     fun String.toComponent(vararg placeholders: TagResolver): Component {
         return miniMessage.deserialize(this, *placeholders)
+    }
+
+    fun Player.showTitle(title: Title) {
+        audience.sender(this).showTitle(title)
     }
 
 }

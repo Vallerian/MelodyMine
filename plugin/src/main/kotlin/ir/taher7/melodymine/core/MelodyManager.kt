@@ -3,6 +3,7 @@ package ir.taher7.melodymine.core
 import ir.taher7.melodymine.MelodyMine
 import ir.taher7.melodymine.api.events.*
 import ir.taher7.melodymine.database.Database
+import ir.taher7.melodymine.models.MelodyPlayer
 import ir.taher7.melodymine.services.Websocket
 import ir.taher7.melodymine.storage.Storage
 import ir.taher7.melodymine.utils.AdventureUtils.sendMessage
@@ -11,7 +12,6 @@ import ir.taher7.melodymine.utils.QRCodeRenderer
 import ir.taher7.melodymine.utils.Utils
 import net.glxn.qrgen.javase.QRCode
 import org.bukkit.Bukkit
-import org.bukkit.Location
 import org.bukkit.entity.Player
 import org.bukkit.scheduler.BukkitRunnable
 
@@ -150,7 +150,6 @@ object MelodyManager {
 
         Websocket.socket.emit(
             "onEnableVoicePlugin", mapOf(
-                "name" to playerName,
                 "uuid" to playerUuid,
                 "server" to playerServer,
                 "socketID" to targetSocketID
@@ -174,7 +173,6 @@ object MelodyManager {
 
         Websocket.socket.emit(
             "onDisableVoicePlugin", mapOf(
-                "name" to playerName,
                 "uuid" to playerUuid,
                 "server" to playerServer,
                 "socketID" to targetSocketID
@@ -195,35 +193,60 @@ object MelodyManager {
         playerUuid: String,
         volume: Double,
         targetSocketID: String,
-        playerLocation: Location,
-        targetLocation: Location,
     ) {
         val preSetVolumeEvent = PreSetVolumeEvent(playerUuid, volume, targetSocketID)
         Bukkit.getServer().pluginManager.callEvent(preSetVolumeEvent)
         if (preSetVolumeEvent.isCancelled) return
 
         Websocket.socket.emit(
-            "onSetVolumePlugin", mapOf(
+            "onSetVolumePlugin",
+            mapOf(
                 "uuid" to playerUuid,
                 "volume" to volume,
                 "socketID" to targetSocketID,
-                "selfLocation" to mapOf(
-                    "yaw" to targetLocation.yaw,
-                    "pitch" to targetLocation.pitch,
-                    "x" to targetLocation.x,
-                    "y" to targetLocation.y,
-                    "z" to targetLocation.z,
-                ),
-                "targetLocation" to mapOf(
-                    "yaw" to playerLocation.yaw,
-                    "pitch" to playerLocation.pitch,
-                    "x" to playerLocation.x,
-                    "y" to playerLocation.y,
-                    "z" to playerLocation.z,
-                )
             )
         )
 
         Bukkit.getServer().pluginManager.callEvent(PostSetVolumeEvent(playerUuid, volume, targetSocketID))
+    }
+
+    fun setPlayerSelfMute(melodyPlayer: MelodyPlayer, value: Boolean) {
+        val prePlayerSetSelfMuteEvent = PrePlayerSetSelfMuteEvent(melodyPlayer, value)
+        Bukkit.getServer().pluginManager.callEvent(prePlayerSetSelfMuteEvent)
+        if (prePlayerSetSelfMuteEvent.isCancelled) return
+
+        melodyPlayer.isSelfMute = value
+        Websocket.socket.emit(
+            "onSetControlPlugin",
+            mapOf(
+                "name" to melodyPlayer.name,
+                "uuid" to melodyPlayer.uuid,
+                "type" to "mic",
+                "server" to melodyPlayer.server,
+                "value" to value,
+            )
+        )
+
+        Bukkit.getServer().pluginManager.callEvent(PostPlayerSetSelfMuteEvent(melodyPlayer, value))
+    }
+
+    fun setPlayerDeafen(melodyPlayer: MelodyPlayer, value: Boolean) {
+        val prePlayerSetDeafenEvent = PrePlayerSetDeafenEvent(melodyPlayer, value)
+        Bukkit.getServer().pluginManager.callEvent(prePlayerSetDeafenEvent)
+        if (prePlayerSetDeafenEvent.isCancelled) return
+
+        melodyPlayer.isDeafen = value
+        Websocket.socket.emit(
+            "onSetControlPlugin",
+            mapOf(
+                "name" to melodyPlayer.name,
+                "uuid" to melodyPlayer.uuid,
+                "type" to "sound",
+                "server" to melodyPlayer.server,
+                "value" to value,
+            )
+        )
+
+        Bukkit.getServer().pluginManager.callEvent(PostPlayerSetDeafenEvent(melodyPlayer, value))
     }
 }

@@ -31,18 +31,13 @@ export interface IPeer {
 export interface IVolume {
     uuid: string
     volume: string
-    selfLocation?: {
-        yaw: number
-        pitch: number
-        x: number
-        y: number
-        z: number
-    }
-    targetLocation?: {
-        yaw: number
-        pitch: number
-        x: number
-        y: number
-        z: number
-    }
+}
+
+
+export interface IReceiveControl {
+    name: string
+    uuid: string
+    server: string
+    type: "mic" | "sound"
+    value: boolean
 }
