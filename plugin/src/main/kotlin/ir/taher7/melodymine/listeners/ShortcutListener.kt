@@ -35,7 +35,7 @@ class ShortcutListener : Listener {
         if (!melodyPlayer.webIsOnline || !melodyPlayer.isActiveVoice) return
         if (!Storage.playerMuteShortcut.contains(event.player.uniqueId)) return
         if (coolDown.containsKey(player.uniqueId) && (System.currentTimeMillis() - coolDown[player.uniqueId]!!) <= 5000) {
-            player.sendMessage("<prefix>You can toggle after <count_color>${((5000 - (System.currentTimeMillis() - coolDown[player.uniqueId]!!)) / 1000)}</count_color> second.".toComponent())
+            player.sendMessage("<prefix>You can toggle after <count_color>${((5000 - (System.currentTimeMillis() - coolDown[player.uniqueId]!!)) / 1000)}<text> second.".toComponent())
             return
         }
         MelodyManager.setPlayerSelfMute(melodyPlayer, !melodyPlayer.isSelfMute)

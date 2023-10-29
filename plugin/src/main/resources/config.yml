@@ -41,7 +41,7 @@ mute-toggle-shortcut: true
 prefix: "<gradient:#FFF4E4:#DDB216>MelodyMine</gradient> <#FFF4E4><bold>|</bold> <text>"
 text: "<gradient:#F04FE7:#FFF4E4>"
 text_hover: "<gradient:#F04FE7:#DDB216>"
-count_color: " <#DDB216>"
+count_color: "<#DDB216>"
 
 # open website link message.
 website-message: "Click to open website and start voice chat."

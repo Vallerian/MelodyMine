@@ -83,7 +83,7 @@ object Utils {
                     clearForceVoice(player.player!!)
                     cancel()
                 } else {
-                    player.player?.addPotionEffect(PotionEffect(PotionEffectType.BLINDNESS, 200, 1))
+                    player.player?.addPotionEffect(PotionEffect(PotionEffectType.BLINDNESS, 500, 1))
                     MelodyManager.sendStartLink(player.player!!)
                 }
             }
