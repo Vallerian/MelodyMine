@@ -24,6 +24,7 @@ MelodyMine is a revolutionary system for Minecraft servers where players can sim
 
 ## Key Features 🌟
 
+
 <img style="margin-bottom:10px;border-radius: 5px" src="https://media.discordapp.net/attachments/1159034838783893567/1168283125206491167/image.png?ex=65513372&is=653ebe72&hm=cbaca1b0fdb1352d38c2337587ed6ba9665998d271266cedf3108c0cb6f16b24&="/>
 
 - 🗣️ **Admin Mode:** Admins can communicate with players across the entire server and listen to their conversations, even from a distance. Maintain control and ensure a safe environment. 🔊🔒
