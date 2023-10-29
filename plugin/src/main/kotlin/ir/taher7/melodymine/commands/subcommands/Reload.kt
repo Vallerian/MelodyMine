@@ -2,9 +2,9 @@ package ir.taher7.melodymine.commands.subcommands
 
 import ir.taher7.melodymine.commands.SubCommand
 import ir.taher7.melodymine.storage.Storage
-import ir.taher7.melodymine.utils.AdventureUtils
-import ir.taher7.melodymine.utils.AdventureUtils.sendMessage
-import ir.taher7.melodymine.utils.AdventureUtils.toComponent
+import ir.taher7.melodymine.utils.Adventure
+import ir.taher7.melodymine.utils.Adventure.sendMessage
+import ir.taher7.melodymine.utils.Adventure.toComponent
 import org.bukkit.entity.Player
 
 class Reload : SubCommand() {
@@ -15,8 +15,8 @@ class Reload : SubCommand() {
 
     override fun handler(player: Player, args: Array<out String>) {
         Storage.reload()
-        AdventureUtils.initMiniMessage()
-        player.sendMessage("<prefix>Plugin has been successfully reload.</gradient>".toComponent())
+        Adventure.initMiniMessage()
+        player.sendMessage("<prefix>Plugin has been successfully reload.".toComponent())
     }
 
 }

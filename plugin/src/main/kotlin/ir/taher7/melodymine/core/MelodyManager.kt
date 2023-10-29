@@ -6,8 +6,8 @@ import ir.taher7.melodymine.database.Database
 import ir.taher7.melodymine.models.MelodyPlayer
 import ir.taher7.melodymine.services.Websocket
 import ir.taher7.melodymine.storage.Storage
-import ir.taher7.melodymine.utils.AdventureUtils.sendMessage
-import ir.taher7.melodymine.utils.AdventureUtils.toComponent
+import ir.taher7.melodymine.utils.Adventure.sendMessage
+import ir.taher7.melodymine.utils.Adventure.toComponent
 import ir.taher7.melodymine.utils.QRCodeRenderer
 import ir.taher7.melodymine.utils.Utils
 import net.glxn.qrgen.javase.QRCode
@@ -55,7 +55,7 @@ object MelodyManager {
 
     fun sendStartLink(player: Player) {
         Database.getVerifyCode(player) { result ->
-            player.sendMessage("<click:open_url:'${Storage.website}/login?verifyCode=${result}'><hover:show_text:'<hover_text>Click to open'><prefix>${Storage.websiteMessage}</hover></click>".toComponent())
+            player.sendMessage("<click:open_url:'${Storage.website}/login?verifyCode=${result}'><hover:show_text:'<text_hover>Click to open'><prefix>${Storage.websiteMessage}</hover></click>".toComponent())
         }
     }
 

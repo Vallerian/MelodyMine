@@ -27,6 +27,9 @@ object Storage {
 
     // messages
     lateinit var prefix: String
+    lateinit var text: String
+    lateinit var textHover: String
+    lateinit var count_color: String
     lateinit var websiteMessage: String
 
     // logger messages
@@ -41,6 +44,8 @@ object Storage {
     lateinit var startDescription: String
     lateinit var muteDescription: String
     lateinit var unmuteDescription: String
+    lateinit var toggleDescription: String
+    lateinit var controlDescription: String
 
     // placeholder messages
     lateinit var placeholderWebOnlineTrue: String
@@ -68,7 +73,6 @@ object Storage {
     lateinit var leaveEndType: String
 
     // force voice
-    lateinit var forceVoiceMessage: String
     var forceVoiceTitle: Boolean = true
     lateinit var forceVoiceTitleMessage: String
     lateinit var forceVoiceSubtitleMessage: String
@@ -117,6 +121,10 @@ object Storage {
         forceVoice = config.getBoolean("force-voice")
 
         prefix = config.getString("prefix") ?: ""
+        text = config.getString("text") ?: ""
+        textHover = config.getString("text_hover") ?: ""
+        count_color = config.getString("count_color") ?: ""
+
         websiteMessage = config.getString("website-message") ?: ""
 
         websiteJoinLogger = config.getString("website-join-logger") ?: ""
@@ -129,6 +137,8 @@ object Storage {
         startDescription = config.getString("start-description") ?: ""
         muteDescription = config.getString("mute-description") ?: ""
         unmuteDescription = config.getString("unmute-description") ?: ""
+        toggleDescription = config.getString("toggle-description") ?: ""
+        controlDescription = config.getString("control-description") ?: ""
 
         placeholderWebOnlineTrue = config.getString("placeholder-web-online-true") ?: ""
         placeholderWebOnlineFalse = config.getString("placeholder-web-online-false") ?: ""
@@ -153,7 +163,6 @@ object Storage {
         startVoiceType = config.getString("start-voice-message-type") ?: ""
         leaveEndType = config.getString("end-voice-message-type") ?: ""
 
-        forceVoiceMessage = config.getString("force-voice-message") ?: ""
         forceVoiceTitle = config.getBoolean("force-voice-title")
         forceVoiceTitleMessage = config.getString("force-voice-title-message") ?: ""
         forceVoiceSubtitleMessage = config.getString("force-voice-subtitle-message") ?: ""

@@ -7,9 +7,9 @@ import ir.taher7.melodymine.api.events.*
 import ir.taher7.melodymine.models.MelodyControl
 import ir.taher7.melodymine.models.MelodyPlayer
 import ir.taher7.melodymine.storage.Storage
-import ir.taher7.melodymine.utils.AdventureUtils.sendActionbar
-import ir.taher7.melodymine.utils.AdventureUtils.sendMessage
-import ir.taher7.melodymine.utils.AdventureUtils.toComponent
+import ir.taher7.melodymine.utils.Adventure.sendActionbar
+import ir.taher7.melodymine.utils.Adventure.sendMessage
+import ir.taher7.melodymine.utils.Adventure.toComponent
 import ir.taher7.melodymine.utils.Utils
 import org.bukkit.Bukkit
 import org.bukkit.scheduler.BukkitRunnable
@@ -139,7 +139,9 @@ class SocketListener(private val socket: Socket) {
 
                     else -> {}
                 }
-                player.resetTitle()
+                if (Storage.forceVoice && !player.hasPermission("melodymine.force")) {
+                    Utils.clearForceVoice(player)
+                }
             }
             object : BukkitRunnable() {
                 override fun run() {
