@@ -10,10 +10,8 @@ import {useValidateStore} from "@/store/ValidateStore";
 import {IUser} from "@/interfaces";
 import {BsFillMicMuteFill, BsFillPeopleFill} from "react-icons/bs";
 import {useOnlineUsersStore} from "@/store/OnlineUsersStore";
-import {useEffect, useState} from "react";
+import {useEffect} from "react";
 import {ImUserTie} from "react-icons/im";
-import {decrypt} from "@/utils";
-import {useSocketStore} from "@/store/SocketStore";
 
 
 interface UserInfoProps {
@@ -23,60 +21,15 @@ interface UserInfoProps {
 }
 
 const UserInfo = ({user, websocketKey, iceServers}: UserInfoProps) => {
-    const {socket} = useSocketStore(state => state)
-    const {uuid, server, setSecretKey, setIceServers} = useUserStore(state => state)
+    const { server, setSecretKey, setIceServers, isAdminMode, isMute} = useUserStore(state => state)
     const {isValidate} = useValidateStore(state => state)
     const {users} = useOnlineUsersStore(state => state)
     const {status} = useSession()
-    const [isAdminMode, setIsAdminMode] = useState<boolean>(false)
-    const [isMute, setIsMute] = useState<boolean>()
+
     useEffect(() => {
         setSecretKey(websocketKey!!)
         setIceServers(iceServers!!)
-        setIsMute(isMute)
     }, [])
-
-    useEffect(() => {
-        if (!uuid) return
-        socket?.on("onAdminModeEnableReceive", (token: string) => {
-            const data = decrypt(token) as {
-                uuid: string,
-                server: string
-            }
-            if (data.uuid == uuid) {
-                setIsAdminMode(true)
-            }
-        })
-
-        socket?.on("onAdminModeDisableReceive", (token: string) => {
-            const data = decrypt(token) as {
-                uuid: string
-            }
-            if (data.uuid == uuid) {
-                setIsAdminMode(false)
-            }
-        })
-
-
-        socket?.on("onPlayerMuteReceive", (token: string) => {
-            const data = decrypt(token) as {
-                uuid: string
-            }
-            if (data.uuid == uuid) {
-                setIsMute(true)
-            }
-        })
-
-        socket?.on("onPlayerUnmuteReceive", (token: string) => {
-            const data = decrypt(token) as {
-                uuid: string
-            }
-            if (data.uuid == uuid) {
-                setIsMute(false)
-            }
-        })
-
-    }, [socket, uuid])
 
     return (
         <div className="flex flex-col rounded px-3 py-1 bg-custom shadow-xl w-full">
