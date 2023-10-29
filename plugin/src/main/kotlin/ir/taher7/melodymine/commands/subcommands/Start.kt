@@ -3,8 +3,8 @@ package ir.taher7.melodymine.commands.subcommands
 import ir.taher7.melodymine.commands.SubCommand
 import ir.taher7.melodymine.core.MelodyManager
 import ir.taher7.melodymine.storage.Storage
-import ir.taher7.melodymine.utils.AdventureUtils.sendMessage
-import ir.taher7.melodymine.utils.AdventureUtils.toComponent
+import ir.taher7.melodymine.utils.Adventure.sendMessage
+import ir.taher7.melodymine.utils.Adventure.toComponent
 import org.bukkit.entity.Player
 import java.util.*
 
@@ -14,13 +14,13 @@ class Start : SubCommand() {
 
     override var name = "start"
     override var description = Storage.startDescription
-    override var syntax = "/melodymine start <link | qrcode>"
+    override var syntax = "/melodymine start"
     override var permission = "melodymine.start"
 
     override fun handler(player: Player, args: Array<out String>) {
 
         if (coolDown.containsKey(player.uniqueId) && (System.currentTimeMillis() - coolDown[player.uniqueId]!!) <= 5000) {
-            player.sendMessage("<prefix>You can use this command after <#DDB216>${((5000 - (System.currentTimeMillis() - coolDown[player.uniqueId]!!)) / 1000)}</#DDB216> second.".toComponent())
+            player.sendMessage("<prefix>You can use this command after <count_color>${((5000 - (System.currentTimeMillis() - coolDown[player.uniqueId]!!)) / 1000)}<count_color> second.".toComponent())
             return
         }
         when (args.size) {
@@ -63,7 +63,7 @@ class Start : SubCommand() {
     }
 
     private fun sendStartHelpMessage(player: Player) {
-        player.sendMessage("<click:run_command:'/melodymine start link'><hover:show_text:'<hover_text>Click to run this command <i>/melodymine start link</i>'><prefix>Use: <i>/melodymine start link</i> (PC)</hover></click>".toComponent())
-        player.sendMessage("<click:run_command:'/melodymine start qrcode'><hover:show_text:'<hover_text>Click to run this command <i>/melodymine start qrcode</i>'><prefix>Use: <i>/melodymine start qrcode</i> (Phone)</hover></click>".toComponent())
+        player.sendMessage("<click:run_command:'/melodymine start link'><hover:show_text:'<text_hover>Click to run this command <i>/melodymine start link</i>'><prefix>Use: <i>/melodymine start link</i> (PC)</hover></click>".toComponent())
+        player.sendMessage("<click:run_command:'/melodymine start qrcode'><hover:show_text:'<text_hover>Click to run this command <i>/melodymine start qrcode</i>'><prefix>Use: <i>/melodymine start qrcode</i> (Phone)</hover></click>".toComponent())
     }
 }

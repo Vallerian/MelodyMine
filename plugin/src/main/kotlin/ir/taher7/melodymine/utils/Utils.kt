@@ -2,11 +2,12 @@ package ir.taher7.melodymine.utils
 
 import ir.taher7.melodymine.MelodyMine
 import ir.taher7.melodymine.commands.SubCommand
+import ir.taher7.melodymine.core.MelodyManager
 import ir.taher7.melodymine.models.MelodyPlayer
 import ir.taher7.melodymine.storage.Storage
-import ir.taher7.melodymine.utils.AdventureUtils.sendMessage
-import ir.taher7.melodymine.utils.AdventureUtils.showTitle
-import ir.taher7.melodymine.utils.AdventureUtils.toComponent
+import ir.taher7.melodymine.utils.Adventure.sendMessage
+import ir.taher7.melodymine.utils.Adventure.showTitle
+import ir.taher7.melodymine.utils.Adventure.toComponent
 import net.kyori.adventure.title.Title
 import org.bukkit.ChatColor
 import org.bukkit.Material
@@ -44,7 +45,7 @@ object Utils {
         player.sendMessage("")
         Storage.subCommands.forEach { subCommand: SubCommand ->
             if (player.hasPermission(subCommand.permission)) {
-                player.sendMessage("<click:run_command:'${subCommand.syntax}'><hover:show_text:'<hover_text>Click to run this command <i>${subCommand.syntax}</i>'><text_prefix>${subCommand.syntax}</gradient> <#FFF4E4><bold>|</bold> <text>${subCommand.description}</hover></click>".toComponent())
+                player.sendMessage("<click:run_command:'${subCommand.syntax}'><hover:show_text:'<text_hover>Click to run this command <i>${subCommand.syntax}</i>'>${subCommand.syntax}</text_hover> <#FFF4E4><bold>|</bold> <text>${subCommand.description}</hover></click>".toComponent())
             }
         }
         player.sendMessage("")
@@ -79,23 +80,23 @@ object Utils {
         object : BukkitRunnable() {
             override fun run() {
                 if (!Storage.forceVoice || player.isActiveVoice || player.player?.hasPermission("melodymine.force") == true) {
-                    player.player?.resetTitle()
+                    clearForceVoice(player.player!!)
                     cancel()
-                    return
+                } else {
+                    player.player?.addPotionEffect(PotionEffect(PotionEffectType.BLINDNESS, 200, 1))
+                    MelodyManager.sendStartLink(player.player!!)
                 }
-                player.player?.sendMessage(Storage.forceVoiceMessage.toComponent())
-                object : BukkitRunnable() {
-                    override fun run() {
-                        if (!Storage.forceVoice || player.isActiveVoice || player.player?.hasPermission("melodymine.force") == true) {
-                            player.player?.removePotionEffect(PotionEffectType.BLINDNESS)
-                            cancel()
-                            return
-                        }
-                        player.player?.addPotionEffect(PotionEffect(PotionEffectType.BLINDNESS, 200, 1))
-                    }
-                }.runTaskTimer(MelodyMine.instance, 0L, 10L)
             }
         }.runTaskTimer(MelodyMine.instance, 0L, 300L)
+    }
+
+    fun clearForceVoice(player: Player) {
+        object : BukkitRunnable() {
+            override fun run() {
+                player.removePotionEffect(PotionEffectType.BLINDNESS)
+                player.resetTitle()
+            }
+        }.runTask(MelodyMine.instance)
     }
 
     fun sendMessageLog(message: String, player: MelodyPlayer) {
@@ -154,12 +155,12 @@ object Utils {
     fun sendMelodyFiglet() {
         val consoleSender = MelodyMine.instance.server.consoleSender
         consoleSender.sendMessage("".toComponent())
-        consoleSender.sendMessage("<text>    __  ___     __          __      __  ____          ".toComponent())
-        consoleSender.sendMessage("<text>   /  |/  /__  / /___  ____/ /_  __/  |/  (_)___  ___ ".toComponent())
-        consoleSender.sendMessage("<text>  / /|_/ / _ \\/ / __ \\/ __  / / / / /|_/ / / __ \\/ _ \\".toComponent())
-        consoleSender.sendMessage("<text> / /  / /  __/ / /_/ / /_/ / /_/ / /  / / / / / /  __/".toComponent())
-        consoleSender.sendMessage("<text>/_/  /_/\\___/_/\\____/\\__,_/\\__, /_/  /_/_/_/ /_/\\___/ ".toComponent())
-        consoleSender.sendMessage("<text>                          /____/                      ".toComponent())
+        consoleSender.sendMessage("<gradient:#F04FE7:#FFF4E4>    __  ___     __          __      __  ____          ".toComponent())
+        consoleSender.sendMessage("<gradient:#F04FE7:#FFF4E4>   /  |/  /__  / /___  ____/ /_  __/  |/  (_)___  ___ ".toComponent())
+        consoleSender.sendMessage("<gradient:#F04FE7:#FFF4E4>  / /|_/ / _ \\/ / __ \\/ __  / / / / /|_/ / / __ \\/ _ \\".toComponent())
+        consoleSender.sendMessage("<gradient:#F04FE7:#FFF4E4> / /  / /  __/ / /_/ / /_/ / /_/ / /  / / / / / /  __/".toComponent())
+        consoleSender.sendMessage("<gradient:#F04FE7:#FFF4E4>/_/  /_/\\___/_/\\____/\\__,_/\\__, /_/  /_/_/_/ /_/\\___/ ".toComponent())
+        consoleSender.sendMessage("<gradient:#F04FE7:#FFF4E4>                          /____/                      ".toComponent())
         consoleSender.sendMessage("".toComponent())
     }
 

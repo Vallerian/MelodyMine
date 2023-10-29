@@ -38,7 +38,10 @@ mute-toggle-shortcut: true
 # ----- Message configs -----
 
 # main plugin prefix.
-prefix: "<gradient:#FFF4E4:#DDB216>MelodyMine</gradient> <#FFF4E4><bold>|</bold>"
+prefix: "<gradient:#FFF4E4:#DDB216>MelodyMine</gradient> <#FFF4E4><bold>|</bold> <text>"
+text: "<gradient:#F04FE7:#FFF4E4>"
+text_hover: "<gradient:#F04FE7:#DDB216>"
+count_color: " <#DDB216>"
 
 # open website link message.
 website-message: "Click to open website and start voice chat."
@@ -55,6 +58,9 @@ adminmode-description: "Conversation with players in voice."
 start-description: "Get link to start voice chat."
 mute-description: "Mute player in voice chat."
 unmute-description: "Unmute player in voice chat."
+toggle-description: "toggle join & leave voice logs"
+control-description: "Mute / Deafen Yourself in website."
+
 
 # Placeholder Messages
 placeholder-web-online-true: "Online"
@@ -90,12 +96,9 @@ end-voice-message: "You have end the voice chat."
 end-voice-message-type: "message" # message or actionbar
 
 
-# force voice
-force-voice-message: "<click:run_command:'/melodymine start link'><hover:show_text:'<hover_text>Click to run this command <i>/melodymine start link</i>'><prefix>You must active your voice chat. do <i>/melodymine start link</i></hover></click>"
-
 # force voice title
 force-voice-title: true
-force-voice-title-message: "<hover_text>Force Voice"
+force-voice-title-message: "<text_hover>Force Voice"
 force-voice-subtitle-message: "<text>do <u>/melodymine start link</u> to start"
 
 # control messages

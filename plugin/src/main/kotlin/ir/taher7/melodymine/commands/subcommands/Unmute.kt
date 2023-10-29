@@ -3,24 +3,24 @@ package ir.taher7.melodymine.commands.subcommands
 import ir.taher7.melodymine.commands.SubCommand
 import ir.taher7.melodymine.core.MelodyManager
 import ir.taher7.melodymine.storage.Storage
-import ir.taher7.melodymine.utils.AdventureUtils.sendMessage
-import ir.taher7.melodymine.utils.AdventureUtils.toComponent
+import ir.taher7.melodymine.utils.Adventure.sendMessage
+import ir.taher7.melodymine.utils.Adventure.toComponent
 import org.bukkit.entity.Player
 
 class Unmute : SubCommand() {
     override var name = "unmute"
     override var description = Storage.unmuteDescription
-    override var syntax = "/melodymine unmute <player>"
+    override var syntax = "/melodymine unmute"
     override var permission = "melodymine.unmute"
     override fun handler(player: Player, args: Array<out String>) {
         val coolDown = Storage.muteCoolDown
         if (coolDown.containsKey(player.uniqueId) && (System.currentTimeMillis() - coolDown[player.uniqueId]!!) <= 5000) {
-            player.sendMessage("<prefix>You can use this command after <#DDB216>${((5000 - (System.currentTimeMillis() - coolDown[player.uniqueId]!!)) / 1000)}</#DDB216> second.".toComponent())
+            player.sendMessage("<prefix>You can use this command after <count_color>${((5000 - (System.currentTimeMillis() - coolDown[player.uniqueId]!!)) / 1000)}</count_color> second.".toComponent())
             return
         }
 
         if (args.size != 2) {
-            player.sendMessage("<prefix>use: <i>${syntax}</i>.".toComponent())
+            player.sendMessage("<prefix>use: <i>${syntax} <player></i>.".toComponent())
             return
         }
         val filter = Storage.onlinePlayers.values.filter { melodyPlayer ->

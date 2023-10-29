@@ -12,7 +12,7 @@ import net.kyori.adventure.title.Title
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
-object AdventureUtils {
+object Adventure {
 
     private val audience = BukkitAudiences.create(MelodyMine.instance)
     private lateinit var miniMessage: MiniMessage
@@ -26,10 +26,10 @@ object AdventureUtils {
         miniMessage = MiniMessage.builder().tags(
             TagResolver.resolver(
                 TagResolver.standard(),
-                Placeholder.parsed("prefix", "${Storage.prefix} <text>"),
-                Placeholder.parsed("text_prefix", "<gradient:#F04FE7:#DDB216>"),
-                Placeholder.parsed("text", "<gradient:#F04FE7:#FFF4E4>"),
-                Placeholder.parsed("hover_text", "<gradient:#F04FE7:#DDB216>")
+                Placeholder.parsed("prefix", Storage.prefix),
+                Placeholder.parsed("text", Storage.text),
+                Placeholder.parsed("text_hover", Storage.textHover),
+                Placeholder.parsed("count_color", Storage.count_color),
             ),
         ).build()
     }

@@ -2,8 +2,8 @@ package ir.taher7.melodymine.listeners
 
 import ir.taher7.melodymine.core.MelodyManager
 import ir.taher7.melodymine.storage.Storage
-import ir.taher7.melodymine.utils.AdventureUtils.sendMessage
-import ir.taher7.melodymine.utils.AdventureUtils.toComponent
+import ir.taher7.melodymine.utils.Adventure.sendMessage
+import ir.taher7.melodymine.utils.Adventure.toComponent
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerSwapHandItemsEvent
@@ -35,7 +35,7 @@ class ShortcutListener : Listener {
         if (!melodyPlayer.webIsOnline || !melodyPlayer.isActiveVoice) return
         if (!Storage.playerMuteShortcut.contains(event.player.uniqueId)) return
         if (coolDown.containsKey(player.uniqueId) && (System.currentTimeMillis() - coolDown[player.uniqueId]!!) <= 5000) {
-            player.sendMessage("<prefix>You can toggle after <#DDB216>${((5000 - (System.currentTimeMillis() - coolDown[player.uniqueId]!!)) / 1000)}</#DDB216> second.".toComponent())
+            player.sendMessage("<prefix>You can toggle after <count_color>${((5000 - (System.currentTimeMillis() - coolDown[player.uniqueId]!!)) / 1000)}</count_color> second.".toComponent())
             return
         }
         MelodyManager.setPlayerSelfMute(melodyPlayer, !melodyPlayer.isSelfMute)

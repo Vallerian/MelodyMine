@@ -8,37 +8,12 @@ import {IUser} from "@/interfaces";
 import {prisma} from "@/utils/connect";
 
 
-const checkMulti = async (name: string) => {
-    const player = await prisma.melodymine.findFirst({
-        select: {
-            uuid: true,
-            name: true,
-            server: true,
-            isMute: true,
-            isActiveVoice: true,
-            serverIsOnline: true,
-            webIsOnline: true,
-        },
-        where: {
-            name: name
-        },
-    })
-    if (player) {
-        return !!player.webIsOnline
-    } else {
-        return false
-    }
-}
-
 export const metadata: Metadata = {
     title: "Hub",
 }
 const Page = async () => {
     const session = await getAuthSession()
-
     if (!session?.user) redirect('/login')
-    const isMulti = await checkMulti(session?.user.name!!)
-    if (isMulti) redirect("/?error=multiUser")
 
     return (
         <>
