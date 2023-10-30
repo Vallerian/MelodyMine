@@ -37,6 +37,7 @@ data class MelodyPlayer(
             "sound" -> {
                 isDeafen = control.value
             }
+
             else -> {}
         }
     }

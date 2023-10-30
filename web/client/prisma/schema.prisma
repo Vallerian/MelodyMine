@@ -26,7 +26,6 @@ model authme {
   isLogged   Int     @default(0) @db.SmallInt
   hasSession Int     @default(0) @db.SmallInt
   totp       String? @db.VarChar(32)
-  uuid       String? @db.VarChar(36)
 }
 
 model melodymine {

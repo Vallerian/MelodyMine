@@ -26,12 +26,12 @@ class MelodyMineListener : Listener {
                     Utils.forceVoice(newUser)
                 }
             } else {
+                if (!result.serverIsOnline) Utils.forceVoice(result)
                 result.player = event.player
                 result.serverIsOnline = true
                 result.server = Storage.server
                 result.verifyCode = Utils.getVerifyCode()
                 Database.updatePlayer(result, false)
-                Utils.forceVoice(result)
                 Storage.onlinePlayers[result.uuid] = result
 
                 if (result.webIsOnline && result.isActiveVoice) {
@@ -89,24 +89,20 @@ class MelodyMineListener : Listener {
 
     @EventHandler
     fun onPlayerMove(event: PlayerMoveEvent) {
-        if (!Storage.forceVoice || event.player.player?.hasPermission("melodymine.force") == true) return
 
-        val melodyPlayer = Storage.onlinePlayers[event.player.uniqueId.toString()]
-        if (melodyPlayer != null) {
-            if (!melodyPlayer.isActiveVoice) {
-                event.isCancelled = true
-            }
+        val melodyPlayer = Storage.onlinePlayers[event.player.uniqueId.toString()] ?: return
+        if (Utils.checkPlayerForce(melodyPlayer)) return
+        if (!melodyPlayer.isActiveVoice) {
+            event.isCancelled = true
         }
     }
 
     @EventHandler
     fun onPlayerSendMessage(event: AsyncPlayerChatEvent) {
-        if (!Storage.forceVoice || event.player.player?.hasPermission("melodymine.force") == true) return
-        val melodyPlayer = Storage.onlinePlayers[event.player.uniqueId.toString()]
-        if (melodyPlayer != null) {
-            if (!melodyPlayer.isActiveVoice) {
-                event.isCancelled = true
-            }
+        val melodyPlayer = Storage.onlinePlayers[event.player.uniqueId.toString()] ?: return
+        if (Utils.checkPlayerForce(melodyPlayer)) return
+        if (!melodyPlayer.isActiveVoice) {
+            event.isCancelled = true
         }
     }
 

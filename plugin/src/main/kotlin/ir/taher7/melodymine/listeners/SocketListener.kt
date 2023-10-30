@@ -71,8 +71,11 @@ class SocketListener(private val socket: Socket) {
             val melodyPlayer = gson.fromJson(args[0].toString(), MelodyPlayer::class.java)
             if (melodyPlayer.server != Storage.server) return@on
             updateMelodyPlayer(melodyPlayer)
+            
 
-            Storage.onlinePlayers[melodyPlayer.uuid]?.let { Utils.forceVoice(it) }
+            val targetForce = Storage.onlinePlayers[melodyPlayer.uuid]
+            if (targetForce != null) Utils.forceVoice(targetForce)
+
             Storage.onlinePlayers[melodyPlayer.uuid]?.isSendOffer = arrayListOf()
             Storage.onlinePlayers.values.forEach { player ->
                 if (player.isSendOffer.contains(melodyPlayer.uuid)) {
@@ -140,7 +143,7 @@ class SocketListener(private val socket: Socket) {
                     else -> {}
                 }
                 if (Storage.forceVoice && !player.hasPermission("melodymine.force")) {
-                    Utils.clearForceVoice(player)
+                    Storage.onlinePlayers[melodyPlayer.uuid]?.let { Utils.clearForceVoice(it) }
                 }
             }
             object : BukkitRunnable() {
@@ -165,7 +168,8 @@ class SocketListener(private val socket: Socket) {
             updateMelodyPlayer(melodyPlayer)
             Storage.onlinePlayers[melodyPlayer.uuid]?.adminMode = false
             Utils.sendMessageLog("<prefix>${Storage.websiteEndVoiceLogger}", melodyPlayer)
-            Storage.onlinePlayers[melodyPlayer.uuid]?.let { Utils.forceVoice(it) }
+            val targetForce = Storage.onlinePlayers[melodyPlayer.uuid]
+            if (targetForce != null) Utils.forceVoice(targetForce)
             val player = Storage.onlinePlayers[melodyPlayer.uuid]?.player
             if (player != null) {
                 when (Storage.leaveEndType) {

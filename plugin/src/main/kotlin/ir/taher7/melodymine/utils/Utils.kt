@@ -45,7 +45,7 @@ object Utils {
         player.sendMessage("")
         Storage.subCommands.forEach { subCommand: SubCommand ->
             if (player.hasPermission(subCommand.permission)) {
-                player.sendMessage("<click:run_command:'${subCommand.syntax}'><hover:show_text:'<text_hover>Click to run this command <i>${subCommand.syntax}</i>'>${subCommand.syntax}</text_hover> <#FFF4E4><bold>|</bold> <text>${subCommand.description}</hover></click>".toComponent())
+                player.sendMessage("<click:run_command:'${subCommand.syntax}'><hover:show_text:'<text_hover>Click to run this command <i>${subCommand.syntax}</i>'><text_hover>${subCommand.syntax} <#FFF4E4><bold>|</bold> <text>${subCommand.description}</hover></click>".toComponent())
             }
         }
         player.sendMessage("")
@@ -62,27 +62,32 @@ object Utils {
         return stringBuilder.toString()
     }
 
-    fun forceVoice(player: MelodyPlayer) {
-        if (!Storage.forceVoice || player.isActiveVoice || player.player?.hasPermission("melodymine.force") == true) return
-        if (Storage.forceVoiceTitle) {
-            player.player?.showTitle(
-                Title.title(
-                    Storage.forceVoiceTitleMessage.toComponent(),
-                    Storage.forceVoiceSubtitleMessage.toComponent(),
-                    Title.Times.times(
-                        Duration.ofMillis(100),
-                        Duration.ofDays(365),
-                        Duration.ofMillis(100)
-                    )
-                )
-            )
-        }
+    fun forceVoice(melodyPlayer: MelodyPlayer) {
+        if (checkPlayerForce(melodyPlayer)) return
         object : BukkitRunnable() {
             override fun run() {
-                if (!Storage.forceVoice || player.isActiveVoice || player.player?.hasPermission("melodymine.force") == true) {
-                    clearForceVoice(player.player!!)
+                val player = Storage.onlinePlayers[melodyPlayer.uuid]
+                if (player == null) {
+                    cancel()
+                    return
+                }
+                if (checkPlayerForce(player)) {
+                    clearForceVoice(player)
                     cancel()
                 } else {
+                    if (Storage.forceVoiceTitle) {
+                        player.player?.showTitle(
+                            Title.title(
+                                Storage.forceVoiceTitleMessage.toComponent(),
+                                Storage.forceVoiceSubtitleMessage.toComponent(),
+                                Title.Times.times(
+                                    Duration.ofMillis(100),
+                                    Duration.ofDays(365),
+                                    Duration.ofMillis(100)
+                                )
+                            )
+                        )
+                    }
                     player.player?.addPotionEffect(PotionEffect(PotionEffectType.BLINDNESS, 500, 1))
                     MelodyManager.sendStartLink(player.player!!)
                 }
@@ -90,13 +95,21 @@ object Utils {
         }.runTaskTimer(MelodyMine.instance, 0L, 300L)
     }
 
-    fun clearForceVoice(player: Player) {
+    fun clearForceVoice(player: MelodyPlayer) {
+        if (!checkPlayerForce(player)) return
         object : BukkitRunnable() {
             override fun run() {
-                player.removePotionEffect(PotionEffectType.BLINDNESS)
-                player.resetTitle()
+                player.player?.removePotionEffect(PotionEffectType.BLINDNESS)
+                player.player?.resetTitle()
             }
         }.runTask(MelodyMine.instance)
+    }
+
+    fun checkPlayerForce(player: MelodyPlayer): Boolean {
+        if (player.isActiveVoice) return true
+        if (!Storage.forceVoice) return true
+        if (player.player?.hasPermission("melodymine.force") == true) return true
+        return false
     }
 
     fun sendMessageLog(message: String, player: MelodyPlayer) {
