@@ -9,7 +9,6 @@ import {useSocketStore} from "@/store/SocketStore";
 import {useStreamStore} from "@/store/StreamStore";
 import {SoundMeter} from "@/utils/SoundMeter";
 import {useOnlineUsersStore} from "@/store/OnlineUsersStore";
-import {usePeersStore} from "@/store/PeersStore";
 import {useLoadingStore} from "@/store/LoadingStore";
 import Progress from "@/components/Porgress/Progress";
 import {decrypt, encrypt} from "@/utils";
@@ -22,7 +21,6 @@ const SoundControl = () => {
     const {uuid, name, server, changeUserAdminMode, changeActiveVoice} = useUserStore(state => state)
     const {socket} = useSocketStore(state => state)
     const {removeUser, setAdminModeAll} = useOnlineUsersStore(state => state)
-    const {removeAll} = usePeersStore(state => state)
     const {setStartButton, disconnectButton} = useLoadingStore(state => state)
     const {noiseSuppression, setNoiseSuppression} = useControlStore(state => state)
 
@@ -87,7 +85,6 @@ const SoundControl = () => {
         setValidate(false)
         closeStream()
         removeUser(uuid)
-        removeAll()
         setAdminModeAll()
         changeUserAdminMode(false)
         changeActiveVoice(false)

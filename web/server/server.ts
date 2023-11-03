@@ -6,6 +6,7 @@ import {prisma} from "./utils/connect";
 import {CustomSocket, IClient} from "./interfaces";
 import {decrypt, encrypt} from "./utils";
 import fs from "fs"
+import {ExpressPeerServer} from "peer"
 
 const privateKeyPath = "./ssl/privkey.pem"
 const certPath = "./ssl/cert.pem"
@@ -32,6 +33,7 @@ const io = new Server(server, {
     pingTimeout: 5000,
 
 })
+
 
 io.use((socket: CustomSocket, next) => {
     const from = socket.handshake.auth.from
@@ -324,6 +326,16 @@ io.on("connection", async (socket: CustomSocket) => {
     })
 })
 
+const peerServer = ExpressPeerServer(server, {
+    path: "/melodymine",
+})
+
+app.use("/", peerServer)
+
+peerServer.on("connection", event => {
+    console.log("connection peer: ", event.getId())
+})
+
 server.listen(PORT, async () => {
     console.log(`Server listening on port ${PORT}.`)
     await prisma.melodymine.updateMany({
@@ -335,4 +347,3 @@ server.listen(PORT, async () => {
         }
     })
 })
-

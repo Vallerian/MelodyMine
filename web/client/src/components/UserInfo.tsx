@@ -10,8 +10,10 @@ import {useValidateStore} from "@/store/ValidateStore";
 import {IUser} from "@/interfaces";
 import {BsFillMicMuteFill, BsFillPeopleFill} from "react-icons/bs";
 import {useOnlineUsersStore} from "@/store/OnlineUsersStore";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import {ImUserTie} from "react-icons/im";
+import {useSocketStore} from "@/store/SocketStore";
+import {decrypt} from "@/utils";
 
 
 interface UserInfoProps {
@@ -21,15 +23,41 @@ interface UserInfoProps {
 }
 
 const UserInfo = ({user, websocketKey, iceServers}: UserInfoProps) => {
-    const { server, setSecretKey, setIceServers, isAdminMode, isMute} = useUserStore(state => state)
+    const {server, setSecretKey, setIceServers, isMute} = useUserStore(state => state)
     const {isValidate} = useValidateStore(state => state)
+    const {socket} = useSocketStore(state => state)
     const {users} = useOnlineUsersStore(state => state)
     const {status} = useSession()
-
+    const [userIsAdminMode, setUserIsAdminMode] = useState<boolean>(false)
     useEffect(() => {
         setSecretKey(websocketKey!!)
         setIceServers(iceServers!!)
     }, [])
+
+    useEffect(() => {
+        socket?.on("onAdminModeEnableReceive", (token: string) => {
+            const data = decrypt(token) as {
+                uuid: string,
+                server: string
+            }
+            if (data.uuid != user.uuid) return
+            setUserIsAdminMode(true)
+
+        })
+
+        socket?.on("onAdminModeDisableReceive", (token: string) => {
+            const data = decrypt(token) as {
+                uuid: string
+            }
+            if (data.uuid != user.uuid) return
+            setUserIsAdminMode(false)
+        })
+    }, [socket])
+
+    useEffect(() => {
+        if (isValidate) return
+        setUserIsAdminMode(false)
+    }, [isValidate])
 
     return (
         <div className="flex flex-col rounded px-3 py-1 bg-custom shadow-xl w-full">
@@ -60,7 +88,7 @@ const UserInfo = ({user, websocketKey, iceServers}: UserInfoProps) => {
                                         </span>
                                     </div>
                                 ) : ""}
-                                {isAdminMode ? (
+                                {userIsAdminMode ? (
                                     <div className="ms-2 self-center">
                                     <span
                                         className="ring-1 ring-cyan-900 text-xs font-medium mr-2 px-1.5 py-0.5 rounded dark:bg-cyan-500 dark:text-white flex">
