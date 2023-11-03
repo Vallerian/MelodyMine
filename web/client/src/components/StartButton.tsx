@@ -40,7 +40,7 @@ const StartButton = () => {
 
             if (!res.ok) return
             const {token} = await res.json()
-            const {player: data, socketURL, socketPort, socketHost} = decrypt(token)
+            const {player: data, socketURL} = decrypt(token)
             if (data.webIsOnline) {
                 route.push("/?error=multiUser")
             } else {
@@ -76,9 +76,10 @@ const StartButton = () => {
                     })
 
                     import("peerjs").then(({default: Peer}) => {
+                        const newUrl = new URL(socketURL)
                         const peer = new Peer(data.uuid, {
-                            host: socketHost,
-                            port: socketPort || 443,
+                            host: newUrl.hostname,
+                            port: Number(newUrl.port) || 443,
                             path: "/melodymine",
                         })
                         setPeer(peer)

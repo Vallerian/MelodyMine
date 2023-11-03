@@ -27,8 +27,6 @@ export const GET = async () => {
                 const data = {
                     "player": player,
                     "socketURL": process.env.WEBSOCKET_URL,
-                    "socketHost": process.env.WEBSOCKET_HOST,
-                    "socketPort": process.env.WEBSOCKET_PORT,
                 }
                 CryptoJS.AES.encrypt(JSON.stringify(data), process.env.WEBSOCKET_KEY!!).toString()
                 const token = CryptoJS.AES.encrypt(JSON.stringify(data), process.env.WEBSOCKET_KEY!!).toString()
