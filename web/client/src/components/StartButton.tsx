@@ -10,26 +10,24 @@ import {useSession} from "next-auth/react";
 import {useStreamStore} from "@/store/StreamStore";
 import {useOnlineUsersStore} from "@/store/OnlineUsersStore";
 import {useRouter} from "next/navigation";
-import {usePeersStore} from "@/store/PeersStore";
 import {useLoadingStore} from "@/store/LoadingStore";
 import {decrypt, encrypt} from "@/utils";
 import {DefaultEventsMap} from "@socket.io/component-emitter";
 import {useControlStore} from "@/store/ControlStore";
-
 
 const StartButton = () => {
 
     const {status} = useSession()
     const user = useUserStore(state => state)
     const {noiseSuppression} = useControlStore(state => state)
-    const {socket, setSocket, disconnectSocket} = useSocketStore(state => state)
+    const {socket, setSocket, disconnectSocket, setPeer} = useSocketStore(state => state)
     const {addUser, removeAllOnline, setAdminModeAll} = useOnlineUsersStore(state => state)
-    const {removeAll} = usePeersStore(state => state)
     const {initStream, closeStream} = useStreamStore(state => state)
     const {isValidate, setError, setValidate} = useValidateStore(state => state)
     const {startButton, setDisconnectButton} = useLoadingStore(state => state)
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [socketConnected, setSocketConnected] = useState<boolean>(false)
+    const [peerConnection, setPeerConnection] = useState<boolean>(false)
     const route = useRouter()
 
     useEffect(() => {
@@ -42,7 +40,7 @@ const StartButton = () => {
 
             if (!res.ok) return
             const {token} = await res.json()
-            const {player: data, socketURL} = decrypt(token)
+            const {player: data, socketURL, socketPort, socketHost} = decrypt(token)
             if (data.webIsOnline) {
                 route.push("/?error=multiUser")
             } else {
@@ -57,8 +55,8 @@ const StartButton = () => {
                             })
                         },
                     })
-
                     setSocket(socket)
+
 
                     socket.on("connect", () => {
                         setSocketConnected(true)
@@ -74,9 +72,29 @@ const StartButton = () => {
                         setValidate(false)
                         closeStream()
                         removeAllOnline()
-                        removeAll()
                         setAdminModeAll()
                     })
+
+                    import("peerjs").then(({default: Peer}) => {
+                        const peer = new Peer(data.uuid, {
+                            host: socketHost,
+                            port: socketPort || 443,
+                            path: "/melodymine",
+                        })
+                        setPeer(peer)
+                        setPeerConnection(true)
+
+                        peer.on("connection", () => {
+                            setPeerConnection(true)
+                        })
+
+                        peer.on("disconnected", () => {
+                            setValidate(false)
+                            setPeerConnection(false)
+                        })
+                    })
+
+
                 } catch (ex) {
 
                 }
@@ -89,7 +107,6 @@ const StartButton = () => {
             setValidate(false)
             closeStream()
             removeAllOnline()
-            removeAll()
             setAdminModeAll()
         }
 
@@ -157,7 +174,7 @@ const StartButton = () => {
 
     return (
         <div className="flex self-center">
-            {isLoading || startButton || !socketConnected ? (
+            {isLoading || startButton || !socketConnected || !peerConnection ? (
                 <span className="pr-5 pl-2 self-center">
                         <Progress/>
                     </span>

@@ -1,11 +1,9 @@
 "use client"
-import {IOnlineUsers, IReceiveControl} from "@/interfaces";
+import {IOnlineUsers, IReceiveControl, IVolume} from "@/interfaces";
 import Image from "next/image";
-import {usePeersStore} from "@/store/PeersStore";
 import {useEffect, useRef, useState} from "react";
 import {SoundMeter} from "@/utils/SoundMeter";
 import {useStreamStore} from "@/store/StreamStore";
-import {useVolumeStore} from "@/store/VolumeStore";
 import {BsFillMicFill, BsFillMicMuteFill} from "react-icons/bs";
 import {useUserStore} from "@/store/UserStore";
 import {useControlStore} from "@/store/ControlStore";
@@ -14,15 +12,16 @@ import {RiVoiceprintFill} from "react-icons/ri";
 import {ImUserTie} from "react-icons/im";
 import {useSocketStore} from "@/store/SocketStore";
 import {decrypt} from "@/utils";
+import {MediaConnection} from "peerjs";
+import {useValidateStore} from "@/store/ValidateStore";
 
 const SingleUser = ({user}: { user: IOnlineUsers }) => {
-    const {socket} = useSocketStore(state => state)
-    const {isAdminMode, uuid, server, serverIsOnline, isActiveVoice} = useUserStore(state => state)
-    const {peers} = usePeersStore(state => state)
+    const {socket, peer} = useSocketStore(state => state)
+    const {uuid, server, serverIsOnline, isActiveVoice} = useUserStore(state => state)
     const {setUserMute, muteUsers} = useControlStore(state => state)
+    const {isValidate} = useValidateStore(state => state)
     const {stream} = useStreamStore(state => state)
     const {soundIsActive} = useStreamStore(state => state)
-    const {volumes} = useVolumeStore(state => state)
     const audioRef = useRef<HTMLAudioElement>(null)
     const [userStream, setUserStream] = useState<MediaStream>()
     const [instant, setInstant] = useState(0.00)
@@ -30,9 +29,126 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
     const [voiceBack, setVoiceBack] = useState<boolean>(false)
     const [isSelfMute, setIsSelfMute] = useState<boolean>(true)
     const [isDeafen, setIsDeafen] = useState<boolean>(true)
+    const [userVolume, setUserVolume] = useState<string>("1.0")
+    const [userIsAdminMode, setUserIsAdminMode] = useState<boolean>(false)
+    const [call, setCall] = useState<MediaConnection | undefined>()
+
+    useEffect(() => {
+        if (!uuid || !stream) return
+        let peerCall: MediaConnection | undefined
+        socket?.on("onEnableVoiceReceive", (token: string) => {
+            const onlineUser = decrypt(token) as IOnlineUsers
+            if (onlineUser.uuid != user.uuid) return
+            peerCall = peer?.call(onlineUser.uuid!!, stream!!, {
+                metadata: {
+                    uuid: uuid
+                }
+            })
+            setCall(peerCall)
+            peerCall?.on("stream", remoteStream => {
+                setUserStream(remoteStream)
+                if (audioRef.current) {
+                    audioRef.current.srcObject = remoteStream
+                    setUserStream(remoteStream)
+                }
+            })
+
+        })
+
+        socket?.on("onDisableVoiceReceive", (token: string) => {
+            const onlineUser = decrypt(token) as IOnlineUsers
+            if (onlineUser.uuid != user.uuid) return
+            peerCall?.close()
+        })
+
+        socket?.on("onPlayerInitAdminModeReceive", (token: string) => {
+            const data = decrypt(token) as IOnlineUsers
+            if (data.uuid == user.uuid && data.uuid != uuid && isValidate) {
+                setUserVolume("1.0")
+                setUserIsAdminMode(true)
+            }
+        })
+
+        socket?.on("onAdminModeEnableReceive", (token: string) => {
+            const data = decrypt(token) as {
+                uuid: string,
+                server: string
+            }
+            if (data.uuid != user.uuid && isValidate) return
+            setUserIsAdminMode(true)
+            if (data.uuid == uuid) return
+            peerCall = peer?.call(data.uuid!!, stream!!, {
+                metadata: {
+                    uuid: uuid
+                }
+            })
+            setCall(peerCall)
+            peerCall?.on("stream", remoteStream => {
+                setUserStream(remoteStream)
+                if (audioRef.current) {
+                    audioRef.current.srcObject = remoteStream
+                    setUserStream(remoteStream)
+                }
+            })
+
+            setUserVolume("1.0")
+        })
+
+        socket?.on("onAdminModeDisableReceive", (token: string) => {
+            const data = decrypt(token) as {
+                uuid: string
+            }
+            if (data.uuid != user.uuid) return
+            setUserIsAdminMode(false)
+            peerCall?.close()
+
+        })
+
+        socket?.on("onNewPlayerLeave", (token: string) => {
+            const data = decrypt(token) as IOnlineUsers
+            if (data.uuid != user.uuid && data.uuid == uuid) return
+            peerCall?.close()
+        })
+
+        socket?.on("onPlayerLeaveReceivePlugin", (token: string) => {
+            const data = decrypt(token) as IOnlineUsers
+            if (data.uuid != user.uuid && data.uuid == uuid) return
+            peerCall?.close()
+        })
+
+        socket?.on("onPlayerChangeServer", (token: string) => {
+            const data = decrypt(token) as {
+                name: string,
+                uuid: string,
+                server: string
+            }
+            if (data.uuid != user.uuid && data.uuid != uuid ) return
+            setUserIsAdminMode(false)
+            peerCall?.close()
+        })
+
+        socket?.on("onSetVolumeReceive", (data: IVolume) => {
+            if (data.uuid != user.uuid) return
+            setUserVolume(data.volume)
+        })
+
+        return () => {
+            socket?.off("onEnableVoiceReceive")
+            socket?.off("onDisableVoiceReceive")
+        }
+
+
+    }, [socket, uuid, stream, isValidate])
+
+    useEffect(() => {
+        if (isValidate) return
+        call?.close()
+        setUserIsAdminMode(false)
+    }, [isValidate, call])
 
     useEffect(() => {
         if (!uuid) return
+
         socket?.on("onPlayerChangeControlReceive", (token: string) => {
             const data = decrypt(token) as IReceiveControl
             if (data.uuid == user.uuid) {
@@ -58,25 +174,42 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
     }, [socket, uuid])
 
     useEffect(() => {
-        if (user.uuid != uuid) {
-            const item = peers.find(item => item.uuid == user.uuid)
-            if (item) {
-                item.peer.ontrack = event => {
-                    if (audioRef.current) {
-                        const stream = event.streams[0]
-                        audioRef.current.srcObject = stream
-                        setUserStream(stream)
-                    }
-                }
+        if (audioRef.current) {
+            if (parseFloat(userVolume) > 1.0 || parseFloat(userVolume) < 0.0) {
+                audioRef.current.volume = 1.0
+            } else {
+                audioRef.current.volume = parseFloat(userVolume)
             }
-        } else {
+        }
+    }, [userVolume])
+
+
+    useEffect(() => {
+        if (!peer || !stream) return
+        peer.on("call", call => {
+            if (call.metadata.uuid != user.uuid) return
+            call.answer(stream!!)
+            call.on("stream", remoteStream => {
+                if (audioRef.current) {
+                    audioRef.current.srcObject = remoteStream
+                    setUserStream(remoteStream)
+                }
+            })
+        })
+        return () => {
+            peer?.off("call")
+        }
+    }, [peer, stream])
+
+
+    useEffect(() => {
+        if (user.uuid == uuid) {
             if (audioRef.current) {
                 audioRef.current.srcObject = stream
                 setUserStream(stream!)
             }
         }
-
-    }, [user, peers])
+    }, [user])
 
     useEffect(() => {
         let interval: any
@@ -98,27 +231,6 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
             clearInterval(interval)
         }
     }, [userStream])
-
-    useEffect(() => {
-        const userVolume = volumes.find(item => item.uuid == user.uuid)
-        if (audioRef.current) {
-            if (userVolume?.volume) {
-                if (parseFloat(userVolume.volume) > 1.0 || parseFloat(userVolume.volume) < 0.0) {
-                    audioRef.current.volume = 1.0
-                } else {
-                    audioRef.current.volume = parseFloat(userVolume.volume)
-                }
-            }
-        }
-    }, [volumes])
-
-    useEffect(() => {
-        if (audioRef.current) {
-            if (isAdminMode) {
-                audioRef.current.volume = 1.0
-            }
-        }
-    }, [isAdminMode])
 
     useEffect(() => {
         const isMute = muteUsers.find(item => item.uuid == user.uuid)
@@ -163,7 +275,7 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
                                 </span>
                                 </div>
                             ) : ""}
-                            {user.isAdminMode ? (
+                            {userIsAdminMode ? (
                                 <div className="ms-2 self-center">
                                     <span
                                         className="ring-1 ring-cyan-900 text-xs font-medium mr-2 px-1.5 py-0.5 rounded dark:bg-cyan-500 dark:text-white flex">
