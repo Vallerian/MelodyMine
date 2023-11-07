@@ -14,7 +14,7 @@ interface Actions {
     changeUserIsMute: (value: boolean) => void
     changeUserAdminMode: (value: boolean) => void
     setSecretKey: (key: string) => void
-    setIceServers: (key: string) => void
+    setServer: (server: string) => void
     changeActiveVoice: (value: boolean) => void
 }
 
@@ -43,7 +43,7 @@ export const useUserStore = createWithEqualityFn<State & Actions>((setState) => 
     changeUserIsMute: value => setState(() => ({isMute: value})),
     changeUserAdminMode: value => setState(() => ({isAdminMode: value})),
     setSecretKey: key => setState(() => ({secretKey: key})),
-    setIceServers: key => setState(() => ({iceServers: key})),
+    setServer: server => setState(() => ({server})),
     changeActiveVoice: value => setState(() => ({isActiveVoice: value}))
 
 }), shallow)

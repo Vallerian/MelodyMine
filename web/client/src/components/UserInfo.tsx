@@ -23,7 +23,7 @@ interface UserInfoProps {
 }
 
 const UserInfo = ({user, websocketKey, iceServers}: UserInfoProps) => {
-    const {server, setSecretKey, setIceServers, isMute} = useUserStore(state => state)
+    const {server, setSecretKey, isMute} = useUserStore(state => state)
     const {isValidate} = useValidateStore(state => state)
     const {socket} = useSocketStore(state => state)
     const {users} = useOnlineUsersStore(state => state)
@@ -51,7 +51,6 @@ const UserInfo = ({user, websocketKey, iceServers}: UserInfoProps) => {
 
     useEffect(() => {
         setSecretKey(websocketKey!!)
-        setIceServers(iceServers!!)
     }, [])
 
     useEffect(() => {

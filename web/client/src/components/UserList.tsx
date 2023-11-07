@@ -28,7 +28,8 @@ const UserList = () => {
         server,
         changeUserServer,
         changeUserIsMute,
-        changeUserAdminMode
+        changeUserAdminMode,
+        setServer
     } = useUserStore(state => state)
     const {setValidate, setError} = useValidateStore(state => state)
     const {closeStream} = useStreamStore(state => state)
@@ -59,6 +60,7 @@ const UserList = () => {
             closeStream()
             removeUser(user.uuid!)
             changeUserAdminMode(false)
+            setServer("")
         }
     }
 
