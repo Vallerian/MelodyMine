@@ -29,29 +29,40 @@ const UserInfo = ({user, websocketKey, iceServers}: UserInfoProps) => {
     const {users} = useOnlineUsersStore(state => state)
     const {status} = useSession()
     const [userIsAdminMode, setUserIsAdminMode] = useState<boolean>(false)
+
+    const onAdminModeEnableReceive = (token: string) => {
+        const data = decrypt(token) as {
+            uuid: string,
+            server: string
+        }
+        if (data.uuid != user.uuid) return
+        setUserIsAdminMode(true)
+
+    }
+
+    const onAdminModeDisableReceive = (token: string) => {
+        const data = decrypt(token) as {
+            uuid: string
+        }
+        if (data.uuid != user.uuid) return
+        setUserIsAdminMode(false)
+    }
+
+
     useEffect(() => {
         setSecretKey(websocketKey!!)
         setIceServers(iceServers!!)
     }, [])
 
     useEffect(() => {
-        socket?.on("onAdminModeEnableReceive", (token: string) => {
-            const data = decrypt(token) as {
-                uuid: string,
-                server: string
-            }
-            if (data.uuid != user.uuid) return
-            setUserIsAdminMode(true)
+        socket?.on("onAdminModeEnableReceive", onAdminModeEnableReceive)
+        socket?.on("onAdminModeDisableReceive", onAdminModeDisableReceive)
 
-        })
+        return () => {
+            socket?.off("onAdminModeEnableReceive", onAdminModeEnableReceive)
+            socket?.off("onAdminModeDisableReceive", onAdminModeDisableReceive)
+        }
 
-        socket?.on("onAdminModeDisableReceive", (token: string) => {
-            const data = decrypt(token) as {
-                uuid: string
-            }
-            if (data.uuid != user.uuid) return
-            setUserIsAdminMode(false)
-        })
     }, [socket])
 
     useEffect(() => {

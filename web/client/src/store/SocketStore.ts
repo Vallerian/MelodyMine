@@ -11,6 +11,7 @@ interface Actions {
     setSocket: (socket: any) => void
     setPeer: (peer: Peer) => void
     disconnectSocket: () => void
+    disconnectPeer: () => void
 }
 
 export const useSocketStore = createWithEqualityFn<State & Actions>((setState, getState) => ({
@@ -21,5 +22,8 @@ export const useSocketStore = createWithEqualityFn<State & Actions>((setState, g
     disconnectSocket: () => {
         getState().socket?.disconnect()
     },
+    disconnectPeer: () => {
+        getState().peer?.disconnect()
+    }
 }), shallow)
 

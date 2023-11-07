@@ -32,13 +32,13 @@ class Unmute : SubCommand() {
         }
         val targetPlayer = filter[0]
         if (!targetPlayer.isMute) {
-            player.sendMessage("<prefix>${targetPlayer.name} is not mute.".toComponent())
+            player.sendMessage("<prefix>${targetPlayer.name} <text>is not mute.".toComponent())
             return
         }
 
         MelodyManager.unMute(targetPlayer.uuid)
         targetPlayer.player?.sendMessage("<prefix>You have unmute from voice chat.".toComponent())
-        player.sendMessage("<prefix>${targetPlayer.name} has unmute from voice chat.".toComponent())
+        player.sendMessage("<prefix><count_color>${targetPlayer.name} <text>has unmute from voice chat.".toComponent())
         coolDown[player.uniqueId] = System.currentTimeMillis()
     }
 }

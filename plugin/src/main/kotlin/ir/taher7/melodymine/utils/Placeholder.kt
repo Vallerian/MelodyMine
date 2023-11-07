@@ -81,6 +81,16 @@ class Placeholder : PlaceholderExpansion() {
 
             }
 
+            "call" -> {
+                if (!melodyPlayer.isInCall) return ""
+                return melodyPlayer.callTarget?.name ?: ""
+            }
+
+            "pending_call" -> {
+                if (!melodyPlayer.isCallPending) return ""
+                return melodyPlayer.callPendingTarget?.name ?: ""
+            }
+
             else -> {}
         }
         return null

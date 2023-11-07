@@ -41,15 +41,15 @@ object Utils {
     private val qrCodeDisplayName = "${ChatColor.AQUA}${ChatColor.ITALIC}MelodyMine QRCode"
 
     fun sendHelpMessage(player: Player) {
-        player.sendMessage("<st><gradient:#121F31:#F04FE7>                     </gradient></st> <bold><gradient:#F04FE7:#FFF4E4:#F04FE7>MelodyMine</gradient></bold> <st><gradient:#F04FE7:#121F31>                      </st>".toComponent())
+        player.sendMessage(Storage.contentHeader.toComponent())
         player.sendMessage("")
         Storage.subCommands.forEach { subCommand: SubCommand ->
             if (player.hasPermission(subCommand.permission)) {
-                player.sendMessage("<click:run_command:'${subCommand.syntax}'><hover:show_text:'<text_hover>Click to run this command <i>${subCommand.syntax}</i>'><text_hover>${subCommand.syntax} <#FFF4E4><bold>|</bold> <text>${subCommand.description}</hover></click>".toComponent())
+                player.sendMessage("<click:run_command:'${subCommand.syntax}'><hover:show_text:'<text_hover>Click to run <i>${subCommand.syntax}</i>'><text_hover>${subCommand.syntax} <#FFF4E4><bold>|</bold> <text>${subCommand.description}</hover></click>".toComponent())
             }
         }
         player.sendMessage("")
-        player.sendMessage("<st><gradient:#121F31:#F04FE7:#121F31><st>                                                             ".toComponent())
+        player.sendMessage(Storage.contentFooter.toComponent())
     }
 
     fun getVerifyCode(): String {
@@ -163,6 +163,44 @@ object Utils {
             }
         }
 
+    }
+
+    fun clearUpCall(melodyPlayer: MelodyPlayer?, isQuit: Boolean = false) {
+        object : BukkitRunnable() {
+            override fun run() {
+                if (melodyPlayer == null) return
+
+                if (melodyPlayer.isCallPending) {
+                    val targetPlayer = melodyPlayer.callPendingTarget ?: return
+
+                    melodyPlayer.isCallPending = false
+                    melodyPlayer.callPendingTarget = null
+
+                    targetPlayer.isCallPending = false
+                    targetPlayer.callPendingTarget = null
+
+                    melodyPlayer.pendingTask?.cancel()
+                    targetPlayer.pendingTask?.cancel()
+
+                    melodyPlayer.pendingTask = null
+                    targetPlayer.pendingTask = null
+
+                    if (isQuit) MelodyManager.endPendingCall(melodyPlayer, targetPlayer)
+                    targetPlayer.player?.sendMessage("<prefix>Pending Call Ended.".toComponent())
+                }
+
+                if (melodyPlayer.isInCall) {
+                    val targetPlayer = melodyPlayer.callTarget ?: return
+                    melodyPlayer.isInCall = false
+                    melodyPlayer.callTarget = null
+                    targetPlayer.isInCall = false
+                    targetPlayer.callTarget = null
+                    if (isQuit) MelodyManager.endCall(melodyPlayer, targetPlayer)
+                    targetPlayer.player?.sendMessage("<prefix>Call Ended.".toComponent())
+                }
+
+            }
+        }.runTask(MelodyMine.instance)
     }
 
     fun sendMelodyFiglet() {

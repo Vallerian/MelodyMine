@@ -20,6 +20,7 @@ class CommandManager : CommandExecutor {
         Storage.subCommands.add(Mute())
         Storage.subCommands.add(Unmute())
         Storage.subCommands.add(Control())
+        Storage.subCommands.add(Call())
     }
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {

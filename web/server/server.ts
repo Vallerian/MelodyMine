@@ -3,7 +3,7 @@ import http from "http"
 import https from "https";
 import {Server} from "socket.io"
 import {prisma} from "./utils/connect";
-import {CustomSocket, IClient} from "./interfaces";
+import {callData, CustomSocket, IClient} from "./interfaces";
 import {decrypt, encrypt} from "./utils";
 import fs from "fs"
 import {ExpressPeerServer} from "peer"
@@ -148,6 +148,69 @@ io.on("connection", async (socket: CustomSocket) => {
     })
 
 
+    socket.on("onStartCallPlugin", (data: callData) => {
+
+        socket.to(data.player.socketID).emit("onStartCallSelfPluginReceive", encrypt({
+            name: data.player.name,
+            uuid: data.player.uuid,
+        }))
+
+        socket.to(data.target.socketID).emit("onStartCallTargetPluginReceive", encrypt({
+            name: data.target.name,
+            uuid: data.target.uuid,
+        }))
+
+    })
+
+    socket.on("onEndCallPlugin", (data: callData) => {
+        socket.to(data.player.socketID).emit("onEndCallSelfPluginReceive", encrypt({
+            name: data.player.name,
+            uuid: data.player.uuid,
+        }))
+
+        socket.to(data.target.socketID).emit("onEndCallTargetPluginReceive", encrypt({
+            name: data.target.name,
+            uuid: data.target.uuid,
+        }))
+    })
+
+    socket.on("onPendingCallEndPlugin", (data: callData) => {
+        socket.to(data.player.socketID).emit("onPendingCallEndSelfPluginReceive", encrypt({
+            name: data.player.name,
+            uuid: data.player.uuid,
+        }))
+
+        socket.to(data.target.socketID).emit("onPendingCallEndTargetPluginReceive", encrypt({
+            name: data.target.name,
+            uuid: data.target.uuid,
+        }))
+    })
+
+    socket.on("onAcceptCallPlugin", (data: callData) => {
+        socket.to(data.player.socketID).emit("onAcceptCallSelfPluginReceive", encrypt({
+            name: data.player.name,
+            uuid: data.player.uuid,
+        }))
+
+        socket.to(data.target.socketID).emit("onAcceptCallTargetPluginReceive", encrypt({
+            name: data.target.name,
+            uuid: data.target.uuid,
+        }))
+    })
+
+    socket.on("onDenyCallPlugin", (data: callData) => {
+        socket.to(data.player.socketID).emit("onDenyCallSelfPluginReceive", encrypt({
+            name: data.player.name,
+            uuid: data.player.uuid,
+        }))
+
+        socket.to(data.target.socketID).emit("onDenyCallTargetPluginReceive", encrypt({
+            name: data.target.name,
+            uuid: data.target.uuid,
+        }))
+    })
+
+
     // Web Listeners
     socket.on("onPlayerChangeControl", token => {
         const data = decrypt(token)
@@ -219,58 +282,9 @@ io.on("connection", async (socket: CustomSocket) => {
         }
     })
 
-
-    socket.on("onOffer", async (token: string) => {
-        const data = decrypt(token)
-        try {
-            const user = await prisma.melodymine.findUnique({
-                where: {uuid: data.uuid},
-                select: {socketID: true, server: true}
-            })
-            io.to(user.socketID).emit("onReceiveOffer", encrypt({
-                uuid: socket.melodyClient.uuid,
-                server: user.server,
-                offer: data.offer,
-            }))
-        } catch (ex) {
-            console.log(ex)
-        }
-    })
-
-    socket.on("onAnswer", async (token: string) => {
-        const data = decrypt(token)
-        try {
-            const user = await prisma.melodymine.findUnique({
-                where: {uuid: data.uuid},
-                select: {socketID: true}
-            })
-            io.to(user.socketID).emit("onReceiveAnswer", encrypt({
-                uuid: socket.melodyClient.uuid,
-                answer: data.answer,
-            }))
-        } catch (ex) {
-            console.log(ex)
-        }
-    })
-
-    socket.on("onCandidate", async (token: string) => {
-        const data = decrypt(token)
-        try {
-            const user = await prisma.melodymine.findUnique({
-                where: {uuid: data.uuid},
-                select: {socketID: true}
-            })
-            io.to(user.socketID).emit("onReceiveCandidate", encrypt({
-                uuid: socket.melodyClient.uuid,
-                candidate: data.candidate,
-            }))
-        } catch (ex) {
-            console.log(ex)
-        }
-    })
-
     socket.on("onPlayerEndVoice", async (token: string) => {
         const data = decrypt(token)
+        socket.leave(data.server)
         try {
             const result = await prisma.melodymine.update({
                 where: {uuid: data.uuid},

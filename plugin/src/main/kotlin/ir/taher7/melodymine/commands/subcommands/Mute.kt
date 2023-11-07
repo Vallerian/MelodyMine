@@ -33,14 +33,14 @@ class Mute : SubCommand() {
 
         val melodyPlayer = Storage.onlinePlayers[player.uniqueId.toString()] ?: return
         if (melodyPlayer.isMute) {
-            player.sendMessage("<prefix>${melodyPlayer.name} is already muted.".toComponent())
+            player.sendMessage("<prefix><count_color>${melodyPlayer.name} <text>is already muted.".toComponent())
             return
         }
 
         MelodyManager.mute(targetPlayer.uniqueId.toString())
 
-        melodyPlayer.player?.sendMessage("<prefix>You have muted in voice chat.".toComponent())
-        player.sendMessage("<prefix>${targetPlayer.name} has mute in voice chat.".toComponent())
+        targetPlayer.player?.sendMessage("<prefix>You have muted in voice chat.".toComponent())
+        player.sendMessage("<prefix><count_color>${targetPlayer.name} <text>has mute in voice chat.".toComponent())
         coolDown[player.uniqueId] = System.currentTimeMillis()
     }
 

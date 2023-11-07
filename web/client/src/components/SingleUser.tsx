@@ -7,22 +7,24 @@ import {useStreamStore} from "@/store/StreamStore";
 import {BsFillMicFill, BsFillMicMuteFill} from "react-icons/bs";
 import {useUserStore} from "@/store/UserStore";
 import {useControlStore} from "@/store/ControlStore";
-import {BiSolidRightArrow, BiSolidUserVoice, BiSolidVolumeMute} from "react-icons/bi";
+import {BiPhoneCall, BiSolidRightArrow, BiSolidUserVoice, BiSolidVolumeMute} from "react-icons/bi";
 import {RiVoiceprintFill} from "react-icons/ri";
 import {ImUserTie} from "react-icons/im";
 import {useSocketStore} from "@/store/SocketStore";
 import {decrypt} from "@/utils";
 import {MediaConnection} from "peerjs";
 import {useValidateStore} from "@/store/ValidateStore";
+import {MdOutlinePhoneCallback} from "react-icons/md";
+import {useSoundStore} from "@/store/SoundStore";
 
 const SingleUser = ({user}: { user: IOnlineUsers }) => {
     const {socket, peer} = useSocketStore(state => state)
     const {uuid, server, serverIsOnline, isActiveVoice} = useUserStore(state => state)
     const {setUserMute, muteUsers} = useControlStore(state => state)
     const {isValidate} = useValidateStore(state => state)
+    const {callingSound, callingSound2, endCallSound} = useSoundStore(state => state)
     const {stream} = useStreamStore(state => state)
     const {soundIsActive} = useStreamStore(state => state)
-    const audioRef = useRef<HTMLAudioElement>(null)
     const [userStream, setUserStream] = useState<MediaStream>()
     const [instant, setInstant] = useState(0.00)
     const [isUserMute, setIsUserMute] = useState<boolean>(false)
@@ -32,113 +34,295 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
     const [userVolume, setUserVolume] = useState<string>("1.0")
     const [userIsAdminMode, setUserIsAdminMode] = useState<boolean>(false)
     const [call, setCall] = useState<MediaConnection | undefined>()
+    const [isInCall, setIsInCall] = useState<boolean>(false)
+    const [isPendingCall, setIsPendingCall] = useState<boolean>(false)
 
-    useEffect(() => {
-        if (!uuid || !stream) return
-        let peerCall: MediaConnection | undefined
-        socket?.on("onEnableVoiceReceive", (token: string) => {
-            const onlineUser = decrypt(token) as IOnlineUsers
-            if (onlineUser.uuid != user.uuid) return
-            peerCall = peer?.call(onlineUser.uuid!!, stream!!, {
-                metadata: {
-                    uuid: uuid
-                }
-            })
-            setCall(peerCall)
-            peerCall?.on("stream", remoteStream => {
-                setUserStream(remoteStream)
-                if (audioRef.current) {
-                    audioRef.current.srcObject = remoteStream
-                    setUserStream(remoteStream)
-                }
-            })
+    const audioRef = useRef<HTMLAudioElement>(null)
 
-        })
 
-        socket?.on("onDisableVoiceReceive", (token: string) => {
-            const onlineUser = decrypt(token) as IOnlineUsers
-            if (onlineUser.uuid != user.uuid) return
-            peerCall?.close()
-        })
+    const onEnableVoiceReceive = (token: string) => {
+        const onlineUser = decrypt(token) as IOnlineUsers
+        if (onlineUser.uuid != user.uuid) return
 
-        socket?.on("onPlayerInitAdminModeReceive", (token: string) => {
-            const data = decrypt(token) as IOnlineUsers
-            if (data.uuid == user.uuid && data.uuid != uuid && isValidate) {
-                setUserVolume("1.0")
-                setUserIsAdminMode(true)
+        const peerCall = peer?.call(onlineUser.uuid!!, stream!!, {
+            metadata: {
+                uuid: uuid
             }
         })
 
-        socket?.on("onAdminModeEnableReceive", (token: string) => {
-            const data = decrypt(token) as {
-                uuid: string,
-                server: string
-            }
-            if (data.uuid != user.uuid && isValidate) return
-            setUserIsAdminMode(true)
-            if (data.uuid == uuid) return
-            peerCall = peer?.call(data.uuid!!, stream!!, {
-                metadata: {
-                    uuid: uuid
-                }
-            })
-            setCall(peerCall)
-            peerCall?.on("stream", remoteStream => {
+        setCall(peerCall)
+        peerCall?.on("stream", remoteStream => {
+            setUserStream(remoteStream)
+            if (audioRef.current) {
+                audioRef.current.srcObject = remoteStream
                 setUserStream(remoteStream)
-                if (audioRef.current) {
-                    audioRef.current.srcObject = remoteStream
-                    setUserStream(remoteStream)
-                }
-            })
+            }
+        })
+    }
 
+    const onDisableVoiceReceive = (token: string) => {
+        const onlineUser = decrypt(token) as IOnlineUsers
+        if (onlineUser.uuid != user.uuid) return
+        call?.close()
+    }
+
+    const onPlayerInitAdminModeReceive = (token: string) => {
+        const data = decrypt(token) as IOnlineUsers
+        if (data.uuid == user.uuid && data.uuid != uuid && isValidate) {
             setUserVolume("1.0")
-        })
+            setUserIsAdminMode(true)
+        }
+    }
 
-        socket?.on("onAdminModeDisableReceive", (token: string) => {
-            const data = decrypt(token) as {
-                uuid: string
+    const onAdminModeEnableReceive = (token: string) => {
+        const data = decrypt(token) as {
+            uuid: string,
+            server: string
+        }
+        if (data.uuid != user.uuid && isValidate) return
+        setUserIsAdminMode(true)
+        if (data.uuid == uuid) return
+        const peerCall = peer?.call(data.uuid!!, stream!!, {
+            metadata: {
+                uuid: uuid
             }
-            if (data.uuid != user.uuid) return
-            setUserIsAdminMode(false)
-            peerCall?.close()
-
         })
-
-        socket?.on("onNewPlayerLeave", (token: string) => {
-            const data = decrypt(token) as IOnlineUsers
-            if (data.uuid != user.uuid && data.uuid == uuid) return
-            peerCall?.close()
-        })
-
-        socket?.on("onPlayerLeaveReceivePlugin", (token: string) => {
-            const data = decrypt(token) as IOnlineUsers
-            if (data.uuid != user.uuid && data.uuid == uuid) return
-            peerCall?.close()
-        })
-
-        socket?.on("onPlayerChangeServer", (token: string) => {
-            const data = decrypt(token) as {
-                name: string,
-                uuid: string,
-                server: string
+        setCall(peerCall)
+        peerCall?.on("stream", remoteStream => {
+            if (audioRef.current) {
+                audioRef.current.srcObject = remoteStream
+                setUserStream(remoteStream)
             }
-            if (data.uuid != user.uuid && data.uuid != uuid ) return
-            setUserIsAdminMode(false)
-            peerCall?.close()
         })
 
-        socket?.on("onSetVolumeReceive", (data: IVolume) => {
-            if (data.uuid != user.uuid) return
-            setUserVolume(data.volume)
-        })
+        setUserVolume("1.0")
+    }
 
-        return () => {
-            socket?.off("onEnableVoiceReceive")
-            socket?.off("onDisableVoiceReceive")
+    const onAdminModeDisableReceive = (token: string) => {
+        const data = decrypt(token) as {
+            uuid: string
+        }
+        if (data.uuid != user.uuid) return
+        setUserIsAdminMode(false)
+        call?.close()
+    }
+
+    const onNewPlayerLeave = (token: string) => {
+        const data = decrypt(token) as IOnlineUsers
+        if (data.uuid != user.uuid && data.uuid == uuid) return
+        call?.close()
+    }
+
+    const onPlayerLeaveReceivePlugin = (token: string) => {
+        const data = decrypt(token) as IOnlineUsers
+        if (data.uuid != user.uuid && data.uuid == uuid) return
+        call?.close()
+    }
+
+    const onPlayerChangeServer = (token: string) => {
+        const data = decrypt(token) as {
+            name: string,
+            uuid: string,
+            server: string
+        }
+        if (data.uuid != user.uuid && data.uuid != uuid) return
+        setUserIsAdminMode(false)
+        call?.close()
+    }
+
+    const onSetVolumeReceive = (data: IVolume) => {
+        if (data.uuid != user.uuid) return
+        setUserVolume(data.volume)
+    }
+
+    const onPlayerChangeControlReceive = (token: string) => {
+        const data = decrypt(token) as IReceiveControl
+        if (data.uuid == user.uuid) {
+            if (data.type == "mic") {
+                setIsSelfMute(data.value)
+            } else {
+                setIsDeafen(data.value)
+            }
+        }
+    }
+
+    const onSetControlPluginReceive = (token: string) => {
+        const data = decrypt(token) as IReceiveControl
+        if (data.uuid == user.uuid && data.uuid != uuid) {
+            if (data.type == "mic") {
+                setIsSelfMute(data.value)
+            } else {
+                setIsDeafen(data.value)
+            }
+        }
+    }
+
+    const onStartCallSelfPluginReceive = (token: string) => {
+        const data = decrypt(token) as { name: string, uuid: string }
+        if (data.uuid == user.uuid && data.uuid != uuid) {
+            setIsPendingCall(true)
+
+            callingSound?.play()
+
+        }
+    }
+
+    const onStartCallTargetPluginReceive = (token: string) => {
+        const data = decrypt(token) as { name: string, uuid: string }
+        if (data.uuid == user.uuid && data.uuid != uuid) {
+            setIsPendingCall(true)
+            callingSound2?.play()
+
+        }
+    }
+
+    const onAcceptCallSelfPluginReceive = (token: string) => {
+        const data = decrypt(token) as { name: string, uuid: string }
+        if (data.uuid == user.uuid && data.uuid != uuid) {
+            setIsPendingCall(false)
+            setIsInCall(true)
+
+            callingSound2?.pause()
+
+        }
+    }
+
+    const onAcceptCallTargetPluginReceive = (token: string) => {
+        const data = decrypt(token) as { name: string, uuid: string }
+        if (data.uuid == user.uuid && data.uuid != uuid) {
+            const peerCall = peer?.call(data.uuid!!, stream!!, {
+                metadata: {
+                    uuid: uuid
+                }
+            })
+            setCall(peerCall)
+            peerCall?.on("stream", remoteStream => {
+                if (audioRef.current) {
+                    audioRef.current.srcObject = remoteStream
+                    setUserStream(remoteStream)
+                }
+            })
+            setUserVolume("1.0")
+            setIsPendingCall(false)
+            setIsInCall(true)
+
+            callingSound?.pause()
         }
 
+    }
 
-    }, [socket, uuid, stream, isValidate])
+    const onEndCallSelfPluginReceive = (token: string) => {
+        const data = decrypt(token) as { name: string, uuid: string }
+        if (data.uuid == user.uuid && data.uuid != uuid) {
+            setIsInCall(false)
+            call?.close()
+
+
+            endCallSound?.play()
+        }
+    }
+
+    const onEndCallTargetPluginReceive = (token: string) => {
+        const data = decrypt(token) as { name: string, uuid: string }
+        if (data.uuid == user.uuid && data.uuid != uuid) {
+            setIsInCall(false)
+            call?.close()
+
+            endCallSound?.play()
+        }
+    }
+
+    const onPendingCallEndSelfPluginReceive = (token: string) => {
+        const data = decrypt(token) as { name: string, uuid: string }
+        if (data.uuid == user.uuid && data.uuid != uuid) {
+            setIsPendingCall(false)
+            callingSound?.pause()
+            endCallSound?.play()
+        }
+    }
+
+    const onPendingCallEndTargetPluginReceive = (token: string) => {
+        const data = decrypt(token) as { name: string, uuid: string }
+        if (data.uuid == user.uuid && data.uuid != uuid) {
+            setIsPendingCall(false)
+            callingSound2?.pause()
+            endCallSound?.play()
+        }
+    }
+
+    const onDenyCallSelfPluginReceive = (token: string) => {
+        const data = decrypt(token) as { name: string, uuid: string }
+        if (data.uuid == user.uuid && data.uuid != uuid) {
+            setIsPendingCall(false)
+            callingSound?.pause()
+            callingSound2?.pause()
+            endCallSound?.play()
+        }
+    }
+
+    const onDenyCallTargetPluginReceive = (token: string) => {
+        const data = decrypt(token) as { name: string, uuid: string }
+        if (data.uuid == user.uuid && data.uuid != uuid) {
+            setIsPendingCall(false)
+            callingSound2?.pause()
+            callingSound?.pause()
+            endCallSound?.play()
+        }
+    }
+
+    useEffect(() => {
+            if (!uuid || !stream) return
+
+            socket?.on("onEnableVoiceReceive", onEnableVoiceReceive)
+            socket?.on("onDisableVoiceReceive", onDisableVoiceReceive)
+            socket?.on("onPlayerInitAdminModeReceive", onPlayerInitAdminModeReceive)
+            socket?.on("onAdminModeEnableReceive", onAdminModeEnableReceive)
+            socket?.on("onAdminModeDisableReceive", onAdminModeDisableReceive)
+            socket?.on("onNewPlayerLeave", onNewPlayerLeave)
+            socket?.on("onPlayerLeaveReceivePlugin", onPlayerLeaveReceivePlugin)
+            socket?.on("onPlayerChangeServer", onPlayerChangeServer)
+            socket?.on("onSetVolumeReceive", onSetVolumeReceive)
+
+            socket?.on("onStartCallSelfPluginReceive", onStartCallSelfPluginReceive)
+            socket?.on("onStartCallTargetPluginReceive", onStartCallTargetPluginReceive)
+
+            socket?.on("onEndCallSelfPluginReceive", onEndCallSelfPluginReceive)
+            socket?.on("onEndCallTargetPluginReceive", onEndCallTargetPluginReceive)
+
+            socket?.on("onPendingCallEndSelfPluginReceive", onPendingCallEndSelfPluginReceive)
+            socket?.on("onPendingCallEndTargetPluginReceive", onPendingCallEndTargetPluginReceive)
+
+            socket?.on("onAcceptCallSelfPluginReceive", onAcceptCallSelfPluginReceive)
+            socket?.on("onAcceptCallTargetPluginReceive", onAcceptCallTargetPluginReceive)
+
+            socket?.on("onDenyCallSelfPluginReceive", onDenyCallSelfPluginReceive)
+            socket?.on("onDenyCallTargetPluginReceive", onDenyCallTargetPluginReceive)
+
+            return () => {
+                socket?.off("onEnableVoiceReceive", onEnableVoiceReceive)
+                socket?.off("onDisableVoiceReceive", onDisableVoiceReceive)
+                socket?.off("onPlayerInitAdminModeReceive", onPlayerInitAdminModeReceive)
+                socket?.off("onAdminModeEnableReceive", onAdminModeEnableReceive)
+                socket?.off("onAdminModeDisableReceive", onAdminModeDisableReceive)
+                socket?.off("onNewPlayerLeave", onNewPlayerLeave)
+                socket?.off("onPlayerLeaveReceivePlugin", onPlayerLeaveReceivePlugin)
+                socket?.off("onPlayerChangeServer", onPlayerChangeServer)
+                socket?.off("onSetVolumeReceive", onSetVolumeReceive)
+
+                socket?.off("onStartCallSelfPluginReceive", onStartCallSelfPluginReceive)
+                socket?.off("onStartCallTargetPluginReceive", onStartCallTargetPluginReceive)
+                socket?.off("onEndCallSelfPluginReceive", onEndCallSelfPluginReceive)
+                socket?.off("onEndCallTargetPluginReceive", onEndCallTargetPluginReceive)
+                socket?.off("onPendingCallEndSelfPluginReceive", onPendingCallEndSelfPluginReceive)
+                socket?.off("onPendingCallEndTargetPluginReceive", onPendingCallEndTargetPluginReceive)
+                socket?.off("onAcceptCallSelfPluginReceive", onAcceptCallSelfPluginReceive)
+                socket?.off("onAcceptCallTargetPluginReceive", onAcceptCallTargetPluginReceive)
+                socket?.off("onDenyCallSelfPluginReceive", onDenyCallSelfPluginReceive)
+                socket?.off("onDenyCallTargetPluginReceive", onDenyCallTargetPluginReceive)
+            }
+
+        }, [socket, uuid, stream, isValidate, call]
+    )
 
     useEffect(() => {
         if (isValidate) return
@@ -147,41 +331,31 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
     }, [isValidate, call])
 
     useEffect(() => {
-        if (!uuid) return
+            if (!uuid) return
+            socket?.on("onPlayerChangeControlReceive", onPlayerChangeControlReceive)
+            socket?.on("onSetControlPluginReceive", onSetControlPluginReceive)
 
-        socket?.on("onPlayerChangeControlReceive", (token: string) => {
-            const data = decrypt(token) as IReceiveControl
-            if (data.uuid == user.uuid) {
-                if (data.type == "mic") {
-                    setIsSelfMute(data.value)
-                } else {
-                    setIsDeafen(data.value)
-                }
+            return () => {
+                socket?.off("onPlayerChangeControlReceive", onPlayerChangeControlReceive)
+                socket?.off("onSetControlPluginReceive", onSetControlPluginReceive)
             }
-        })
 
-        socket?.on("onSetControlPluginReceive", (token: string) => {
-            const data = decrypt(token) as IReceiveControl
-            if (data.uuid == user.uuid && data.uuid != uuid) {
-                if (data.type == "mic") {
-                    setIsSelfMute(data.value)
-                } else {
-                    setIsDeafen(data.value)
-                }
-            }
-        })
-
-    }, [socket, uuid])
+        }, [socket, uuid]
+    )
 
     useEffect(() => {
         if (audioRef.current) {
             if (parseFloat(userVolume) > 1.0 || parseFloat(userVolume) < 0.0) {
                 audioRef.current.volume = 1.0
             } else {
-                audioRef.current.volume = parseFloat(userVolume)
+                if (isInCall || user.isAdminMode) {
+                    audioRef.current.volume = 1.0
+                } else {
+                    audioRef.current.volume = parseFloat(userVolume)
+                }
             }
         }
-    }, [userVolume])
+    }, [userVolume, isInCall, user])
 
 
     useEffect(() => {
@@ -247,7 +421,10 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
                 playsInline
             >
             </audio>
-            <div className="flex items-center bg-neutral-800 px-1 py-1 rounded-xl shadow-xl">
+
+
+            <div
+                className={`${isPendingCall ? "shake" : ""} flex items-center bg-neutral-800 px-1 py-1 rounded-xl shadow-xl`}>
                 <div className="flex justify-center items-center w-2/12">
                     <Image
                         src={`https://mc-heads.net/avatar/${user.name}`}
@@ -284,6 +461,30 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
                                         </span>
                                         Admin
                                     </span>
+                                </div>
+                            ) : ""}
+
+                            {isInCall ? (
+                                <div className="ms-2 self-center">
+                                <span
+                                    className="whitespace-nowrap ring-1 ring-fuchsia-900 text-xs font-medium mr-2 px-1.5 py-0.5 rounded dark:bg-fuchsia-500 dark:text-white flex">
+                                    <span className="me-1 self-center hidden sm:block">
+                                        <BiPhoneCall/>
+                                    </span>
+                                    Call
+                                </span>
+                                </div>
+                            ) : ""}
+
+                            {isPendingCall ? (
+                                <div className="ms-2 self-center">
+                                <span
+                                    className="whitespace-nowrap ring-1 ring-yellow-900 text-xs font-medium mr-2 px-1.5 py-0.5 rounded dark:bg-yellow-500 dark:text-white flex">
+                                    <span className="me-1 self-center hidden sm:block">
+                                        <MdOutlinePhoneCallback/>
+                                    </span>
+                                    Calling...
+                                </span>
                                 </div>
                             ) : ""}
                         </div>

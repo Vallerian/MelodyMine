@@ -2,6 +2,7 @@ package ir.taher7.melodymine.models
 
 import com.google.gson.annotations.Expose
 import org.bukkit.entity.Player
+import org.bukkit.scheduler.BukkitTask
 
 data class MelodyPlayer(
     @Expose(deserialize = false) var player: Player? = null,
@@ -18,6 +19,12 @@ data class MelodyPlayer(
     @Expose var isToggle: Boolean = false,
     @Expose var isSelfMute: Boolean = true,
     @Expose var isDeafen: Boolean = true,
+    @Expose var isInCall: Boolean = false,
+    @Expose var callTarget: MelodyPlayer? = null,
+    @Expose var isCallPending: Boolean = false,
+    @Expose var callPendingTarget: MelodyPlayer? = null,
+    @Expose var callToggle: Boolean = false,
+    @Expose var pendingTask: BukkitTask? = null,
     @Expose(deserialize = false) var isSendOffer: ArrayList<String> = arrayListOf(),
 ) {
 

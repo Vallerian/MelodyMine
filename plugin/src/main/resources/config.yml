@@ -35,13 +35,18 @@ force-voice: false
 # shortcut for toggle self mute in website (Shift + F)
 mute-toggle-shortcut: true
 
+# call configs
+call-pending-time: 600
+
 # ----- Message configs -----
 
 # main plugin prefix.
-prefix: "<gradient:#FFF4E4:#DDB216>MelodyMine</gradient> <#FFF4E4><bold>|</bold> <text>"
-text: "<gradient:#F04FE7:#FFF4E4>"
-text_hover: "<gradient:#F04FE7:#DDB216>"
-count_color: "<#DDB216>"
+prefix: "<gradient:#f20ae5:#FFF4E4>MelodyMine</gradient> <#EAEAEA><bold>|</bold> <text>"
+text: "<gradient:#EAEAEA:#E3ACF9>"
+text_hover: "<gradient:#f20ae5:#FFF4E4>"
+count_color: "<#FFD369>"
+content_header: "<st><gradient:#121F31:#F04FE7>                     </gradient></st> <bold><gradient:#F04FE7:#FFF4E4:#F04FE7>MelodyMine</gradient></bold> <st><gradient:#F04FE7:#121F31>                      </st>"
+content_footer: "<st><gradient:#121F31:#F04FE7:#121F31><st>                                                             "
 
 # open website link message.
 website-message: "Click to open website and start voice chat."
@@ -60,6 +65,7 @@ mute-description: "Mute player in voice chat."
 unmute-description: "Unmute player in voice chat."
 toggle-description: "toggle join & leave voice logs"
 control-description: "Mute / Deafen Yourself in website."
+call-description: "Call to Another Player."
 
 
 # Placeholder Messages
