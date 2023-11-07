@@ -30,6 +30,8 @@ object Storage {
     lateinit var textHover: String
     lateinit var count_color: String
     lateinit var websiteMessage: String
+    lateinit var contentHeader: String
+    lateinit var contentFooter: String
 
     // logger messages
     lateinit var websiteJoinLogger: String
@@ -45,6 +47,7 @@ object Storage {
     lateinit var unmuteDescription: String
     lateinit var toggleDescription: String
     lateinit var controlDescription: String
+    lateinit var callDescription: String
 
     // placeholder messages
     lateinit var placeholderWebOnlineTrue: String
@@ -85,11 +88,15 @@ object Storage {
     lateinit var deafenToggleMessage: String
     lateinit var unDeafenToggleMessage: String
 
+    // call configs
+    var callPendingTime: Long = 200
+
     // plugin data
     val onlinePlayers = hashMapOf<String, MelodyPlayer>()
     val subCommands = ArrayList<SubCommand>()
     val muteCoolDown = hashMapOf<UUID, Long>()
     val playerMuteShortcut = ArrayList<UUID>()
+
 
     init {
         reload()
@@ -122,6 +129,8 @@ object Storage {
         text = config.getString("text") ?: ""
         textHover = config.getString("text_hover") ?: ""
         count_color = config.getString("count_color") ?: ""
+        contentHeader = config.getString("content_header") ?: ""
+        contentFooter = config.getString("content_footer") ?: ""
 
         websiteMessage = config.getString("website-message") ?: ""
 
@@ -137,6 +146,7 @@ object Storage {
         unmuteDescription = config.getString("unmute-description") ?: ""
         toggleDescription = config.getString("toggle-description") ?: ""
         controlDescription = config.getString("control-description") ?: ""
+        callDescription = config.getString("call-description") ?: ""
 
         placeholderWebOnlineTrue = config.getString("placeholder-web-online-true") ?: ""
         placeholderWebOnlineFalse = config.getString("placeholder-web-online-false") ?: ""
@@ -171,6 +181,8 @@ object Storage {
         unMuteToggleMessage = config.getString("unmute-toggle-message") ?: ""
         deafenToggleMessage = config.getString("deafen-toggle-message") ?: ""
         unDeafenToggleMessage = config.getString("un-deafen-toggle-message") ?: ""
+
+        callPendingTime = config.getLong("call-pending-time")
 
     }
 

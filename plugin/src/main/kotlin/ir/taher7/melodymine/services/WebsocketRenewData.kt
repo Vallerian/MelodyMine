@@ -16,7 +16,7 @@ class WebsocketRenewData {
                 if (Storage.onlinePlayers.isNotEmpty()) {
                     Storage.onlinePlayers.values.filter { player -> player.webIsOnline && player.isActiveVoice && !player.adminMode }
                         .forEach { melodyPlayer ->
-                            Storage.onlinePlayers.values.filter { player -> player.uuid != melodyPlayer.uuid && player.webIsOnline && player.isActiveVoice && !player.adminMode }
+                            Storage.onlinePlayers.values.filter { player -> player.uuid != melodyPlayer.uuid && player.webIsOnline && player.isActiveVoice && !player.adminMode && player.callTarget != melodyPlayer}
                                 .forEach { targetPlayer ->
                                     val playerLocation = melodyPlayer.player?.location
                                     val targetLocation = targetPlayer.player?.location

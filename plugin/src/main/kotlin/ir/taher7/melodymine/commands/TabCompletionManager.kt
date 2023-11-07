@@ -36,6 +36,14 @@ class TabCompletionManager : TabCompleter {
                         null
                     }
                 }
+
+                if (args[0].equals("call", true)) {
+                    return if (sender.hasPermission("melodymine.call")) {
+                        listOf("start", "end", "accept", "deny", "toggle")
+                    } else {
+                        null
+                    }
+                }
             }
 
             else -> {}

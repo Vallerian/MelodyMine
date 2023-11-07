@@ -63,7 +63,11 @@ class Start : SubCommand() {
     }
 
     private fun sendStartHelpMessage(player: Player) {
-        player.sendMessage("<click:run_command:'/melodymine start link'><hover:show_text:'<text_hover>Click to run this command <i>/melodymine start link</i>'><prefix>Use: <i>/melodymine start link</i> (PC)</hover></click>".toComponent())
-        player.sendMessage("<click:run_command:'/melodymine start qrcode'><hover:show_text:'<text_hover>Click to run this command <i>/melodymine start qrcode</i>'><prefix>Use: <i>/melodymine start qrcode</i> (Phone)</hover></click>".toComponent())
+        player.sendMessage(Storage.contentHeader.toComponent())
+        player.sendMessage("")
+        player.sendMessage("<click:run_command:'${syntax} link'><hover:show_text:'<text_hover>Click to run <i>${syntax} link</i>'><text_hover>${syntax} link <#FFF4E4><bold>|</bold> <text>Open Website with Link.</hover></click>".toComponent())
+        player.sendMessage("<click:run_command:'${syntax} qrcode'><hover:show_text:'<text_hover>Click to run <i>${syntax} qrcode</i>'><text_hover>${syntax} qrcode <#FFF4E4><bold>|</bold> <text>Open Website with Qrcode.</hover></click>".toComponent())
+        player.sendMessage("")
+        player.sendMessage(Storage.contentFooter.toComponent())
     }
 }

@@ -75,7 +75,81 @@
     }
 }
 
-.soundAnimationSingle{
+.soundAnimationSingle {
     /*border: 2px solid rgba(13, 255, 0, 0.8);*/
     opacity: 100%;
+}
+
+.shake {
+    animation: shake 1s infinite ease;
+}
+
+@keyframes shake {
+    0%, 100% {
+        transform: translate3d(0, 0, 0);
+    }
+    10%, 30%, 50%, 70%, 90% {
+        transform: translate3d(-3px, 0, 0);
+    }
+    20%, 40%, 60%, 80% {
+        transform: translate3d(3px, 0, 0);
+    }
+}
+
+.reflection {
+    position: relative;
+    overflow: hidden;
+}
+
+.reflection::after {
+    content: "";
+    display: block;
+    width: 50px;
+    height: 100%;
+    position: absolute;
+    top: -180px;
+    left: 0;
+    background-color: #D3D3D3FF;
+    opacity: 0;
+    transform: rotate(45deg);
+    animation: reflect 10s ease-in-out infinite;
+    -webkit-animation: reflect 10s ease infinite;
+}
+
+@keyframes reflect {
+    0% {
+        transform: scale(0) rotate(45deg);
+        opacity: 0;
+    }
+    80% {
+        transform: scale(0) rotate(45deg);
+        opacity: 0.5;
+    }
+    81% {
+        transform: scale(4) rotate(45deg);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(50) rotate(45deg);
+        opacity: 0;
+    }
+}
+
+@-webkit-keyframes reflect {
+    0% {
+        transform: scale(0) rotate(45deg);
+        opacity: 0;
+    }
+    80% {
+        transform: scale(0) rotate(45deg);
+        opacity: 0.5;
+    }
+    81% {
+        transform: scale(4) rotate(45deg);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(50) rotate(45deg);
+        opacity: 0;
+    }
 }

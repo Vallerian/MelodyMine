@@ -5,7 +5,7 @@ import {useValidateStore} from "@/store/ValidateStore";
 import {useEffect, useState} from "react";
 import Progress from "@/components/Porgress/Progress";
 import {useSocketStore} from "@/store/SocketStore";
-import {Socket, io} from "socket.io-client";
+import {io, Socket} from "socket.io-client";
 import {useSession} from "next-auth/react";
 import {useStreamStore} from "@/store/StreamStore";
 import {useOnlineUsersStore} from "@/store/OnlineUsersStore";
@@ -20,7 +20,7 @@ const StartButton = () => {
     const {status} = useSession()
     const user = useUserStore(state => state)
     const {noiseSuppression} = useControlStore(state => state)
-    const {socket, setSocket, disconnectSocket, setPeer} = useSocketStore(state => state)
+    const {socket, setSocket, disconnectSocket, setPeer, disconnectPeer} = useSocketStore(state => state)
     const {addUser, removeAllOnline, setAdminModeAll} = useOnlineUsersStore(state => state)
     const {initStream, closeStream} = useStreamStore(state => state)
     const {isValidate, setError, setValidate} = useValidateStore(state => state)
@@ -45,7 +45,6 @@ const StartButton = () => {
                 route.push("/?error=multiUser")
             } else {
                 try {
-
                     socket = io(socketURL, {
                         auth: {
                             from: "web",
@@ -72,7 +71,7 @@ const StartButton = () => {
                         setValidate(false)
                         closeStream()
                         removeAllOnline()
-                        setAdminModeAll()
+                        disconnectPeer()
                     })
 
                     import("peerjs").then(({default: Peer}) => {
@@ -90,8 +89,12 @@ const StartButton = () => {
                         })
 
                         peer.on("disconnected", () => {
-                            setValidate(false)
                             setPeerConnection(false)
+                            setValidate(false)
+                            closeStream()
+                            removeAllOnline()
+                            setAdminModeAll()
+                            disconnectSocket()
                         })
                     })
 
@@ -104,11 +107,12 @@ const StartButton = () => {
 
         doAsync()
         return () => {
-            disconnectSocket()
             setValidate(false)
             closeStream()
             removeAllOnline()
             setAdminModeAll()
+            disconnectSocket()
+            disconnectPeer()
         }
 
     }, [])
@@ -183,7 +187,7 @@ const StartButton = () => {
             <button
                 className="text-sm btn-gradient px-3 py-1 rounded text-white shadow-xl flex items-center"
                 onClick={handleStart}
-                disabled={isLoading || status == "loading" || startButton || !socketConnected}
+                disabled={isLoading || status == "loading" || startButton || !socketConnected || !peerConnection}
             >
                 Start
                 <span className="px-1 hidden sm:block text-2xl">

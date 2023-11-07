@@ -35,6 +35,17 @@ const SoundControl = () => {
     const {isValidate, setValidate} = useValidateStore(state => state)
     const [instant, setInstant] = useState(0.00)
 
+    const onSetControlPluginReceive = (token: string) => {
+        const data = decrypt(token) as IReceiveControl
+        if (data.uuid == uuid) {
+            if (data.type == "mic") {
+                setMicActive(data.value, true)
+            } else {
+                setSoundActive(data.value, true)
+            }
+        }
+    }
+
     useEffect(() => {
         let interval: any
         let soundMaster: any
@@ -64,16 +75,10 @@ const SoundControl = () => {
 
     useEffect(() => {
         if (!uuid) return
-        socket?.on("onSetControlPluginReceive", (token: string) => {
-            const data = decrypt(token) as IReceiveControl
-            if (data.uuid == uuid) {
-                if (data.type == "mic") {
-                    setMicActive(data.value, true)
-                } else {
-                    setSoundActive(data.value, true)
-                }
-            }
-        })
+        socket?.on("onSetControlPluginReceive", onSetControlPluginReceive)
+        return () => {
+            socket?.off("onSetControlPluginReceive", onSetControlPluginReceive)
+        }
 
     }, [socket, uuid])
 
@@ -99,7 +104,8 @@ const SoundControl = () => {
 
 
     if (!isValidate) return (
-        <div className="fixed md:fixed text-white bottom-5 bg-neutral-700 sm:bg-transparent sm:px-0 px-3 sm:py-0 py-2 rounded-xl sm:shadow-none shadow-xl z-10 bg-opacity-60">
+        <div
+            className="fixed md:fixed text-white bottom-5 bg-neutral-700 sm:bg-transparent sm:px-0 px-3 sm:py-0 py-2 rounded-xl sm:shadow-none shadow-xl z-10 bg-opacity-60">
             <button
                 className={`cursor-pointer text-sm ${noiseSuppression ? "text-green-500" : "text-neutral-400"} flex gap-1 justify-center items-center p-1 rounded ring-1 ${noiseSuppression ? "ring-green-700" : "ring-neutral-700"} shadow ${noiseSuppression ? "shadow-green-600" : "shadow-neutral-600"}`}
                 onClick={() => setNoiseSuppression(!noiseSuppression)}

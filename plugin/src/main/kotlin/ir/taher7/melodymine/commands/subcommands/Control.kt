@@ -58,7 +58,11 @@ class Control : SubCommand() {
     }
 
     private fun sendControlHelpMessage(player: Player) {
-        player.sendMessage("<click:run_command:'/melodymine control mute'><hover:show_text:'<text_hover>Click to run this command <i>/melodymine control mute</i>'><prefix>Use: <i>/melodymine control mute</i></hover></click>".toComponent())
-        player.sendMessage("<click:run_command:'/melodymine control deafen'><hover:show_text:'<text_hover>Click to run this command <i>/melodymine control deafen</i>'><prefix>Use: <i>/melodymine control deafen</i></hover></click>".toComponent())
+        player.sendMessage(Storage.contentHeader.toComponent())
+        player.sendMessage("")
+        player.sendMessage("<click:run_command:'${syntax} mute'><hover:show_text:'<text_hover>Click to run <i>${syntax} mute</i>'><text_hover>${syntax} mute <#FFF4E4><bold>|</bold> <text>Mute Yourself in Website.</hover></click>".toComponent())
+        player.sendMessage("<click:run_command:'${syntax} deafen'><hover:show_text:'<text_hover>Click to run <i>${syntax} deafen</i>'><text_hover>${syntax} deafen <#FFF4E4><bold>|</bold> <text>Deafen Yourself in Website.</hover></click>".toComponent())
+        player.sendMessage("")
+        player.sendMessage(Storage.contentFooter.toComponent())
     }
 }

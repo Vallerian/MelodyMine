@@ -50,3 +50,27 @@ permissions:
   melodymine.control:
     description: player can change mute / deafen in website
     default: true
+  melodymine.call:
+    description: player can use /melodymine call
+    default: true
+    children:
+      melodymine.call.start: true
+      melodymine.call.end: true
+      melodymine.call.accept: true
+      melodymine.call.deny: true
+      melodymine.call.toggle: true
+  melodymine.call.start:
+    description: player can start call to another one
+    default: true
+  melodymine.call.end:
+    description: player can end call
+    default: true
+  melodymine.call.accept:
+    description: player can accept call
+    default: true
+  melodymine.call.deny:
+    description: player can deny call
+    default: true
+  melodymine.call.toggle:
+    description: player can toggle call
+    default: true

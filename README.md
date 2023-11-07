@@ -25,7 +25,7 @@ MelodyMine is a revolutionary system for Minecraft servers where players can sim
 ## Key Features 🌟
 
 
-<img style="margin-bottom:10px;border-radius: 5px" src="https://media.discordapp.net/attachments/1159034838783893567/1168283125206491167/image.png?ex=65513372&is=653ebe72&hm=cbaca1b0fdb1352d38c2337587ed6ba9665998d271266cedf3108c0cb6f16b24&="/>
+<img style="margin-bottom:10px;border-radius: 5px" src="https://cdn.discordapp.com/attachments/1159034838783893567/1171346459858325554/image.png?ex=655c5866&is=6549e366&hm=ad63d33eb0047f053aebc91c0f4df56c449bc92cfa23333c082b9ad512d483f0&"/>
 
 - 🗣️ **Admin Mode:** Admins can communicate with players across the entire server and listen to their conversations, even from a distance. Maintain control and ensure a safe environment. 🔊🔒
 
@@ -94,10 +94,17 @@ force-voice: false
 
 # shortcut for toggle self mute in website (Shift + F)
 mute-toggle-shortcut: true
+
+# call configs
+call-pending-time: 600
+
 ```
 
-- 🐞 **Robust System:** MelodyMine is a highly reliable and secure system with minimal bugs. Any discovered bugs are promptly addressed and fixed, ensuring a smooth and hassle-free experience for all users. Be part of a community that values your experience and offers continuous improvement. Find announcements and updates on our [GitHub repository](https://github.com/vallerian/MelodyMine). 🛠️🐛
+- 📞 **Call System:** You have the ability to make a call using the command `/melodymine call start <player>` to call other players.
 
+<img style="margin-bottom:10px;border-radius: 5px" src="https://media.discordapp.net/attachments/1159034838783893567/1171354819643047977/callpng.png?ex=655c602f&is=6549eb2f&hm=310550c82085cfd69735ad77502dc30d57b94605187fbab68229c619ec435fc7&="/>
+
+- 🐞 **Robust System:** MelodyMine is a highly reliable and secure system with minimal bugs. Any discovered bugs are promptly addressed and fixed, ensuring a smooth and hassle-free experience for all users. Be part of a community that values your experience and offers continuous improvement. Find announcements and updates on our [GitHub repository](https://github.com/vallerian/MelodyMine). 🛠️🐛
 
 ## Links 🔗
 

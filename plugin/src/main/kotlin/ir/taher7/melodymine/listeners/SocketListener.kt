@@ -71,7 +71,8 @@ class SocketListener(private val socket: Socket) {
             val melodyPlayer = gson.fromJson(args[0].toString(), MelodyPlayer::class.java)
             if (melodyPlayer.server != Storage.server) return@on
             updateMelodyPlayer(melodyPlayer)
-            
+
+            Utils.clearUpCall(Storage.onlinePlayers[melodyPlayer.uuid])
 
             val targetForce = Storage.onlinePlayers[melodyPlayer.uuid]
             if (targetForce != null) Utils.forceVoice(targetForce)
@@ -82,6 +83,7 @@ class SocketListener(private val socket: Socket) {
                     player.isSendOffer.remove(melodyPlayer.uuid)
                 }
             }
+
             Utils.sendMessageLog("<prefix>${Storage.websiteLeaveLogger}", melodyPlayer)
             val player = Storage.onlinePlayers[melodyPlayer.uuid]?.player
             if (player != null) {
@@ -110,6 +112,7 @@ class SocketListener(private val socket: Socket) {
         socket.on("onPlayerStartVoiceWeb") { args ->
             val melodyPlayer = gson.fromJson(args[0].toString(), MelodyPlayer::class.java)
             if (melodyPlayer.server != Storage.server) return@on
+
             updateMelodyPlayer(melodyPlayer)
             Storage.onlinePlayers[melodyPlayer.uuid]?.isSendOffer = arrayListOf()
             Storage.onlinePlayers[melodyPlayer.uuid]?.adminMode = false
@@ -159,6 +162,8 @@ class SocketListener(private val socket: Socket) {
         socket.on("onPlayerEndVoiceWeb") { args ->
             val melodyPlayer = gson.fromJson(args[0].toString(), MelodyPlayer::class.java)
             if (melodyPlayer.server != Storage.server) return@on
+
+            Utils.clearUpCall(Storage.onlinePlayers[melodyPlayer.uuid])
             Storage.onlinePlayers[melodyPlayer.uuid]?.isSendOffer = arrayListOf()
             Storage.onlinePlayers.values.forEach { player ->
                 if (player.isSendOffer.contains(melodyPlayer.uuid)) {

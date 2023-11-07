@@ -34,98 +34,107 @@ const UserList = () => {
     const {closeStream} = useStreamStore(state => state)
     const [userOnline, setUserOnline] = useState<IOnlineUsers[]>()
 
+    const onPlayerJoinReceive = (token: string) => {
+        const data = decrypt(token) as IOnlineUsers[]
+        initUsers(data)
+    }
+
+    const onPlayerStartVoiceReceive = (token: string) => {
+        const user = decrypt(token) as IOnlineUsers
+        addUser(user)
+    }
+
+    const onNewPlayerLeave = (token: string) => {
+        const user = decrypt(token) as IOnlineUsers
+        removeUser(user.uuid!)
+    }
+
+    const onPlayerLeaveReceivePlugin = (token: string) => {
+        const user = decrypt(token) as IOnlineUsers
+        if (user.uuid != uuid) {
+            removeUser(user.uuid!)
+        } else {
+            setValidate(false)
+            setError("playerLeaveServer")
+            closeStream()
+            removeUser(user.uuid!)
+            changeUserAdminMode(false)
+        }
+    }
+
+    const onPluginDisabled = (token: string) => {
+        const data = decrypt(token) as {
+            server: string
+        }
+        setError("pluginDisabled")
+        setValidate(false)
+        closeStream()
+        removeAllOnline(data.server)
+        changeUserAdminMode(false)
+    }
+
+    const onPlayerChangeServer = (token: string) => {
+        const data = decrypt(token) as {
+            name: string,
+            uuid: string,
+            server: string
+        }
+        if (data.uuid == uuid) {
+            updateUser(data)
+            changeUserServer(data)
+            setAdminModeAll(true)
+            changeUserAdminMode(false)
+            setMicActive(true)
+            setSoundActive(true)
+        } else {
+            updateUser(data)
+        }
+    }
+
+    const onPlayerMuteReceive = (token: string) => {
+        const data = decrypt(token) as {
+            uuid: string
+        }
+        if (data.uuid == uuid) {
+            changeUserIsMute(true)
+            setMute(data.uuid, true)
+        } else {
+            setMute(data.uuid, true)
+        }
+    }
+
+    const onPlayerUnmuteReceive = (token: string) => {
+        const data = decrypt(token) as {
+            uuid: string
+        }
+        if (data.uuid == uuid) {
+            changeUserIsMute(false)
+            setMute(data.uuid, false)
+        } else {
+            setMute(data.uuid, false)
+        }
+    }
 
     useEffect(() => {
-        socket?.on("onPlayerJoinReceive", (token: string) => {
-            const data = decrypt(token) as IOnlineUsers[]
-            initUsers(data)
-        })
 
-        socket?.on("onPlayerStartVoiceReceive", (token: string) => {
-            const user = decrypt(token) as IOnlineUsers
-            addUser(user)
-        })
-
-        socket?.on("onNewPlayerLeave", (token: string) => {
-            const user = decrypt(token) as IOnlineUsers
-            removeUser(user.uuid!)
-        })
-
-        socket?.on("onPlayerLeaveReceivePlugin", (token: string) => {
-            const user = decrypt(token) as IOnlineUsers
-            if (user.uuid != uuid) {
-                removeUser(user.uuid!)
-            } else {
-                setValidate(false)
-                setError("playerLeaveServer")
-                closeStream()
-                removeUser(user.uuid!)
-                changeUserAdminMode(false)
-            }
-        })
-
-        socket?.on("onPluginDisabled", (token: string) => {
-            const data = decrypt(token) as {
-                server: string
-            }
-            setError("pluginDisabled")
-            setValidate(false)
-            closeStream()
-            removeAllOnline(data.server)
-            changeUserAdminMode(false)
-        })
-
-        socket?.on("onPlayerChangeServer", (token: string) => {
-            const data = decrypt(token) as {
-                name: string,
-                uuid: string,
-                server: string
-            }
-            if (data.uuid == uuid) {
-                updateUser(data)
-                changeUserServer(data)
-                setAdminModeAll(true)
-                changeUserAdminMode(false)
-                setMicActive(true)
-                setSoundActive(true)
-            } else {
-                updateUser(data)
-            }
-        })
-
-        socket?.on("onPlayerMuteReceive", (token: string) => {
-            const data = decrypt(token) as {
-                uuid: string
-            }
-            if (data.uuid == uuid) {
-                changeUserIsMute(true)
-                setMute(data.uuid, true)
-            } else {
-                setMute(data.uuid, true)
-            }
-        })
-
-        socket?.on("onPlayerUnmuteReceive", (token: string) => {
-            const data = decrypt(token) as {
-                uuid: string
-            }
-            if (data.uuid == uuid) {
-                changeUserIsMute(false)
-                setMute(data.uuid, false)
-            } else {
-                setMute(data.uuid, false)
-            }
-        })
+        socket?.on("onPlayerJoinReceive", onPlayerJoinReceive)
+        socket?.on("onPlayerStartVoiceReceive", onPlayerStartVoiceReceive)
+        socket?.on("onNewPlayerLeave", onNewPlayerLeave)
+        socket?.on("onPlayerLeaveReceivePlugin", onPlayerLeaveReceivePlugin)
+        socket?.on("onPluginDisabled", onPluginDisabled)
+        socket?.on("onPlayerChangeServer", onPlayerChangeServer)
+        socket?.on("onPlayerMuteReceive", onPlayerMuteReceive)
+        socket?.on("onPlayerUnmuteReceive", onPlayerUnmuteReceive)
 
         return () => {
-            socket?.off("onPlayerJoinReceive")
-            socket?.off("onPlayerStartVoiceReceive")
-            socket?.off("onNewPlayerLeave")
-            socket?.off("onPlayerLeaveReceivePlugin")
-            socket?.off("onPluginDisabled")
-            socket?.off("onPlayerChangeServer")
-            socket?.off("onPlayerMuteReceive")
-            socket?.off("onPlayerUnmuteReceive")
+            socket?.off("onPlayerJoinReceive", onPlayerJoinReceive)
+            socket?.off("onPlayerStartVoiceReceive", onPlayerStartVoiceReceive)
+            socket?.off("onNewPlayerLeave", onNewPlayerLeave)
+            socket?.off("onPlayerLeaveReceivePlugin", onPlayerLeaveReceivePlugin)
+            socket?.off("onPluginDisabled", onPluginDisabled)
+            socket?.off("onPlayerChangeServer", onPlayerChangeServer)
+            socket?.off("onPlayerMuteReceive", onPlayerMuteReceive)
+            socket?.off("onPlayerUnmuteReceive", onPlayerUnmuteReceive)
         }
 
     }, [socket, uuid])
@@ -135,7 +144,8 @@ const UserList = () => {
     }, [users])
 
     return (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 w-full mt-3">
+        <div
+            className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 w-full mt-3 reflection">
             {userOnline?.sort((a, b) => {
                 const uuidComparison = (a.uuid === uuid && b.uuid !== uuid) ? -1 :
                     (a.uuid !== uuid && b.uuid === uuid) ? 1 : 0;

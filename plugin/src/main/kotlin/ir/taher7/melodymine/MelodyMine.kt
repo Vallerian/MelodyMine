@@ -3,6 +3,7 @@ package ir.taher7.melodymine
 import ir.taher7.melodymine.commands.CommandManager
 import ir.taher7.melodymine.commands.TabCompletionManager
 import ir.taher7.melodymine.database.Database
+import ir.taher7.melodymine.listeners.CallListener
 import ir.taher7.melodymine.listeners.MelodyMineListener
 import ir.taher7.melodymine.listeners.QRCodeListener
 import ir.taher7.melodymine.listeners.ShortcutListener
@@ -30,6 +31,7 @@ class MelodyMine : JavaPlugin() {
         server.pluginManager.registerEvents(MelodyMineListener(), this)
         server.pluginManager.registerEvents(QRCodeListener(), this)
         server.pluginManager.registerEvents(ShortcutListener(), this)
+        server.pluginManager.registerEvents(CallListener(), this)
 
         getCommand("melodymine")?.setExecutor(CommandManager())
         getCommand("melodymine")?.tabCompleter = TabCompletionManager()

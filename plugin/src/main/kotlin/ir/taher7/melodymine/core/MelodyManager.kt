@@ -249,4 +249,248 @@ object MelodyManager {
 
         Bukkit.getServer().pluginManager.callEvent(PostPlayerSetDeafenEvent(melodyPlayer, value))
     }
+
+    fun startCall(melodyPlayer: MelodyPlayer, targetPlayer: MelodyPlayer) {
+
+        val preStartCallEvent = PreStartCallEvent(melodyPlayer, targetPlayer)
+        Bukkit.getServer().pluginManager.callEvent(preStartCallEvent)
+        if (preStartCallEvent.isCancelled) return
+
+        if (preStartCallEvent.canSendMessage) {
+            melodyPlayer.player?.sendMessage(Storage.contentHeader.toComponent())
+            melodyPlayer.player?.sendMessage("")
+            melodyPlayer.player?.sendMessage("<text>Please wait to <count_color>${targetPlayer.name} <text>Accept Call.".toComponent())
+            melodyPlayer.player?.sendMessage("<click:run_command:'/melodymine call deny'><text>Click to <gradient:#D80032:#F78CA2>Deny</gradient> <text>Call.</click>".toComponent())
+            melodyPlayer.player?.sendMessage("")
+            melodyPlayer.player?.sendMessage(Storage.contentFooter.toComponent())
+        }
+
+        melodyPlayer.isCallPending = true
+        melodyPlayer.callPendingTarget = targetPlayer
+        targetPlayer.isCallPending = true
+        targetPlayer.callPendingTarget = melodyPlayer
+
+        val scheduler = MelodyMine.instance.server.scheduler
+        val callTask = scheduler.runTaskLater(MelodyMine.instance, Runnable {
+            val newMelodyPlayer = Storage.onlinePlayers[melodyPlayer.uuid] ?: return@Runnable
+            val newTargetPlayer = Storage.onlinePlayers[targetPlayer.uuid] ?: return@Runnable
+
+            if ((newMelodyPlayer.isCallPending && newMelodyPlayer.callPendingTarget == newTargetPlayer) &&
+                (newTargetPlayer.isCallPending && newTargetPlayer.callPendingTarget == newMelodyPlayer)
+            ) {
+                endPendingCall(newMelodyPlayer, newTargetPlayer)
+            }
+        }, Storage.callPendingTime)
+
+        melodyPlayer.pendingTask = callTask
+        targetPlayer.pendingTask = callTask
+
+        Websocket.socket.emit(
+            "onStartCallPlugin",
+            mapOf(
+                "player" to mapOf(
+                    "name" to targetPlayer.name,
+                    "uuid" to targetPlayer.uuid,
+                    "socketID" to melodyPlayer.socketID,
+                ),
+                "target" to mapOf(
+                    "name" to melodyPlayer.name,
+                    "uuid" to melodyPlayer.uuid,
+                    "socketID" to targetPlayer.socketID,
+                ),
+            )
+        )
+
+        if (preStartCallEvent.canSendMessage) {
+            targetPlayer.player?.sendMessage(Storage.contentHeader.toComponent())
+            targetPlayer.player?.sendMessage("")
+            targetPlayer.player?.sendMessage("<text>You have Received a Call from <count_color>${melodyPlayer.name}<text>.".toComponent())
+            targetPlayer.player?.sendMessage("<click:run_command:'/melodymine call accept'><text>Click to <gradient:#16FF00:#A2FF86>Accept</gradient> <text>Call.</click>".toComponent())
+            targetPlayer.player?.sendMessage("<click:run_command:'/melodymine call deny'><text>Click to <gradient:#D80032:#F78CA2>Deny</gradient> <text>Call.</click>".toComponent())
+            targetPlayer.player?.sendMessage("")
+            targetPlayer.player?.sendMessage(Storage.contentFooter.toComponent())
+        }
+
+        Bukkit.getServer().pluginManager.callEvent(PostStartCallEvent(melodyPlayer, targetPlayer))
+    }
+
+    fun endCall(melodyPlayer: MelodyPlayer, targetPlayer: MelodyPlayer) {
+
+        val preEndCallEvent = PreEndCallEvent(melodyPlayer, targetPlayer)
+        Bukkit.getServer().pluginManager.callEvent(preEndCallEvent)
+        if (preEndCallEvent.isCancelled) return
+
+        if (melodyPlayer.isSendOffer.contains(targetPlayer.uuid)) {
+            melodyPlayer.isSendOffer.remove(targetPlayer.uuid)
+        }
+
+        if (targetPlayer.isSendOffer.contains(melodyPlayer.uuid)) {
+            targetPlayer.isSendOffer.remove(melodyPlayer.uuid)
+        }
+
+        melodyPlayer.isInCall = false
+        melodyPlayer.callTarget = null
+
+        targetPlayer.isInCall = false
+        targetPlayer.callTarget = null
+
+        Websocket.socket.emit(
+            "onEndCallPlugin",
+            mapOf(
+                "player" to mapOf(
+                    "name" to targetPlayer.name,
+                    "uuid" to targetPlayer.uuid,
+                    "socketID" to melodyPlayer.socketID,
+                ),
+                "target" to mapOf(
+                    "name" to melodyPlayer.name,
+                    "uuid" to melodyPlayer.uuid,
+                    "socketID" to targetPlayer.socketID,
+                ),
+            )
+        )
+
+        val player = melodyPlayer.player ?: return
+        if (preEndCallEvent.canSendMessage) {
+            player.sendMessage("<prefix>You have End Call Between Yourself and <count_color>${targetPlayer.name}<text>.".toComponent())
+            targetPlayer.player?.sendMessage("<prefix><count_color>${melodyPlayer.name} <text>has End Call Between Themselves and You.".toComponent())
+        }
+        Bukkit.getServer().pluginManager.callEvent(PostEndCallEvent(melodyPlayer, targetPlayer))
+    }
+
+    fun endPendingCall(melodyPlayer: MelodyPlayer, targetPlayer: MelodyPlayer) {
+
+        val prePendingCallEndEvent = PreEndPendingCallEvent(melodyPlayer, targetPlayer)
+        Bukkit.getServer().pluginManager.callEvent(prePendingCallEndEvent)
+        if (prePendingCallEndEvent.isCancelled) return
+
+        targetPlayer.isCallPending = false
+        targetPlayer.callPendingTarget = null
+        melodyPlayer.isCallPending = false
+        melodyPlayer.callPendingTarget = null
+
+        melodyPlayer.pendingTask?.cancel()
+        targetPlayer.pendingTask?.cancel()
+
+        melodyPlayer.pendingTask = null
+        targetPlayer.pendingTask = null
+
+        Websocket.socket.emit(
+            "onPendingCallEndPlugin",
+            mapOf(
+                "player" to mapOf(
+                    "name" to targetPlayer.name,
+                    "uuid" to targetPlayer.uuid,
+                    "socketID" to melodyPlayer.socketID,
+                ),
+                "target" to mapOf(
+                    "name" to melodyPlayer.name,
+                    "uuid" to melodyPlayer.uuid,
+                    "socketID" to targetPlayer.socketID,
+                ),
+            )
+        )
+        if (prePendingCallEndEvent.canSendMessage) {
+            melodyPlayer.player?.sendMessage("<prefix><count_color>${targetPlayer.name} <text>is not Available Please try Again later.".toComponent())
+            targetPlayer.player?.sendMessage("<prefix>Pending Call has End.".toComponent())
+        }
+
+        Bukkit.getServer().pluginManager.callEvent(PostPendingCallEndEvent(melodyPlayer, targetPlayer))
+    }
+
+    fun acceptCall(melodyPlayer: MelodyPlayer, targetPlayer: MelodyPlayer) {
+
+        val preAcceptChangeServerEvent = PreAcceptCallEvent(melodyPlayer, targetPlayer)
+        Bukkit.getServer().pluginManager.callEvent(preAcceptChangeServerEvent)
+        if (preAcceptChangeServerEvent.isCancelled) return
+
+        melodyPlayer.isCallPending = false
+        melodyPlayer.callPendingTarget = null
+
+        targetPlayer.isCallPending = false
+        targetPlayer.callPendingTarget = null
+
+        melodyPlayer.isInCall = true
+        melodyPlayer.callTarget = targetPlayer
+
+        targetPlayer.isInCall = true
+        targetPlayer.callTarget = melodyPlayer
+
+        Websocket.socket.emit(
+            "onAcceptCallPlugin",
+            mapOf(
+                "player" to mapOf(
+                    "name" to targetPlayer.name,
+                    "uuid" to targetPlayer.uuid,
+                    "socketID" to melodyPlayer.socketID,
+                ),
+                "target" to mapOf(
+                    "name" to melodyPlayer.name,
+                    "uuid" to melodyPlayer.uuid,
+                    "socketID" to targetPlayer.socketID,
+                ),
+            )
+        )
+        if (preAcceptChangeServerEvent.canSendMessage) {
+            val player = melodyPlayer.player ?: return
+            player.sendMessage("<prefix>Call has been Started with <count_color>${targetPlayer.name}<text>, You can use <i>/melodymine call end</i> to end the Call.".toComponent())
+            targetPlayer.player?.sendMessage("<prefix>Call has Started with <count_color>${melodyPlayer.name}<text>, You can use <i>/melodymine call end</i> to end the Call.".toComponent())
+        }
+
+        Bukkit.getServer().pluginManager.callEvent(PostAcceptCallEvent(melodyPlayer, targetPlayer))
+    }
+
+    fun denyCall(melodyPlayer: MelodyPlayer, targetPlayer: MelodyPlayer) {
+
+        val preDenyCallEvent = PreDenyCallEvent(melodyPlayer, targetPlayer)
+        Bukkit.getServer().pluginManager.callEvent(preDenyCallEvent)
+        if (preDenyCallEvent.isCancelled) return
+
+        melodyPlayer.isCallPending = false
+        melodyPlayer.callPendingTarget = null
+
+        targetPlayer.isCallPending = false
+        targetPlayer.callPendingTarget = null
+
+        Websocket.socket.emit(
+            "onDenyCallPlugin",
+            mapOf(
+                "player" to mapOf(
+                    "name" to targetPlayer.name,
+                    "uuid" to targetPlayer.uuid,
+                    "socketID" to melodyPlayer.socketID,
+                ),
+                "target" to mapOf(
+                    "name" to melodyPlayer.name,
+                    "uuid" to melodyPlayer.uuid,
+                    "socketID" to targetPlayer.socketID,
+                ),
+            )
+        )
+        if (preDenyCallEvent.canSendMessage) {
+            val player = melodyPlayer.player ?: return
+            player.sendMessage("<prefix>Call Request has been Deny.".toComponent())
+            targetPlayer.player?.sendMessage("<prefix><count_color>${player.name}<text>, Deny Call Request.".toComponent())
+        }
+
+        Bukkit.getServer().pluginManager.callEvent(PostDenyCallEvent(melodyPlayer, targetPlayer))
+    }
+
+    fun toggleCall(melodyPlayer: MelodyPlayer) {
+        val player = melodyPlayer.player ?: return
+        val preToggleCallEvent = PreToggleCallEvent(melodyPlayer)
+        Bukkit.getServer().pluginManager.callEvent(preToggleCallEvent)
+        if (preToggleCallEvent.isCancelled) return
+        if (preToggleCallEvent.canSendMessage) {
+            if (!melodyPlayer.callToggle) {
+                player.sendMessage("<prefix>Your Call Requests has been Disabled, Now Players can not Send Call Request.".toComponent())
+            } else {
+                player.sendMessage("<prefix>Your Call Requests has been Enabled, Now Players can Send Call Request.".toComponent())
+            }
+        }
+
+        melodyPlayer.callToggle = !melodyPlayer.callToggle
+
+        Bukkit.getServer().pluginManager.callEvent(PostToggleCallEvent(melodyPlayer))
+    }
 }
