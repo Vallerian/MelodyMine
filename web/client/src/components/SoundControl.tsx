@@ -18,7 +18,7 @@ import {IReceiveControl} from "@/interfaces";
 
 const SoundControl = () => {
 
-    const {uuid, name, server, changeUserAdminMode, changeActiveVoice} = useUserStore(state => state)
+    const {uuid, name, server, changeUserAdminMode, changeActiveVoice, setServer} = useUserStore(state => state)
     const {socket} = useSocketStore(state => state)
     const {removeUser, setAdminModeAll} = useOnlineUsersStore(state => state)
     const {setStartButton, disconnectButton} = useLoadingStore(state => state)
@@ -98,7 +98,7 @@ const SoundControl = () => {
             uuid: uuid,
             server: server,
         }))
-
+        setServer("")
         setStartButton()
     }
 
