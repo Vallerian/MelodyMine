@@ -14,17 +14,18 @@ import {useEffect, useState} from "react";
 import {ImUserTie} from "react-icons/im";
 import {useSocketStore} from "@/store/SocketStore";
 import {decrypt} from "@/utils";
+import {useSoundStore} from "@/store/SoundStore";
 
 
 interface UserInfoProps {
     user: IUser,
     websocketKey?: string
-    iceServers?: string
 }
 
-const UserInfo = ({user, websocketKey, iceServers}: UserInfoProps) => {
+const UserInfo = ({user, websocketKey}: UserInfoProps) => {
     const {server, setSecretKey, isMute} = useUserStore(state => state)
     const {isValidate} = useValidateStore(state => state)
+    const {initSounds, soundList} = useSoundStore(state => state)
     const {socket} = useSocketStore(state => state)
     const {users} = useOnlineUsersStore(state => state)
     const {status} = useSession()
@@ -37,7 +38,6 @@ const UserInfo = ({user, websocketKey, iceServers}: UserInfoProps) => {
         }
         if (data.uuid != user.uuid) return
         setUserIsAdminMode(true)
-
     }
 
     const onAdminModeDisableReceive = (token: string) => {
@@ -48,21 +48,52 @@ const UserInfo = ({user, websocketKey, iceServers}: UserInfoProps) => {
         setUserIsAdminMode(false)
     }
 
+    const onPlaySoundReceive = (token: string) => {
+        const data = decrypt(token) as {
+            sound: string
+        }
+        const sound = soundList.find(item => item.name == data.sound)?.howl
+        sound?.play()
+    }
+
+    const onPauseSoundReceive = (token: string) => {
+        const data = decrypt(token) as {
+            sound: string
+        }
+        const sound = soundList.find(item => item.name == data.sound)?.howl
+        sound?.pause()
+    }
+
+    const onStopSoundReceive = (token: string) => {
+        const data = decrypt(token) as {
+            sound: string
+        }
+        const sound = soundList.find(item => item.name == data.sound)?.howl
+        sound?.stop()
+    }
+
 
     useEffect(() => {
         setSecretKey(websocketKey!!)
+        initSounds()
     }, [])
 
     useEffect(() => {
         socket?.on("onAdminModeEnableReceive", onAdminModeEnableReceive)
         socket?.on("onAdminModeDisableReceive", onAdminModeDisableReceive)
+        socket?.on("onPlaySoundReceive", onPlaySoundReceive)
+        socket?.on("onPauseSoundReceive", onPauseSoundReceive)
+        socket?.on("onStopSoundReceive", onStopSoundReceive)
 
         return () => {
             socket?.off("onAdminModeEnableReceive", onAdminModeEnableReceive)
             socket?.off("onAdminModeDisableReceive", onAdminModeDisableReceive)
+            socket?.off("onPlaySoundReceive", onPlaySoundReceive)
+            socket?.off("onPauseSoundReceive", onPauseSoundReceive)
+            socket?.off("onStopSoundReceive", onStopSoundReceive)
         }
 
-    }, [socket])
+    }, [socket, soundList])
 
     useEffect(() => {
         if (isValidate) return

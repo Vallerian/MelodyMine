@@ -63,7 +63,6 @@ dependencies {
 
     // Socket Io
     implementation("io.socket:socket.io-client:2.1.0")
-
     implementation("com.github.kenglxn.QRGen:javase:3.0.1")
 
     implementation("com.zaxxer:HikariCP:5.0.1")

@@ -493,4 +493,50 @@ object MelodyManager {
 
         Bukkit.getServer().pluginManager.callEvent(PostToggleCallEvent(melodyPlayer))
     }
+
+    fun playSound(soundName: String, sendToAll: Boolean = false, socketID: String?) {
+        val prePlaySoundEvent = PrePlaySoundEvent(soundName, sendToAll, socketID)
+        Bukkit.getServer().pluginManager.callEvent(prePlaySoundEvent)
+        if (prePlaySoundEvent.isCancelled) return
+        Websocket.socket.emit(
+            "onPlaySoundPlugin",
+            mapOf(
+                "socketID" to socketID!!,
+                "soundName" to soundName,
+                "sendToAll" to sendToAll
+            )
+        )
+        Bukkit.getServer().pluginManager.callEvent(PostPlaySoundEvent(soundName, sendToAll, socketID))
+    }
+
+    fun pauseSound(soundName: String, sendToAll: Boolean = false, socketID: String?) {
+        val prePauseSoundEvent = PrePauseSoundEvent(soundName, sendToAll, socketID)
+        Bukkit.getServer().pluginManager.callEvent(prePauseSoundEvent)
+        if (prePauseSoundEvent.isCancelled) return
+        Websocket.socket.emit(
+            "onPauseSoundPlugin",
+            mapOf(
+                "socketID" to socketID!!,
+                "soundName" to soundName,
+                "sendTOAll" to sendToAll
+            )
+        )
+        Bukkit.getServer().pluginManager.callEvent(PrePauseSoundEvent(soundName, sendToAll, socketID))
+    }
+
+    fun stopSound(soundName: String, sendToAll: Boolean = false, socketID: String?) {
+        val preStopSoundEvent = PreStopSoundEvent(soundName, sendToAll, socketID)
+        Bukkit.getServer().pluginManager.callEvent(preStopSoundEvent)
+        if (preStopSoundEvent.isCancelled) return
+        Websocket.socket.emit(
+            "onStopSoundPlugin",
+            mapOf(
+                "socketID" to socketID!!,
+                "soundName" to soundName,
+                "sendTOAll" to sendToAll
+            )
+        )
+        Bukkit.getServer().pluginManager.callEvent(PostStopSoundEvent(soundName, sendToAll, socketID))
+    }
+
 }

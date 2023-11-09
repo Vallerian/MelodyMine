@@ -210,6 +210,39 @@ io.on("connection", async (socket: CustomSocket) => {
         }))
     })
 
+    socket.on("onPlaySoundPlugin", (data: {
+        socketID: string
+        sendTOAll: boolean
+        soundName: string
+
+    }) => {
+        socket.to(data.sendTOAll ? socket.melodyClient.server : data.socketID).emit("onPlaySoundReceive", encrypt({
+            sound: data.soundName,
+        }))
+    })
+
+    socket.on("onPauseSoundPlugin", (data: {
+        socketID: string
+        sendTOAll: boolean
+        soundName: string
+    }) => {
+
+        socket.to(data.sendTOAll ? socket.melodyClient.server : data.socketID).emit("onPauseSoundReceive", encrypt({
+            sound: data.soundName
+        }))
+    })
+
+    socket.on("onStopSoundPlugin", (data: {
+        socketID: string
+        sendTOAll: boolean
+        soundName: string
+
+    }) => {
+        socket.to(data.sendTOAll ? socket.melodyClient.server : data.socketID).emit("onStopSoundReceive", encrypt({
+            sound: data.soundName,
+        }))
+    })
+
 
     // Web Listeners
     socket.on("onPlayerChangeControl", token => {

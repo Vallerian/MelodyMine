@@ -5,11 +5,13 @@ import org.bukkit.event.Cancellable
 import org.bukkit.event.Event
 import org.bukkit.event.HandlerList
 
-class PreToggleCallEvent (
+class PreToggleCallEvent(
     val melodyPlayer: MelodyPlayer,
 ) : Event(), Cancellable {
     private var cancelled = false
-    val canSendMessage = true
+    var canSendMessage = true
+
+
     override fun isCancelled(): Boolean {
         return cancelled
     }

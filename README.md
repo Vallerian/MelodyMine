@@ -96,7 +96,9 @@ force-voice: false
 mute-toggle-shortcut: true
 
 # call configs
-call-pending-time: 600
+call-pending-time: 600 # must be Long (10L = 0.5s, 20L = 1s,...)
+
+
 
 ```
 
