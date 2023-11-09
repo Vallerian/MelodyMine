@@ -10,7 +10,7 @@ class PreEndCallEvent(
     val targetPlayer: MelodyPlayer,
 ) : Event(), Cancellable {
     private var cancelled = false
-    val canSendMessage = true
+    var canSendMessage = true
     override fun isCancelled(): Boolean {
         return cancelled
     }

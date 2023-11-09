@@ -189,7 +189,7 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
             setIsPendingCall(false)
             setIsInCall(true)
 
-            callingSound2?.pause()
+            callingSound2?.stop()
 
         }
     }
@@ -213,7 +213,7 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
             setIsPendingCall(false)
             setIsInCall(true)
 
-            callingSound?.pause()
+            callingSound?.stop()
         }
 
     }
@@ -243,7 +243,7 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
         const data = decrypt(token) as { name: string, uuid: string }
         if (data.uuid == user.uuid && data.uuid != uuid) {
             setIsPendingCall(false)
-            callingSound?.pause()
+            callingSound?.stop()
             endCallSound?.play()
         }
     }
@@ -252,7 +252,7 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
         const data = decrypt(token) as { name: string, uuid: string }
         if (data.uuid == user.uuid && data.uuid != uuid) {
             setIsPendingCall(false)
-            callingSound2?.pause()
+            callingSound2?.stop()
             endCallSound?.play()
         }
     }
@@ -261,8 +261,8 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
         const data = decrypt(token) as { name: string, uuid: string }
         if (data.uuid == user.uuid && data.uuid != uuid) {
             setIsPendingCall(false)
-            callingSound?.pause()
-            callingSound2?.pause()
+            callingSound?.stop()
+            callingSound2?.stop()
             endCallSound?.play()
         }
     }
@@ -271,8 +271,8 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
         const data = decrypt(token) as { name: string, uuid: string }
         if (data.uuid == user.uuid && data.uuid != uuid) {
             setIsPendingCall(false)
-            callingSound2?.pause()
-            callingSound?.pause()
+            callingSound2?.stop()
+            callingSound?.stop()
             endCallSound?.play()
         }
     }
