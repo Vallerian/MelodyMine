@@ -25,7 +25,6 @@ const Page = async () => {
                         <UserInfo
                             user={session.user as IUser}
                             websocketKey={process.env.WEBSOCKET_KEY}
-                            iceServers={process.env.ICE_SERVERS}
                         />
                     </div>
 

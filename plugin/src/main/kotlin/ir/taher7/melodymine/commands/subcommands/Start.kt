@@ -50,6 +50,7 @@ class Start : SubCommand() {
 
                 if (args[1].equals("link", true)) {
                     MelodyManager.sendStartLink(player)
+                    coolDown[player.uniqueId] = System.currentTimeMillis()
                     return
                 }
 

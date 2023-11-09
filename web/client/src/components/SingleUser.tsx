@@ -22,7 +22,7 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
     const {uuid, server, serverIsOnline, isActiveVoice} = useUserStore(state => state)
     const {setUserMute, muteUsers} = useControlStore(state => state)
     const {isValidate} = useValidateStore(state => state)
-    const {callingSound, callingSound2, endCallSound} = useSoundStore(state => state)
+    const {soundList} = useSoundStore(state => state)
     const {stream} = useStreamStore(state => state)
     const {soundIsActive} = useStreamStore(state => state)
     const [userStream, setUserStream] = useState<MediaStream>()
@@ -36,9 +36,16 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
     const [call, setCall] = useState<MediaConnection | undefined>()
     const [isInCall, setIsInCall] = useState<boolean>(false)
     const [isPendingCall, setIsPendingCall] = useState<boolean>(false)
-
+    const [callingSound, setCallingSound] = useState<Howl>()
+    const [callingSound2, setCallingSound2] = useState<Howl>()
+    const [endCallSound, setEndCallSound] = useState<Howl>()
     const audioRef = useRef<HTMLAudioElement>(null)
 
+    useEffect(() => {
+        setCallingSound(soundList.find(sound => sound.name == "calling")?.howl)
+        setCallingSound2(soundList.find(sound => sound.name == "calling2")?.howl)
+        setEndCallSound(soundList.find(sound => sound.name == "hangUp")?.howl)
+    }, [soundList])
 
     const onEnableVoiceReceive = (token: string) => {
         const onlineUser = decrypt(token) as IOnlineUsers
@@ -321,7 +328,7 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
                 socket?.off("onDenyCallTargetPluginReceive", onDenyCallTargetPluginReceive)
             }
 
-        }, [socket, uuid, stream, isValidate, call]
+        }, [socket, uuid, stream, isValidate, call, callingSound, callingSound2, endCallSound]
     )
 
     useEffect(() => {
