@@ -18,7 +18,7 @@ import {IReceiveControl} from "@/interfaces";
 
 const SoundControl = () => {
 
-    const {uuid, name, server, changeUserAdminMode, changeActiveVoice, setServer} = useUserStore(state => state)
+    const {uuid, name, server, changeUserAdminMode, changeActiveVoice, setServer, isMute} = useUserStore(state => state)
     const {socket} = useSocketStore(state => state)
     const {removeUser, setAdminModeAll} = useOnlineUsersStore(state => state)
     const {setStartButton, disconnectButton} = useLoadingStore(state => state)
@@ -128,7 +128,7 @@ const SoundControl = () => {
                 </li>
                 <li className={`${!micIsActive && 'text-red-500'} cursor-pointer flex justify-center items-center`}
                     onClick={() => handleToggle("mic")}>
-                    {instant > 0.00 && micIsActive ? (<>
+                    {instant > 0.00 && micIsActive && !isMute ? (<>
                         <div className="soundAnimation">
                         </div>
                     </>) : ''}

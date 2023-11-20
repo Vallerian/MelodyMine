@@ -12,6 +12,7 @@ import ir.taher7.melodymine.utils.QRCodeRenderer
 import ir.taher7.melodymine.utils.Utils
 import net.glxn.qrgen.javase.QRCode
 import org.bukkit.Bukkit
+import org.bukkit.Location
 import org.bukkit.entity.Player
 import org.bukkit.scheduler.BukkitRunnable
 
@@ -191,10 +192,11 @@ object MelodyManager {
 
     fun setVolume(
         playerUuid: String,
-        volume: Double,
         targetSocketID: String,
+        playerLocation: Location,
+        targetLocation: Location,
     ) {
-        val preSetVolumeEvent = PreSetVolumeEvent(playerUuid, volume, targetSocketID)
+        val preSetVolumeEvent = PreSetVolumeEvent(playerUuid, targetSocketID)
         Bukkit.getServer().pluginManager.callEvent(preSetVolumeEvent)
         if (preSetVolumeEvent.isCancelled) return
 
@@ -202,12 +204,38 @@ object MelodyManager {
             "onSetVolumePlugin",
             mapOf(
                 "uuid" to playerUuid,
-                "volume" to volume,
                 "socketID" to targetSocketID,
+                "settings" to mapOf(
+                    "maxDistance" to Storage.maxDistance,
+                    "refDistance" to Storage.refDistance,
+                    "innerAngle" to Storage.innerAngle,
+                    "outerAngle" to Storage.outerAngle,
+                    "outerVolume" to Storage.outerVolume,
+                ),
+                "playerLocation" to mapOf(
+                    "x" to playerLocation.x,
+                    "y" to playerLocation.y,
+                    "z" to playerLocation.z,
+                ),
+                "targetLocation" to mapOf(
+                    "x" to targetLocation.x,
+                    "y" to targetLocation.y,
+                    "z" to targetLocation.z,
+                ),
+                "playerDirection" to mapOf(
+                    "x" to playerLocation.direction.x,
+                    "y" to playerLocation.direction.y,
+                    "z" to playerLocation.direction.z,
+                ),
+                "targetDirection" to mapOf(
+                    "x" to targetLocation.direction.x,
+                    "y" to targetLocation.direction.y,
+                    "z" to targetLocation.direction.z,
+                )
             )
         )
 
-        Bukkit.getServer().pluginManager.callEvent(PostSetVolumeEvent(playerUuid, volume, targetSocketID))
+        Bukkit.getServer().pluginManager.callEvent(PostSetVolumeEvent(playerUuid, targetSocketID))
     }
 
     fun setPlayerSelfMute(melodyPlayer: MelodyPlayer, value: Boolean) {
@@ -257,6 +285,7 @@ object MelodyManager {
         if (preStartCallEvent.isCancelled) return
 
         if (preStartCallEvent.canSendMessage) {
+            preStartCallEvent.canSendMessage = true
             melodyPlayer.player?.sendMessage(Storage.contentHeader.toComponent())
             melodyPlayer.player?.sendMessage("")
             melodyPlayer.player?.sendMessage("<text>Please wait to <count_color>${targetPlayer.name} <text>Accept Call.".toComponent())
@@ -265,6 +294,7 @@ object MelodyManager {
             melodyPlayer.player?.sendMessage(Storage.contentFooter.toComponent())
         }
 
+        melodyPlayer.isStartCall = true
         melodyPlayer.isCallPending = true
         melodyPlayer.callPendingTarget = targetPlayer
         targetPlayer.isCallPending = true
@@ -302,6 +332,7 @@ object MelodyManager {
         )
 
         if (preStartCallEvent.canSendMessage) {
+            preStartCallEvent.canSendMessage = true
             targetPlayer.player?.sendMessage(Storage.contentHeader.toComponent())
             targetPlayer.player?.sendMessage("")
             targetPlayer.player?.sendMessage("<text>You have Received a Call from <count_color>${melodyPlayer.name}<text>.".toComponent())
@@ -330,9 +361,12 @@ object MelodyManager {
 
         melodyPlayer.isInCall = false
         melodyPlayer.callTarget = null
+        melodyPlayer.isStartCall = false
 
         targetPlayer.isInCall = false
         targetPlayer.callTarget = null
+        targetPlayer.isStartCall = false
+
 
         Websocket.socket.emit(
             "onEndCallPlugin",
@@ -352,6 +386,7 @@ object MelodyManager {
 
         val player = melodyPlayer.player ?: return
         if (preEndCallEvent.canSendMessage) {
+            preEndCallEvent.canSendMessage = true
             player.sendMessage("<prefix>You have End Call Between Yourself and <count_color>${targetPlayer.name}<text>.".toComponent())
             targetPlayer.player?.sendMessage("<prefix><count_color>${melodyPlayer.name} <text>has End Call Between Themselves and You.".toComponent())
         }
@@ -366,8 +401,11 @@ object MelodyManager {
 
         targetPlayer.isCallPending = false
         targetPlayer.callPendingTarget = null
+        targetPlayer.isStartCall = false
+
         melodyPlayer.isCallPending = false
         melodyPlayer.callPendingTarget = null
+        melodyPlayer.isStartCall = false
 
         melodyPlayer.pendingTask?.cancel()
         targetPlayer.pendingTask?.cancel()
@@ -391,6 +429,7 @@ object MelodyManager {
             )
         )
         if (prePendingCallEndEvent.canSendMessage) {
+            prePendingCallEndEvent.canSendMessage = true
             melodyPlayer.player?.sendMessage("<prefix><count_color>${targetPlayer.name} <text>is not Available Please try Again later.".toComponent())
             targetPlayer.player?.sendMessage("<prefix>Pending Call has End.".toComponent())
         }
@@ -416,6 +455,12 @@ object MelodyManager {
         targetPlayer.isInCall = true
         targetPlayer.callTarget = melodyPlayer
 
+        melodyPlayer.pendingTask?.cancel()
+        targetPlayer.pendingTask?.cancel()
+
+        melodyPlayer.pendingTask = null
+        targetPlayer.pendingTask = null
+
         Websocket.socket.emit(
             "onAcceptCallPlugin",
             mapOf(
@@ -432,6 +477,7 @@ object MelodyManager {
             )
         )
         if (preAcceptChangeServerEvent.canSendMessage) {
+            preAcceptChangeServerEvent.canSendMessage = true
             val player = melodyPlayer.player ?: return
             player.sendMessage("<prefix>Call has been Started with <count_color>${targetPlayer.name}<text>, You can use <i>/melodymine call end</i> to end the Call.".toComponent())
             targetPlayer.player?.sendMessage("<prefix>Call has Started with <count_color>${melodyPlayer.name}<text>, You can use <i>/melodymine call end</i> to end the Call.".toComponent())
@@ -448,9 +494,17 @@ object MelodyManager {
 
         melodyPlayer.isCallPending = false
         melodyPlayer.callPendingTarget = null
+        melodyPlayer.isStartCall = false
 
         targetPlayer.isCallPending = false
         targetPlayer.callPendingTarget = null
+        targetPlayer.isStartCall = false
+
+        melodyPlayer.pendingTask?.cancel()
+        targetPlayer.pendingTask?.cancel()
+
+        melodyPlayer.pendingTask = null
+        targetPlayer.pendingTask = null
 
         Websocket.socket.emit(
             "onDenyCallPlugin",
@@ -468,6 +522,7 @@ object MelodyManager {
             )
         )
         if (preDenyCallEvent.canSendMessage) {
+            preDenyCallEvent.canSendMessage = true
             val player = melodyPlayer.player ?: return
             player.sendMessage("<prefix>Call Request has been Deny.".toComponent())
             targetPlayer.player?.sendMessage("<prefix><count_color>${player.name}<text>, Deny Call Request.".toComponent())
@@ -482,6 +537,7 @@ object MelodyManager {
         Bukkit.getServer().pluginManager.callEvent(preToggleCallEvent)
         if (preToggleCallEvent.isCancelled) return
         if (preToggleCallEvent.canSendMessage) {
+            preToggleCallEvent.canSendMessage = true
             if (!melodyPlayer.callToggle) {
                 player.sendMessage("<prefix>Your Call Requests has been Disabled, Now Players can not Send Call Request.".toComponent())
             } else {

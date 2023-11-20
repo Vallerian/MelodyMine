@@ -14,7 +14,6 @@ const Navbar = () => {
             </Link>
 
 
-
             {/* ------------------ <>_<> Don't touch this Lines <>_<> ------------------ */}
             <div className="pr-3">
                 <Link href="https://github.com/Vallerian/MelodyMine" target="_blank"

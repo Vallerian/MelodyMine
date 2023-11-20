@@ -24,6 +24,7 @@ data class MelodyPlayer(
     @Expose var isCallPending: Boolean = false,
     @Expose var callPendingTarget: MelodyPlayer? = null,
     @Expose var callToggle: Boolean = false,
+    @Expose var isStartCall: Boolean = false,
     @Expose var pendingTask: BukkitTask? = null,
     @Expose(deserialize = false) var isSendOffer: ArrayList<String> = arrayListOf(),
 ) {

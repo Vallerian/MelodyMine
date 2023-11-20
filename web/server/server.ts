@@ -115,6 +115,11 @@ io.on("connection", async (socket: CustomSocket) => {
         io.to(data.socketID).emit("onSetVolumeReceive", {
             uuid: data.uuid,
             volume: data.volume,
+            settings: data.settings,
+            playerLocation: data.playerLocation,
+            targetLocation: data.targetLocation,
+            playerDirection: data.playerDirection,
+            targetDirection: data.targetDirection
         })
     })
 

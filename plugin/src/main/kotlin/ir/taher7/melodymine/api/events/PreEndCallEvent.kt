@@ -11,6 +11,8 @@ class PreEndCallEvent(
 ) : Event(), Cancellable {
     private var cancelled = false
     var canSendMessage = true
+
+
     override fun isCancelled(): Boolean {
         return cancelled
     }

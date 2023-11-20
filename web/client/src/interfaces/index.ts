@@ -28,9 +28,34 @@ export interface IPeer {
     peer: RTCPeerConnection
 }
 
+export interface ISoundSettings {
+    maxDistance: number
+    refDistance: number
+    innerAngle: number
+    outerAngle: number
+    outerVolume: number
+}
+
+export interface ILocation {
+    x: number
+    y: number
+    z: number
+}
+
+export interface IDirection {
+    x: number
+    y: number
+    z: number
+}
+
 export interface IVolume {
     uuid: string
     volume: string
+    settings: ISoundSettings
+    playerLocation: ILocation
+    targetLocation: ILocation
+    playerDirection: IDirection
+    targetDirection: IDirection
 }
 
 

@@ -11,7 +11,6 @@ class PreToggleCallEvent(
     private var cancelled = false
     var canSendMessage = true
 
-
     override fun isCancelled(): Boolean {
         return cancelled
     }
