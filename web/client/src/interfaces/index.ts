@@ -29,6 +29,8 @@ export interface IPeer {
 }
 
 export interface ISoundSettings {
+    sound3D: boolean
+    lazyHear: boolean
     maxDistance: number
     refDistance: number
     innerAngle: number
@@ -50,7 +52,7 @@ export interface IDirection {
 
 export interface IVolume {
     uuid: string
-    volume: string
+    distance: number
     settings: ISoundSettings
     playerLocation: ILocation
     targetLocation: ILocation

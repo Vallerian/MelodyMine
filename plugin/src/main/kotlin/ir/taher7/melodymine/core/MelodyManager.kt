@@ -204,8 +204,11 @@ object MelodyManager {
             "onSetVolumePlugin",
             mapOf(
                 "uuid" to playerUuid,
+                "distance" to playerLocation.distance(targetLocation),
                 "socketID" to targetSocketID,
                 "settings" to mapOf(
+                    "sound3D" to Storage.sound3D,
+                    "lazyHear" to Storage.lazyHear,
                     "maxDistance" to Storage.maxDistance,
                     "refDistance" to Storage.refDistance,
                     "innerAngle" to Storage.innerAngle,

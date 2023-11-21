@@ -89,11 +89,14 @@ class MelodyMineListener : Listener {
 
     @EventHandler
     fun onPlayerMove(event: PlayerMoveEvent) {
-
         val melodyPlayer = Storage.onlinePlayers[event.player.uniqueId.toString()] ?: return
-        if (Utils.checkPlayerForce(melodyPlayer)) return
         if (!melodyPlayer.isActiveVoice) {
-            event.isCancelled = true
+            if (Utils.checkPlayerForce(melodyPlayer)) return
+            val from = event.from
+            val to = event.to ?: return
+            if (from.blockX != to.blockX || from.blockY != to.blockY || from.blockZ != to.blockZ) {
+                event.isCancelled = true
+            }
         }
     }
 

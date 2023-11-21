@@ -116,13 +116,13 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
 
     const onNewPlayerLeave = (token: string) => {
         const data = decrypt(token) as IOnlineUsers
-        if (data.uuid != user.uuid && data.uuid == uuid) return
+        if (data.uuid != user.uuid || data.uuid == uuid) return
         call?.close()
     }
 
     const onPlayerLeaveReceivePlugin = (token: string) => {
         const data = decrypt(token) as IOnlineUsers
-        if (data.uuid != user.uuid && data.uuid == uuid) return
+        if (data.uuid != user.uuid || data.uuid == uuid) return
         call?.close()
     }
 
@@ -139,7 +139,6 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
 
     const onSetVolumeReceive = (data: IVolume) => {
         if (data.uuid != user.uuid) return
-        console.log(data)
         updateListenerPosition(data)
         updatePannerPosition(data)
     }
@@ -376,51 +375,41 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
     }, [user])
 
 
-    function updatePannerPosition(data: IVolume) {
+    const updatePannerPosition = (data: IVolume) => {
         if (!pannerNode || !audioContext) return
-        const {playerLocation, playerDirection, settings} = data
+        const {playerLocation, playerDirection, settings, distance} = data
+        if (settings.sound3D) {
+            const {x, y, z} = playerLocation
+            const {x: Dx, y: Dy, z: Dz} = playerDirection
+            pannerNode.panningModel = "HRTF"
+            pannerNode.distanceModel = "inverse"
+            pannerNode.maxDistance = settings.maxDistance
+            pannerNode.refDistance = settings.refDistance
+            pannerNode.rolloffFactor = 1
+            pannerNode.coneInnerAngle = settings.innerAngle
+            pannerNode.coneOuterAngle = settings.outerAngle
+            pannerNode.coneOuterGain = settings.outerVolume
 
-        const {x, y, z} = playerLocation
-        const {x: Dx, y: Dy, z: Dz} = playerDirection
-
-        pannerNode.panningModel = "HRTF"
-        pannerNode.distanceModel = "inverse"
-        pannerNode.maxDistance = settings.maxDistance
-        pannerNode.refDistance = settings.refDistance
-        pannerNode.rolloffFactor = 1
-        pannerNode.coneInnerAngle = settings.innerAngle
-        pannerNode.coneOuterAngle = settings.outerAngle
-        pannerNode.coneOuterGain = settings.outerVolume
-
-        pannerNode.positionX.setValueAtTime(x, audioContext.currentTime)
-        pannerNode.positionY.setValueAtTime(y, audioContext.currentTime)
-        pannerNode.positionZ.setValueAtTime(z, audioContext.currentTime)
-
-        pannerNode.orientationX.setValueAtTime(Dx, audioContext.currentTime)
-        pannerNode.orientationY.setValueAtTime(Dy, audioContext.currentTime)
-        pannerNode.orientationZ.setValueAtTime(Dz, audioContext.currentTime)
+            pannerNode.setPosition(x, y, z)
+            pannerNode.setOrientation(Dx, Dy, Dz)
+        } else {
+            if (!settings.lazyHear) return
+            let volume = (settings.maxDistance - distance) / settings.maxDistance
+            if (userIsAdminMode) volume = 1
+            if (user.isMute) volume = 0
+            if (gain) gain.gain.value = volume
+        }
     }
 
-    function updateListenerPosition(data: IVolume) {
+    const updateListenerPosition = (data: IVolume) => {
         const listener = audioContext?.listener
         if (!audioContext || !listener) return
-        const { targetLocation, targetDirection} = data
-
+        const {targetLocation, targetDirection, settings} = data
+        if (!settings.sound3D) return
         const {x, y, z} = targetLocation
         const {x: Dx, y: Dy, z: Dz} = targetDirection
-
-
-        listener.positionX.setValueAtTime(x, audioContext.currentTime)
-        listener.positionY.setValueAtTime(y, audioContext.currentTime)
-        listener.positionZ.setValueAtTime(z, audioContext.currentTime)
-
-        listener.forwardX.setValueAtTime(Dx, audioContext.currentTime)
-        listener.forwardY.setValueAtTime(Dy, audioContext.currentTime)
-        listener.forwardZ.setValueAtTime(Dz, audioContext.currentTime)
-
-        listener.upX.setValueAtTime(0, audioContext.currentTime)
-        listener.upY.setValueAtTime(1, audioContext.currentTime)
-        listener.upZ.setValueAtTime(0, audioContext.currentTime)
+        listener.setPosition(x, y, z)
+        listener.setOrientation(Dx, Dy, Dz, 0, 1, 0)
 
     }
 
@@ -437,14 +426,12 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
 
             if (user.uuid == uuid) GN.gain.value = 0
 
-
             AS.connect(PN)
             PN.connect(GN)
             GN.connect(AC.destination)
 
             setGain(GN)
             setPannerNode(PN)
-
 
             soundMaster = new SoundMeter(AC)
             soundMaster.connectToSource(userStream, (event: any) => {

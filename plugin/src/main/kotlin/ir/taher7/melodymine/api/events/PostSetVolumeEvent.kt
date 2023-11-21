@@ -7,7 +7,6 @@ import org.bukkit.event.HandlerList
 
 class PostSetVolumeEvent(
     val playerUuid: String,
-    val volume: Double,
     val targetSocketID: String,
 ) : Event() {
     fun getPlayer(): MelodyPlayer? {

@@ -18,8 +18,13 @@ object Storage {
     lateinit var website: String
     lateinit var websocket: String
 
-    var hearDistance: Int = 20
-    var hearLazy: Boolean = true
+    var sound3D: Boolean = true
+    var lazyHear: Boolean = true
+    var maxDistance: Int = 30
+    var refDistance: Int = 5
+    var innerAngle: Int = 120
+    var outerAngle: Int = 180
+    var outerVolume: Double = 0.3
     var forceVoice: Boolean = false
     var updateDistanceTime: Long = 10L
     var websocketKey: String = ""
@@ -120,9 +125,15 @@ object Storage {
         websocket = config.getString("websocket-url") ?: ""
         websocketKey = config.getString("websocket-auth-key") ?: ""
 
-        hearDistance = config.getInt("hear-distance")
+        sound3D = config.getBoolean("3D-sound")
+        lazyHear = config.getBoolean("hear-lazy")
+        maxDistance = config.getInt("max-distance")
+        refDistance = config.getInt("ref-distance")
+        innerAngle = config.getInt("inner-angle")
+        outerAngle = config.getInt("outer-angle")
+        outerVolume = config.getDouble("outer-volume")
+
         updateDistanceTime = config.getLong("update-distance-time")
-        hearLazy = config.getBoolean("hear-lazy")
         forceVoice = config.getBoolean("force-voice")
 
         prefix = config.getString("prefix") ?: ""
