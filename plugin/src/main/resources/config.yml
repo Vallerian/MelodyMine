@@ -20,15 +20,6 @@ websocket-url: "ws://localhost:4000"
 # websocket auth security key !!! (important) change that after install plugin !!!
 websocket-auth-key: "" # must be the same in web server auth key
 
-# distance that players can hear each other.
-hear-distance: 32
-
-# update player distance time (as Long)
-update-distance-time: 10 # must be Long (10L = 0.5s, 20L = 1s,...)
-
-# increase & decrease sound in hear-distance.
-hear-lazy: true
-
 # users must be online in website and active voice chat.
 force-voice: false
 
@@ -37,6 +28,22 @@ mute-toggle-shortcut: true
 
 # call configs
 call-pending-time: 600 # must be Long (10L = 0.5s, 20L = 1s,...)
+
+
+# ------ sound configs ------
+
+3D-sound: true # player voice 3D mode.
+hear-lazy: true # default player volume (when 3DSound is "false" you can use this feature).
+max-distance: 30 # distance that players can hear each other.
+ref-distance: 5  # distance that players can hear each other max volume.
+inner-angle: 120 # angle that players can hear each other max volume.
+outer-angle: 180 # angle that players can hear each other.
+outer-volume: 0.3 # outer angle volume.
+
+
+# update player distance time (as Long)
+update-distance-time: 10 # must be Long (10L = 0.5s, 20L = 1s,...)
+
 
 # ----- Message configs -----
 

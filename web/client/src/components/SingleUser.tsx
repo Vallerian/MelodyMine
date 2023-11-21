@@ -31,7 +31,6 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
     const [voiceBack, setVoiceBack] = useState<boolean>(false)
     const [isSelfMute, setIsSelfMute] = useState<boolean>(true)
     const [isDeafen, setIsDeafen] = useState<boolean>(true)
-    const [userVolume, setUserVolume] = useState<string>("1.0")
     const [userIsAdminMode, setUserIsAdminMode] = useState<boolean>(false)
     const [call, setCall] = useState<MediaConnection | undefined>()
     const [isInCall, setIsInCall] = useState<boolean>(false)
@@ -39,6 +38,10 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
     const [callingSound, setCallingSound] = useState<Howl>()
     const [callingSound2, setCallingSound2] = useState<Howl>()
     const [endCallSound, setEndCallSound] = useState<Howl>()
+    const [pannerNode, setPannerNode] = useState<PannerNode>()
+    const [gain, setGain] = useState<GainNode>()
+    const [audioContext, setAudioContext] = useState<AudioContext>()
+
     const audioRef = useRef<HTMLAudioElement>(null)
 
     useEffect(() => {
@@ -59,11 +62,11 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
 
         setCall(peerCall)
         peerCall?.on("stream", remoteStream => {
-            setUserStream(remoteStream)
             if (audioRef.current) {
                 audioRef.current.srcObject = remoteStream
                 setUserStream(remoteStream)
             }
+
         })
     }
 
@@ -76,7 +79,6 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
     const onPlayerInitAdminModeReceive = (token: string) => {
         const data = decrypt(token) as IOnlineUsers
         if (data.uuid == user.uuid && data.uuid != uuid && isValidate) {
-            setUserVolume("1.0")
             setUserIsAdminMode(true)
         }
     }
@@ -101,8 +103,6 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
                 setUserStream(remoteStream)
             }
         })
-
-        setUserVolume("1.0")
     }
 
     const onAdminModeDisableReceive = (token: string) => {
@@ -116,13 +116,13 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
 
     const onNewPlayerLeave = (token: string) => {
         const data = decrypt(token) as IOnlineUsers
-        if (data.uuid != user.uuid && data.uuid == uuid) return
+        if (data.uuid != user.uuid || data.uuid == uuid) return
         call?.close()
     }
 
     const onPlayerLeaveReceivePlugin = (token: string) => {
         const data = decrypt(token) as IOnlineUsers
-        if (data.uuid != user.uuid && data.uuid == uuid) return
+        if (data.uuid != user.uuid || data.uuid == uuid) return
         call?.close()
     }
 
@@ -139,7 +139,8 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
 
     const onSetVolumeReceive = (data: IVolume) => {
         if (data.uuid != user.uuid) return
-        setUserVolume(data.volume)
+        updateListenerPosition(data)
+        updatePannerPosition(data)
     }
 
     const onPlayerChangeControlReceive = (token: string) => {
@@ -168,7 +169,6 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
         const data = decrypt(token) as { name: string, uuid: string }
         if (data.uuid == user.uuid && data.uuid != uuid) {
             setIsPendingCall(true)
-
             callingSound?.play()
 
         }
@@ -188,7 +188,6 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
         if (data.uuid == user.uuid && data.uuid != uuid) {
             setIsPendingCall(false)
             setIsInCall(true)
-
             callingSound2?.stop()
 
         }
@@ -209,10 +208,8 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
                     setUserStream(remoteStream)
                 }
             })
-            setUserVolume("1.0")
             setIsPendingCall(false)
             setIsInCall(true)
-
             callingSound?.stop()
         }
 
@@ -328,7 +325,7 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
                 socket?.off("onDenyCallTargetPluginReceive", onDenyCallTargetPluginReceive)
             }
 
-        }, [socket, uuid, stream, isValidate, call, callingSound, callingSound2, endCallSound]
+        }, [socket, uuid, stream, isValidate, call, callingSound, callingSound2, endCallSound, pannerNode]
     )
 
     useEffect(() => {
@@ -349,21 +346,6 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
 
         }, [socket, uuid]
     )
-
-    useEffect(() => {
-        if (audioRef.current) {
-            if (parseFloat(userVolume) > 1.0 || parseFloat(userVolume) < 0.0) {
-                audioRef.current.volume = 1.0
-            } else {
-                if (isInCall || user.isAdminMode) {
-                    audioRef.current.volume = 1.0
-                } else {
-                    audioRef.current.volume = parseFloat(userVolume)
-                }
-            }
-        }
-    }, [userVolume, isInCall, user])
-
 
     useEffect(() => {
         if (!peer || !stream) return
@@ -392,12 +374,66 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
         }
     }, [user])
 
+
+    const updatePannerPosition = (data: IVolume) => {
+        if (!pannerNode || !audioContext) return
+        const {playerLocation, playerDirection, settings, distance} = data
+        if (settings.sound3D) {
+            const {x, y, z} = playerLocation
+            const {x: Dx, y: Dy, z: Dz} = playerDirection
+            pannerNode.panningModel = "HRTF"
+            pannerNode.distanceModel = "inverse"
+            pannerNode.maxDistance = settings.maxDistance
+            pannerNode.refDistance = settings.refDistance
+            pannerNode.rolloffFactor = 1
+            pannerNode.coneInnerAngle = settings.innerAngle
+            pannerNode.coneOuterAngle = settings.outerAngle
+            pannerNode.coneOuterGain = settings.outerVolume
+
+            pannerNode.setPosition(x, y, z)
+            pannerNode.setOrientation(Dx, Dy, Dz)
+        } else {
+            if (!settings.lazyHear) return
+            let volume = (settings.maxDistance - distance) / settings.maxDistance
+            if (userIsAdminMode) volume = 1
+            if (user.isMute) volume = 0
+            if (gain) gain.gain.value = volume
+        }
+    }
+
+    const updateListenerPosition = (data: IVolume) => {
+        const listener = audioContext?.listener
+        if (!audioContext || !listener) return
+        const {targetLocation, targetDirection, settings} = data
+        if (!settings.sound3D) return
+        const {x, y, z} = targetLocation
+        const {x: Dx, y: Dy, z: Dz} = targetDirection
+        listener.setPosition(x, y, z)
+        listener.setOrientation(Dx, Dy, Dz, 0, 1, 0)
+
+    }
+
+
     useEffect(() => {
         let interval: any
         let soundMaster: any
-        const audioContext = new AudioContext()
         if (userStream) {
-            soundMaster = new SoundMeter(audioContext)
+            const AC = new AudioContext()
+            setAudioContext(AC)
+            const AS = AC.createMediaStreamSource(userStream)
+            const PN = AC.createPanner()
+            const GN = AC.createGain()
+
+            if (user.uuid == uuid) GN.gain.value = 0
+
+            AS.connect(PN)
+            PN.connect(GN)
+            GN.connect(AC.destination)
+
+            setGain(GN)
+            setPannerNode(PN)
+
+            soundMaster = new SoundMeter(AC)
             soundMaster.connectToSource(userStream, (event: any) => {
                 if (!event) {
                     interval = setInterval(() => {
@@ -411,24 +447,37 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
             if (soundMaster) soundMaster.stop()
             clearInterval(interval)
         }
-    }, [userStream])
+    }, [userStream, uuid])
 
     useEffect(() => {
         const isMute = muteUsers.find(item => item.uuid == user.uuid)
-        if (isMute) setIsUserMute(isMute.isSelfMute)
+        if (isMute) {
+            setIsUserMute(isMute.isSelfMute)
+        }
     }, [muteUsers])
+
+
+    useEffect(() => {
+        if (!gain) return
+
+        if (!soundIsActive || (isUserMute || user.isMute && user.uuid != uuid) || (!voiceBack && user.uuid == uuid)) {
+            gain.gain.value = 0
+        } else {
+            gain.gain.value = 1
+        }
+
+    }, [soundIsActive, isUserMute, user.isMute, voiceBack, uuid, gain])
 
 
     return (
         <>
             <audio
-                muted={!soundIsActive || (isUserMute || user.isMute && user.uuid != uuid) || (!voiceBack && user.uuid == uuid)}
                 ref={audioRef}
+                muted
                 autoPlay
                 playsInline
             >
             </audio>
-
 
             <div
                 className={`${isPendingCall ? "shake" : ""} flex items-center bg-neutral-800 px-1 py-1 rounded-xl shadow-xl`}>

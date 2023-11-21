@@ -23,15 +23,15 @@ class TabCompletionManager : TabCompleter {
             2 -> {
                 if (args[0].equals("start", true)) {
                     return if (sender.hasPermission("melodymine.qrcode")) {
-                        listOf("link", "qrcode")
+                        listOf("link", "qrcode").filter { item -> item.contains(args[1]) }
                     } else {
-                        listOf("link")
+                        listOf("link").filter { item -> item.contains(args[1], true) }
                     }
                 }
 
                 if (args[0].equals("control", true)) {
                     return if (sender.hasPermission("melodymine.control")) {
-                        listOf("mute", "deafen")
+                        listOf("mute", "deafen").filter { item -> item.contains(args[1], true) }
                     } else {
                         null
                     }
@@ -39,7 +39,12 @@ class TabCompletionManager : TabCompleter {
 
                 if (args[0].equals("call", true)) {
                     return if (sender.hasPermission("melodymine.call")) {
-                        listOf("start", "end", "accept", "deny", "toggle")
+                        listOf("start", "end", "accept", "deny", "toggle").filter { item ->
+                            item.contains(
+                                args[1],
+                                true
+                            )
+                        }
                     } else {
                         null
                     }

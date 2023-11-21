@@ -29,7 +29,7 @@ export const useStreamStore = createWithEqualityFn<State & Actions>((setState, g
             soundIsActive: true
         })
     },
-    setMicActive: (micIsActive, plugin = false ) => {
+    setMicActive: (micIsActive, plugin = false) => {
         const stream = getState().stream
         const {socket} = useSocketStore.getState()
         const {name, uuid, server} = useUserStore.getState()
@@ -49,7 +49,7 @@ export const useStreamStore = createWithEqualityFn<State & Actions>((setState, g
         }
 
     },
-    setSoundActive: (soundIsActive, plugin= false ) => {
+    setSoundActive: (soundIsActive, plugin = false) => {
         setState({soundIsActive})
         const {socket} = useSocketStore.getState()
         const {name, uuid, server} = useUserStore.getState()

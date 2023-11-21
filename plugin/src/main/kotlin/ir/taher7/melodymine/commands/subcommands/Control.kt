@@ -28,7 +28,7 @@ class Control : SubCommand() {
 
         val melodyPlayer = Storage.onlinePlayers[player.uniqueId.toString()] ?: return
         if (!melodyPlayer.isActiveVoice) {
-            player.sendMessage("<prefix>You must active your voice.".toComponent())
+            player.sendMessage("<prefix>You Must Active Your Voice.".toComponent())
             return
         }
 

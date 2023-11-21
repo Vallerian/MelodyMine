@@ -8,13 +8,13 @@ export default [
     {
         name: "calling",
         url: "sound/calling-sound.mp3",
-        loop: true,
+        loop: false,
         volume: 0.5
     },
     {
         name: "calling2",
         url: "sound/calling-sound_2.mp3",
-        loop: true,
+        loop: false,
         volume: 0.5
     },
     {

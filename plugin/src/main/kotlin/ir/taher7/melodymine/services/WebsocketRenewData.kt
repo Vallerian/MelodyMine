@@ -16,7 +16,7 @@ class WebsocketRenewData {
                 if (Storage.onlinePlayers.isNotEmpty()) {
                     Storage.onlinePlayers.values.filter { player -> player.webIsOnline && player.isActiveVoice && !player.adminMode }
                         .forEach { melodyPlayer ->
-                            Storage.onlinePlayers.values.filter { player -> player.uuid != melodyPlayer.uuid && player.webIsOnline && player.isActiveVoice && !player.adminMode && player.callTarget != melodyPlayer}
+                            Storage.onlinePlayers.values.filter { player -> player.uuid != melodyPlayer.uuid && player.webIsOnline && player.isActiveVoice && !player.adminMode && player.callTarget != melodyPlayer }
                                 .forEach { targetPlayer ->
                                     val playerLocation = melodyPlayer.player?.location
                                     val targetLocation = targetPlayer.player?.location
@@ -26,9 +26,8 @@ class WebsocketRenewData {
                                         playerLocation.world == targetLocation.world
                                     ) {
                                         val distance = playerLocation.distance(targetLocation)
-                                        var volume: Double
-                                        val hearDistance = Storage.hearDistance
-                                        if (distance < hearDistance) {
+                                        val maxDistance = Storage.maxDistance
+                                        if (distance < maxDistance) {
                                             if (!melodyPlayer.isSendOffer.contains(targetPlayer.uuid)) {
                                                 melodyPlayer.isSendOffer.add(targetPlayer.uuid)
                                                 if (!targetPlayer.isSendOffer.contains(melodyPlayer.uuid)) {
@@ -47,28 +46,20 @@ class WebsocketRenewData {
                                                 }
                                             }
 
-                                            volume = if (Storage.hearLazy) {
-                                                (hearDistance - distance) / hearDistance
-                                            } else {
-                                                1.0
-                                            }
                                             val targetSocketID = targetPlayer.socketID
                                             if (targetSocketID != null) {
-                                                if (melodyPlayer.adminMode) {
-                                                    volume = 1.0
-                                                }
-
-                                                if (melodyPlayer.isMute) {
-                                                    volume = 0.0
-                                                }
-
                                                 object : BukkitRunnable() {
                                                     override fun run() {
-                                                        MelodyManager.setVolume(
-                                                            melodyPlayer.uuid,
-                                                            volume,
-                                                            targetSocketID,
-                                                        )
+                                                        melodyPlayer.player?.eyeLocation?.let {
+                                                            targetPlayer.player?.eyeLocation?.let { it1 ->
+                                                                MelodyManager.setVolume(
+                                                                    melodyPlayer.uuid,
+                                                                    targetSocketID,
+                                                                    it,
+                                                                    it1
+                                                                )
+                                                            }
+                                                        }
                                                     }
                                                 }.runTask(MelodyMine.instance)
                                             }

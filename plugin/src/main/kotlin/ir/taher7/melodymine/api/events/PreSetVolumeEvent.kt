@@ -8,7 +8,6 @@ import org.bukkit.event.HandlerList
 
 class PreSetVolumeEvent(
     val playerUuid: String,
-    val volume: Double,
     val targetSocketID: String
 ) : Event(), Cancellable {
     private var cancelled = false

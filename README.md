@@ -80,15 +80,6 @@ websocket-url: "ws://localhost:4000"
 # websocket auth security key !!! (important) change that after install plugin !!!
 websocket-auth-key: "" # must be the same in web server auth key
 
-# distance that players can hear each other.
-hear-distance: 32
-
-# update player distance time (as Long)
-update-distance-time: 10 # must be Long (10L = 0.5s, 20L = 1s,...)
-
-# increase & decrease sound in hear-distance.
-hear-lazy: true
-
 # users must be online in website and active voice chat.
 force-voice: false
 
@@ -98,13 +89,27 @@ mute-toggle-shortcut: true
 # call configs
 call-pending-time: 600 # must be Long (10L = 0.5s, 20L = 1s,...)
 
+# ------ sound configs ------
 
+3D-sound: true # player voice 3D mode.
+hear-lazy: true # default player volume (when 3DSound is "false" you can use this feature).
+max-distance: 30 # distance that players can hear each other.
+ref-distance: 5  # distance that players can hear each other max volume.
+inner-angle: 120 # angle that players can hear each other max volume.
+outer-angle: 180 # angle that players can hear each other.
+outer-volume: 0.3 # outer angle volume.
 
+# update player distance time (as Long)
+update-distance-time: 10 # must be Long (10L = 0.5s, 20L = 1s,...)
 ```
 
 - 📞 **Call System:** You have the ability to make a call using the command `/melodymine call start <player>` to call other players.
 
 <img style="margin-bottom:10px;border-radius: 5px" src="https://media.discordapp.net/attachments/1159034838783893567/1171354819643047977/callpng.png?ex=655c602f&is=6549eb2f&hm=310550c82085cfd69735ad77502dc30d57b94605187fbab68229c619ec435fc7&="/>
+
+- 🎧 **3D Sound Capability:** Player sounds are played in 3D, and you can determine the player's position through sound.
+
+<img style="margin-bottom:10px;border-radius: 5px" src="https://media.discordapp.net/attachments/1159034838783893567/1176549584571469874/melodySound2.png?ex=656f4630&is=655cd130&hm=b269ec5826c1fedb1c03727eeb3a9b7421af107892762cf011496a2a9227e1d6&=&width=969&height=554">
 
 - 🐞 **Robust System:** MelodyMine is a highly reliable and secure system with minimal bugs. Any discovered bugs are promptly addressed and fixed, ensuring a smooth and hassle-free experience for all users. Be part of a community that values your experience and offers continuous improvement. Find announcements and updates on our [GitHub repository](https://github.com/vallerian/MelodyMine). 🛠️🐛
 
