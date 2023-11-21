@@ -107,9 +107,9 @@ update-distance-time: 10 # must be Long (10L = 0.5s, 20L = 1s,...)
 
 <img style="margin-bottom:10px;border-radius: 5px" src="https://media.discordapp.net/attachments/1159034838783893567/1171354819643047977/callpng.png?ex=655c602f&is=6549eb2f&hm=310550c82085cfd69735ad77502dc30d57b94605187fbab68229c619ec435fc7&="/>
 
-- 🎧 **3D Sound Capability:** Player sounds are played in 3D, and you can determine the player's position through sound.
+- 🎧 **3D Voice Capability:** Player sounds are played in 3D, and you can determine the player's position through sound.
 
-<img style="margin-bottom:10px;border-radius: 5px" src="https://media.discordapp.net/attachments/1159034838783893567/1176549584571469874/melodySound2.png?ex=656f4630&is=655cd130&hm=b269ec5826c1fedb1c03727eeb3a9b7421af107892762cf011496a2a9227e1d6&=&width=969&height=554">
+<img style="margin-bottom:10px;border-radius: 5px" src="https://cdn.discordapp.com/attachments/1159034838783893567/1176601670650703933/melody-sound4.png?ex=656f76b2&is=655d01b2&hm=08004a4c29ab3370656f0b6963689fb76c27dc22128b939d75d5dad32fb73333&">
 
 - 🐞 **Robust System:** MelodyMine is a highly reliable and secure system with minimal bugs. Any discovered bugs are promptly addressed and fixed, ensuring a smooth and hassle-free experience for all users. Be part of a community that values your experience and offers continuous improvement. Find announcements and updates on our [GitHub repository](https://github.com/vallerian/MelodyMine). 🛠️🐛
 
