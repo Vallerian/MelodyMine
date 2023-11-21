@@ -23,6 +23,7 @@ export const useSocketStore = createWithEqualityFn<State & Actions>((setState, g
         getState().socket?.disconnect()
     },
     disconnectPeer: () => {
+        getState().peer?.destroy()
         getState().peer?.disconnect()
     }
 }), shallow)
