@@ -1,6 +1,5 @@
 "use client"
 import {IOnlineUsers, IReceiveControl, IVolume} from "@/interfaces";
-import Image from "next/image";
 import {useEffect, useRef, useState} from "react";
 import {SoundMeter} from "@/utils/SoundMeter";
 import {useStreamStore} from "@/store/StreamStore";
@@ -16,6 +15,8 @@ import {MediaConnection} from "peerjs";
 import {useValidateStore} from "@/store/ValidateStore";
 import {MdOutlinePhoneCallback} from "react-icons/md";
 import {useSoundStore} from "@/store/SoundStore";
+import UserHead from "@/components/UserHead";
+import UserVolumeLine from "@/components/UserVolumeLine";
 
 const SingleUser = ({user}: { user: IOnlineUsers }) => {
     const {socket, peer} = useSocketStore(state => state)
@@ -26,7 +27,6 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
     const {stream} = useStreamStore(state => state)
     const {soundIsActive} = useStreamStore(state => state)
     const [userStream, setUserStream] = useState<MediaStream>()
-    const [instant, setInstant] = useState(0.00)
     const [isUserMute, setIsUserMute] = useState<boolean>(false)
     const [voiceBack, setVoiceBack] = useState<boolean>(false)
     const [isSelfMute, setIsSelfMute] = useState<boolean>(true)
@@ -220,8 +220,6 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
         if (data.uuid == user.uuid && data.uuid != uuid) {
             setIsInCall(false)
             call?.close()
-
-
             endCallSound?.play()
         }
     }
@@ -415,8 +413,6 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
 
 
     useEffect(() => {
-        let interval: any
-        let soundMaster: any
         if (userStream) {
             const AC = new AudioContext()
             setAudioContext(AC)
@@ -432,20 +428,6 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
 
             setGain(GN)
             setPannerNode(PN)
-
-            soundMaster = new SoundMeter(AC)
-            soundMaster.connectToSource(userStream, (event: any) => {
-                if (!event) {
-                    interval = setInterval(() => {
-                        setInstant(soundMaster.instant.toFixed(2))
-                    }, 10)
-                }
-            })
-        }
-
-        return () => {
-            if (soundMaster) soundMaster.stop()
-            clearInterval(interval)
         }
     }, [userStream, uuid])
 
@@ -468,7 +450,6 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
 
     }, [soundIsActive, isUserMute, user.isMute, voiceBack, uuid, gain])
 
-
     return (
         <>
             <audio
@@ -482,10 +463,15 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
             <div
                 className={`${isPendingCall ? "shake" : ""} flex items-center bg-neutral-800 px-1 py-1 rounded-xl shadow-xl`}>
                 <div className="flex justify-center items-center w-2/12">
-                    <Image
-                        src={`https://mc-heads.net/avatar/${user.name}`}
-                        alt={`${user.name} avatar`} width={50} height={50}
-                        className={` opacity-30 rounded ${instant > 0.00 && audioRef?.current?.volume != 0 && soundIsActive && !user.isMute && !isUserMute ? "soundAnimationSingle" : ""}`}
+                    <UserHead
+                        key={user.name}
+                        stream={userStream}
+                        audioContext={audioContext}
+                        name={user.name}
+                        volume={audioRef?.current?.volume}
+                        soundIsActive={soundIsActive}
+                        isMute={user.isMute}
+                        isSelfMute={isUserMute}
                     />
                 </div>
                 <div className="flex flex-col ml-3 w-10/12">
@@ -545,13 +531,16 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
                             ) : ""}
                         </div>
                     </h3>
-                    <div
-                        className="bg-neutral-700 rounded-2xl h-[2px] my-1 relative w-full flex items-center">
-                        <div className="btn-gradient h-[2px] rounded-2xl absolute shadow-2xl shadow-white" style={{
-                            maxWidth: "100%",
-                            width: instant > 0.00 && audioRef?.current?.volume != 0 && soundIsActive && !user.isMute && !isUserMute ? `${instant * 500}%` : "0px",
-                        }}/>
-                    </div>
+                    <UserVolumeLine
+                        key={user.name + "volume"}
+                        stream={userStream}
+                        audioContext={audioContext}
+                        name={user.name}
+                        volume={audioRef?.current?.volume}
+                        soundIsActive={soundIsActive}
+                        isMute={user.isMute}
+                        isSelfMute={isUserMute}
+                    />
                     <div className="flex items-center justify-between w-full">
                         <span
                             className={`${user.server == server && serverIsOnline && isActiveVoice ? "text-green-500" : "text-neutral-400"} font-bold flex items-center gap-1`}>
