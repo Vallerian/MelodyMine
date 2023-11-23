@@ -35,7 +35,6 @@ const UserList = () => {
     const {closeStream} = useStreamStore(state => state)
     const [userOnline, setUserOnline] = useState<IOnlineUsers[]>()
 
-
     const onPlayerJoinReceive = (token: string) => {
         const data = decrypt(token) as IOnlineUsers[]
         initUsers(data)

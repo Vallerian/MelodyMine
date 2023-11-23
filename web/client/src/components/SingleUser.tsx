@@ -1,7 +1,6 @@
 "use client"
 import {IOnlineUsers, IReceiveControl, IVolume} from "@/interfaces";
 import {useEffect, useRef, useState} from "react";
-import {SoundMeter} from "@/utils/SoundMeter";
 import {useStreamStore} from "@/store/StreamStore";
 import {BsFillMicFill, BsFillMicMuteFill} from "react-icons/bs";
 import {useUserStore} from "@/store/UserStore";
@@ -41,6 +40,7 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
     const [pannerNode, setPannerNode] = useState<PannerNode>()
     const [gain, setGain] = useState<GainNode>()
     const [audioContext, setAudioContext] = useState<AudioContext>()
+    const [enableVoice, setEnableVoice] = useState<boolean>(false)
 
     const audioRef = useRef<HTMLAudioElement>(null)
 
@@ -229,7 +229,6 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
         if (data.uuid == user.uuid && data.uuid != uuid) {
             setIsInCall(false)
             call?.close()
-
             endCallSound?.play()
         }
     }
@@ -323,7 +322,7 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
                 socket?.off("onDenyCallTargetPluginReceive", onDenyCallTargetPluginReceive)
             }
 
-        }, [socket, uuid, stream, isValidate, call, callingSound, callingSound2, endCallSound, pannerNode]
+        }, [socket, uuid, stream, isValidate, call, callingSound, callingSound2, endCallSound, pannerNode, soundIsActive, isUserMute, user, voiceBack, gain]
     )
 
     useEffect(() => {
@@ -374,8 +373,16 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
 
 
     const updatePannerPosition = (data: IVolume) => {
-        if (!pannerNode || !audioContext) return
+        if (!pannerNode || !audioContext || !gain) return
         const {playerLocation, playerDirection, settings, distance} = data
+        if (distance > settings.maxDistance || checkPlayerCanTalk()) {
+            gain.gain.value = 0
+            setEnableVoice(false)
+            return
+        } else {
+            gain.gain.value = 1
+            setEnableVoice(true)
+        }
         if (settings.sound3D) {
             const {x, y, z} = playerLocation
             const {x: Dx, y: Dy, z: Dz} = playerDirection
@@ -387,16 +394,22 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
             pannerNode.coneInnerAngle = settings.innerAngle
             pannerNode.coneOuterAngle = settings.outerAngle
             pannerNode.coneOuterGain = settings.outerVolume
-
             pannerNode.setPosition(x, y, z)
             pannerNode.setOrientation(Dx, Dy, Dz)
+
         } else {
             if (!settings.lazyHear) return
             let volume = (settings.maxDistance - distance) / settings.maxDistance
-            if (userIsAdminMode) volume = 1
-            if (user.isMute) volume = 0
-            if (gain) gain.gain.value = volume
+            gain.gain.value = volume
+            if (userIsAdminMode) gain.gain.value = 1
+            if (checkPlayerCanTalk()) {
+                gain.gain.value = 0
+            } else {
+                gain.gain.value = volume
+            }
         }
+
+
     }
 
     const updateListenerPosition = (data: IVolume) => {
@@ -420,8 +433,10 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
             const PN = AC.createPanner()
             const GN = AC.createGain()
 
-            if (user.uuid == uuid) GN.gain.value = 0
-
+            if (user.uuid == uuid){
+                setEnableVoice(true)
+            }
+            GN.gain.value = 0
             AS.connect(PN)
             PN.connect(GN)
             GN.connect(AC.destination)
@@ -438,17 +453,19 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
         }
     }, [muteUsers])
 
+    const checkPlayerCanTalk = () => {
+        return (!soundIsActive || (isUserMute || user.isMute && user.uuid != uuid) || (!voiceBack && user.uuid == uuid))
+    }
+
 
     useEffect(() => {
         if (!gain) return
-
-        if (!soundIsActive || (isUserMute || user.isMute && user.uuid != uuid) || (!voiceBack && user.uuid == uuid)) {
+        if (checkPlayerCanTalk()) {
             gain.gain.value = 0
         } else {
             gain.gain.value = 1
         }
-
-    }, [soundIsActive, isUserMute, user.isMute, voiceBack, uuid, gain])
+    }, [soundIsActive, isUserMute, user, voiceBack, uuid, gain])
 
     return (
         <>
@@ -472,6 +489,7 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
                         soundIsActive={soundIsActive}
                         isMute={user.isMute}
                         isSelfMute={isUserMute}
+                        enableVoice={enableVoice}
                     />
                 </div>
                 <div className="flex flex-col ml-3 w-10/12">
@@ -540,6 +558,7 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
                         soundIsActive={soundIsActive}
                         isMute={user.isMute}
                         isSelfMute={isUserMute}
+                        enableVoice={enableVoice}
                     />
                     <div className="flex items-center justify-between w-full">
                         <span
