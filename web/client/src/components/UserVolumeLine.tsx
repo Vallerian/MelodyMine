@@ -9,9 +9,10 @@ interface props {
     soundIsActive: boolean
     isMute?: boolean
     isSelfMute: boolean
+    enableVoice: boolean
 }
 
-const UserVolumeLine = ({stream, audioContext, isSelfMute, isMute, volume, soundIsActive, name}: props) => {
+const UserVolumeLine = ({stream, audioContext, isSelfMute, isMute, volume, soundIsActive, name,enableVoice}: props) => {
     const [instant, setInstant] = useState(0.00)
     useEffect(() => {
         let interval: any
@@ -37,7 +38,7 @@ const UserVolumeLine = ({stream, audioContext, isSelfMute, isMute, volume, sound
                 className="bg-neutral-700 rounded-2xl h-[2px] my-1 relative w-full flex items-center">
                 <div className="btn-gradient h-[2px] rounded-2xl absolute shadow-2xl shadow-white" style={{
                     maxWidth: "100%",
-                    width: instant > 0.00 && volume != 0 && soundIsActive && !isMute && !isSelfMute ? `${instant * 500}%` : "0px",
+                    width: instant > 0.00 && volume != 0 && soundIsActive && !isMute && !isSelfMute && enableVoice ? `${instant * 500}%` : "0px",
                 }}/>
             </div>
         </>

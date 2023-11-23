@@ -27,7 +27,9 @@ class WebsocketRenewData {
                                     ) {
                                         val distance = playerLocation.distance(targetLocation)
                                         val maxDistance = Storage.maxDistance
-                                        if (distance < maxDistance) {
+
+
+                                        if (distance < (maxDistance + 50)) {
                                             if (!melodyPlayer.isSendOffer.contains(targetPlayer.uuid)) {
                                                 melodyPlayer.isSendOffer.add(targetPlayer.uuid)
                                                 if (!targetPlayer.isSendOffer.contains(melodyPlayer.uuid)) {
@@ -45,7 +47,9 @@ class WebsocketRenewData {
                                                     }
                                                 }
                                             }
+                                        }
 
+                                        if (distance < (maxDistance + 50)) {
                                             val targetSocketID = targetPlayer.socketID
                                             if (targetSocketID != null) {
                                                 object : BukkitRunnable() {
@@ -63,7 +67,9 @@ class WebsocketRenewData {
                                                     }
                                                 }.runTask(MelodyMine.instance)
                                             }
-                                        } else {
+                                        }
+
+                                        if (distance > (maxDistance + 100)) {
                                             if (melodyPlayer.isSendOffer.contains(targetPlayer.uuid)) {
                                                 val targetSocketID = targetPlayer.socketID
                                                 if (targetSocketID != null) {

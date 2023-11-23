@@ -10,9 +10,10 @@ interface props {
     soundIsActive: boolean
     isMute?: boolean
     isSelfMute: boolean
+    enableVoice: boolean
 }
 
-const UserHead = ({stream, audioContext, isSelfMute, isMute, volume, soundIsActive, name}: props) => {
+const UserHead = ({stream, audioContext, isSelfMute, isMute, volume, soundIsActive, name,enableVoice}: props) => {
     const [instant, setInstant] = useState(0.00)
     useEffect(() => {
         let interval: any
@@ -38,7 +39,7 @@ const UserHead = ({stream, audioContext, isSelfMute, isMute, volume, soundIsActi
             <Image
                 src={`https://mc-heads.net/avatar/${name}`}
                 alt={`${name} avatar`} width={50} height={50}
-                className={` opacity-30 rounded ${instant > 0.00 && volume != 0 && soundIsActive && !isMute && !isSelfMute ? "soundAnimationSingle" : ""}`}
+                className={` opacity-30 rounded ${instant > 0.00 && volume != 0 && soundIsActive && !isMute && !isSelfMute && enableVoice ? "soundAnimationSingle" : ""}`}
             />
         </>
     )
