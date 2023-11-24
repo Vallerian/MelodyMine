@@ -44,10 +44,45 @@ class WebsocketRenewData {
                                                                 )
                                                             }
                                                         }.runTask(MelodyMine.instance)
+
+                                                        object : BukkitRunnable() {
+                                                            override fun run() {
+                                                                MelodyManager.enableVoice(
+                                                                    targetPlayer.name,
+                                                                    targetPlayer.uuid,
+                                                                    targetPlayer.server,
+                                                                    it
+                                                                )
+                                                            }
+                                                        }.runTaskLater(MelodyMine.instance, 60)
+
+                                                        object : BukkitRunnable() {
+                                                            override fun run() {
+                                                                MelodyManager.enableVoice(
+                                                                    targetPlayer.name,
+                                                                    targetPlayer.uuid,
+                                                                    targetPlayer.server,
+                                                                    it
+                                                                )
+                                                            }
+                                                        }.runTaskLater(MelodyMine.instance, 120)
+
+                                                        object : BukkitRunnable() {
+                                                            override fun run() {
+                                                                MelodyManager.enableVoice(
+                                                                    targetPlayer.name,
+                                                                    targetPlayer.uuid,
+                                                                    targetPlayer.server,
+                                                                    it
+                                                                )
+                                                            }
+                                                        }.runTaskLater(MelodyMine.instance, 180)
                                                     }
                                                 }
                                             }
                                         }
+
+
 
                                         if (distance < (maxDistance + 50)) {
                                             val targetSocketID = targetPlayer.socketID
@@ -69,6 +104,8 @@ class WebsocketRenewData {
                                             }
                                         }
 
+
+
                                         if (distance > (maxDistance + 100)) {
                                             if (melodyPlayer.isSendOffer.contains(targetPlayer.uuid)) {
                                                 val targetSocketID = targetPlayer.socketID
@@ -83,10 +120,46 @@ class WebsocketRenewData {
                                                             )
                                                         }
                                                     }.runTask(MelodyMine.instance)
+
+                                                    object : BukkitRunnable() {
+                                                        override fun run() {
+                                                            MelodyManager.disableVoice(
+                                                                melodyPlayer.name,
+                                                                melodyPlayer.uuid,
+                                                                melodyPlayer.server,
+                                                                targetSocketID
+                                                            )
+                                                        }
+                                                    }.runTaskLater(MelodyMine.instance, 60)
+
+                                                    object : BukkitRunnable() {
+                                                        override fun run() {
+                                                            MelodyManager.disableVoice(
+                                                                melodyPlayer.name,
+                                                                melodyPlayer.uuid,
+                                                                melodyPlayer.server,
+                                                                targetSocketID
+                                                            )
+                                                        }
+                                                    }.runTaskLater(MelodyMine.instance, 120)
+
+                                                    object : BukkitRunnable() {
+                                                        override fun run() {
+                                                            MelodyManager.disableVoice(
+                                                                melodyPlayer.name,
+                                                                melodyPlayer.uuid,
+                                                                melodyPlayer.server,
+                                                                targetSocketID
+                                                            )
+                                                        }
+                                                    }.runTaskLater(MelodyMine.instance, 180)
+
                                                     melodyPlayer.isSendOffer.remove(targetPlayer.uuid)
                                                 }
                                             }
                                         }
+
+
                                     }
                                 }
 
