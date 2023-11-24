@@ -50,24 +50,38 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
         setEndCallSound(soundList.find(sound => sound.name == "hangUp")?.howl)
     }, [soundList])
 
-    const onEnableVoiceReceive = (token: string) => {
-        const onlineUser = decrypt(token) as IOnlineUsers
-        if (onlineUser.uuid != user.uuid) return
-        if (call) return
-        const peerCall = peer?.call(onlineUser.uuid!!, stream!!, {
+    const connectPeerCall = (peerUuid: string) => {
+        if (peerUuid == uuid || !peer) return
+        call?.peerConnection.close()
+        call?.close()
+        setCall(undefined)
+        const peerCall = peer.call(peerUuid!!, stream!!, {
             metadata: {
                 uuid: uuid
             }
         })
-
         setCall(peerCall)
-        peerCall?.on("stream", remoteStream => {
+        peerCall.on("stream", remoteStream => {
             if (audioRef.current) {
                 audioRef.current.srcObject = remoteStream
                 setUserStream(remoteStream)
             }
-
         })
+
+        peerCall.peerConnection.oniceconnectionstatechange = () => {
+            if (peerCall.peerConnection.iceConnectionState === "disconnected") {
+                connectPeerCall(peerUuid)
+            }
+        }
+
+    }
+
+
+    const onEnableVoiceReceive = (token: string) => {
+        const onlineUser = decrypt(token) as IOnlineUsers
+        if (onlineUser.uuid != user.uuid) return
+        if (call) return
+        connectPeerCall(onlineUser.uuid!!)
     }
 
     const onDisableVoiceReceive = (token: string) => {
@@ -85,6 +99,7 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
         }
     }
 
+
     const onAdminModeEnableReceive = (token: string) => {
         const data = decrypt(token) as {
             uuid: string,
@@ -92,19 +107,9 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
         }
         if (data.uuid != user.uuid && isValidate) return
         setUserIsAdminMode(true)
-        if (data.uuid == uuid) return
-        const peerCall = peer?.call(data.uuid!!, stream!!, {
-            metadata: {
-                uuid: uuid
-            }
-        })
-        setCall(peerCall)
-        peerCall?.on("stream", remoteStream => {
-            if (audioRef.current) {
-                audioRef.current.srcObject = remoteStream
-                setUserStream(remoteStream)
-            }
-        })
+        if (data.uuid == uuid || !peer) return
+
+        connectPeerCall(data.uuid)
     }
 
     const onAdminModeDisableReceive = (token: string) => {
@@ -204,18 +209,7 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
     const onAcceptCallTargetPluginReceive = (token: string) => {
         const data = decrypt(token) as { name: string, uuid: string }
         if (data.uuid == user.uuid && data.uuid != uuid) {
-            const peerCall = peer?.call(data.uuid!!, stream!!, {
-                metadata: {
-                    uuid: uuid
-                }
-            })
-            setCall(peerCall)
-            peerCall?.on("stream", remoteStream => {
-                if (audioRef.current) {
-                    audioRef.current.srcObject = remoteStream
-                    setUserStream(remoteStream)
-                }
-            })
+            connectPeerCall(data.uuid)
             setIsPendingCall(false)
             setIsInCall(true)
             callingSound?.stop()
