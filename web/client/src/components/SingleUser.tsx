@@ -53,7 +53,7 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
     const onEnableVoiceReceive = (token: string) => {
         const onlineUser = decrypt(token) as IOnlineUsers
         if (onlineUser.uuid != user.uuid) return
-
+        if (call) return
         const peerCall = peer?.call(onlineUser.uuid!!, stream!!, {
             metadata: {
                 uuid: uuid
@@ -73,7 +73,9 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
     const onDisableVoiceReceive = (token: string) => {
         const onlineUser = decrypt(token) as IOnlineUsers
         if (onlineUser.uuid != user.uuid) return
+        if (!call) return
         call?.close()
+        setCall(undefined)
     }
 
     const onPlayerInitAdminModeReceive = (token: string) => {
@@ -112,18 +114,23 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
         if (data.uuid != user.uuid) return
         setUserIsAdminMode(false)
         call?.close()
+        setCall(undefined)
+
     }
 
     const onNewPlayerLeave = (token: string) => {
         const data = decrypt(token) as IOnlineUsers
         if (data.uuid != user.uuid || data.uuid == uuid) return
         call?.close()
+        setCall(undefined)
     }
 
     const onPlayerLeaveReceivePlugin = (token: string) => {
         const data = decrypt(token) as IOnlineUsers
         if (data.uuid != user.uuid || data.uuid == uuid) return
         call?.close()
+        setCall(undefined)
+
     }
 
     const onPlayerChangeServer = (token: string) => {
@@ -135,6 +142,7 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
         if (data.uuid != user.uuid && data.uuid != uuid) return
         setUserIsAdminMode(false)
         call?.close()
+        setCall(undefined)
     }
 
     const onSetVolumeReceive = (data: IVolume) => {
@@ -220,6 +228,7 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
         if (data.uuid == user.uuid && data.uuid != uuid) {
             setIsInCall(false)
             call?.close()
+            setCall(undefined)
             endCallSound?.play()
         }
     }
@@ -229,6 +238,7 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
         if (data.uuid == user.uuid && data.uuid != uuid) {
             setIsInCall(false)
             call?.close()
+            setCall(undefined)
             endCallSound?.play()
         }
     }
@@ -328,6 +338,7 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
     useEffect(() => {
         if (isValidate) return
         call?.close()
+        setCall(undefined)
         setUserIsAdminMode(false)
     }, [isValidate, call])
 
@@ -433,7 +444,7 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
             const PN = AC.createPanner()
             const GN = AC.createGain()
 
-            if (user.uuid == uuid){
+            if (user.uuid == uuid) {
                 setEnableVoice(true)
             }
             GN.gain.value = 0
