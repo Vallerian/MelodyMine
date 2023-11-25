@@ -74,7 +74,6 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
                 connectPeerCall(peerUuid)
             }
         }
-        setEnableVoice(true)
     }
 
 
@@ -379,7 +378,7 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
 
 
     const updatePannerPosition = (data: IVolume) => {
-        if (!pannerNode || !audioContext || !gain) return
+        if (!pannerNode || !audioContext || !gain || isInCall) return
         const {playerLocation, playerDirection, settings, distance} = data
         if (distance > settings.maxDistance || checkPlayerCanTalk()) {
             gain.gain.value = 0
@@ -433,6 +432,7 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
 
     useEffect(() => {
         if (userStream) {
+            setEnableVoice(true)
             const AC = new AudioContext()
             setAudioContext(AC)
             const AS = AC.createMediaStreamSource(userStream)
