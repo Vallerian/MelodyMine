@@ -55,6 +55,7 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
         call?.peerConnection.close()
         call?.close()
         setCall(undefined)
+
         const peerCall = peer.call(peerUuid!!, stream!!, {
             metadata: {
                 uuid: uuid
@@ -73,7 +74,7 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
                 connectPeerCall(peerUuid)
             }
         }
-
+        setEnableVoice(true)
     }
 
 
@@ -87,7 +88,7 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
     const onDisableVoiceReceive = (token: string) => {
         const onlineUser = decrypt(token) as IOnlineUsers
         if (onlineUser.uuid != user.uuid) return
-        if (!call) return
+        if (!call || isInCall) return
         call?.close()
         setCall(undefined)
     }
