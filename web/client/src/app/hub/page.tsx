@@ -5,7 +5,7 @@ import UserList from "@/components/UserList";
 import {getAuthSession} from "@/utils/auth";
 import {redirect} from "next/navigation";
 import {IUser} from "@/interfaces";
-import {prisma} from "@/utils/connect";
+
 
 
 export const metadata: Metadata = {

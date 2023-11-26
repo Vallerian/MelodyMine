@@ -2,7 +2,7 @@
 import {GiSoundWaves} from "react-icons/gi";
 import {useUserStore} from "@/store/UserStore";
 import {useValidateStore} from "@/store/ValidateStore";
-import {useEffect, useState} from "react";
+import {useEffect, useLayoutEffect, useState} from "react";
 import Progress from "@/components/Porgress/Progress";
 import {useSocketStore} from "@/store/SocketStore";
 import {io, Socket} from "socket.io-client";
@@ -30,7 +30,7 @@ const StartButton = () => {
     const [peerConnection, setPeerConnection] = useState<boolean>(false)
     const route = useRouter()
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         let socket: Socket<DefaultEventsMap, DefaultEventsMap>
         const doAsync = async () => {
             const res = await fetch("/api/user/data", {

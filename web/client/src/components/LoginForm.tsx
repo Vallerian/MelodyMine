@@ -4,7 +4,7 @@ import {signIn, useSession} from 'next-auth/react';
 import * as Yup from 'yup';
 import {FormikHelpers, useFormik} from "formik";
 import {useRouter, useSearchParams} from "next/navigation";
-import {useEffect, useState} from "react";
+import {useLayoutEffect, useState} from "react";
 import {AiOutlineEye, AiOutlineEyeInvisible} from "react-icons/ai";
 import Progress from "@/components/Porgress/Progress";
 import {useValidateStore} from "@/store/ValidateStore";
@@ -36,8 +36,7 @@ const LoginForm = () => {
 
     if (status === "authenticated") route.push("/hub")
 
-    useEffect(() => {
-
+    useLayoutEffect(() => {
         const doAsync = async () => {
             if (params.has("verifyCode")) {
                 const verifyCode = params.get("verifyCode")
