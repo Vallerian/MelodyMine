@@ -2,7 +2,7 @@
 import Link from "next/link";
 import {useSession} from "next-auth/react";
 import {useRouter, useSearchParams} from "next/navigation";
-import {useEffect} from "react";
+import {useLayoutEffect} from "react";
 import {useValidateStore} from "@/store/ValidateStore";
 
 const HomeStart = () => {
@@ -11,7 +11,7 @@ const HomeStart = () => {
     const route = useRouter()
     const {setError, setValidate} = useValidateStore(status => status)
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         if (params.has("error")) {
             setValidate(false)
             setError(params.get("error")!)
