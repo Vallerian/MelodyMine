@@ -27,6 +27,11 @@ export const GET = async () => {
                 const data = {
                     "player": player,
                     "socketURL": process.env.WEBSOCKET_URL,
+                    "turnServer": {
+                        url: process.env.TURN_URL,
+                        username: process.env.TURN_USERNAME,
+                        credential: process.env.TURN_PASSWORD,
+                    },
                 }
                 CryptoJS.AES.encrypt(JSON.stringify(data), process.env.WEBSOCKET_KEY!!).toString()
                 const token = CryptoJS.AES.encrypt(JSON.stringify(data), process.env.WEBSOCKET_KEY!!).toString()

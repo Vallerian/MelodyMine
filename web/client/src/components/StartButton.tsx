@@ -40,7 +40,7 @@ const StartButton = () => {
 
             if (!res.ok) return
             const {token} = await res.json()
-            const {player: data, socketURL} = decrypt(token)
+            const {player: data, socketURL, turnServer} = decrypt(token)
             if (data.webIsOnline) {
                 route.push("/?error=multiUser")
             } else {
@@ -80,6 +80,9 @@ const StartButton = () => {
                             host: newUrl.hostname,
                             port: Number(newUrl.port) || 443,
                             path: "/melodymine",
+                            config: {
+                                'iceServers': [turnServer]
+                            }
                         })
                         setPeer(peer)
                         setPeerConnection(true)
