@@ -33,7 +33,6 @@ repositories {
     maven("https://oss.sonatype.org/content/repositories/snapshots")
     maven("https://oss.sonatype.org/content/repositories/central")
 
-
 //    PlaceholderAPI
     maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
 
@@ -50,10 +49,10 @@ dependencies {
 
     implementation("com.google.code.gson:gson:2.10.1")
 
-    implementation("com.github.cryptomorin:XSeries:9.5.0") { isTransitive = false }
+    implementation("com.github.cryptomorin:XSeries:9.7.0") { isTransitive = false }
 
     implementation("net.kyori:adventure-api:4.14.0")
-    implementation("net.kyori:adventure-platform-bukkit:4.3.0")
+    implementation("net.kyori:adventure-platform-bukkit:4.3.1")
     implementation("net.kyori:adventure-text-minimessage:4.14.0")
 
     implementation("cloud.commandframework:cloud-paper:1.9.0-SNAPSHOT")
