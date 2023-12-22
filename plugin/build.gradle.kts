@@ -42,7 +42,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly("org.spigotmc:spigot-api:1.19.3-R0.1-SNAPSHOT")
+    compileOnly("org.spigotmc:spigot-api:1.20.2-R0.1-SNAPSHOT")
     compileOnly("me.clip:placeholderapi:2.11.3")
 
     implementation("org.bstats:bstats-bukkit:3.0.2")
@@ -64,7 +64,7 @@ dependencies {
     implementation("io.socket:socket.io-client:2.1.0")
     implementation("com.github.kenglxn.QRGen:javase:3.0.1")
 
-    implementation("com.zaxxer:HikariCP:5.0.1")
+    implementation("com.zaxxer:HikariCP:4.0.3")
 
 }
 

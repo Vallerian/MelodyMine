@@ -1,5 +1,6 @@
 package ir.taher7.melodymine.commands.subcommands
 
+import com.cryptomorin.xseries.ReflectionUtils
 import ir.taher7.melodymine.commands.SubCommand
 import ir.taher7.melodymine.core.MelodyManager
 import ir.taher7.melodymine.storage.Storage
@@ -25,7 +26,7 @@ class Start : SubCommand() {
         }
         when (args.size) {
             2 -> {
-                if (args[1].equals("qrcode", true)) {
+                if (ReflectionUtils.supports(13) && args[1].equals("qrcode", true)) {
                     if (!player.hasPermission("melodymine.qrcode")) {
                         player.sendMessage("<prefix>You dont have permission to use this command.".toComponent())
                         return
