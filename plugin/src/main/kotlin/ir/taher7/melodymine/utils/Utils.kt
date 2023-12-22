@@ -1,5 +1,6 @@
 package ir.taher7.melodymine.utils
 
+import com.cryptomorin.xseries.ReflectionUtils
 import ir.taher7.melodymine.MelodyMine
 import ir.taher7.melodymine.commands.SubCommand
 import ir.taher7.melodymine.core.MelodyManager
@@ -141,7 +142,11 @@ object Utils {
     }
 
     fun isMap(item: ItemStack): Boolean {
-        if (item.type != Material.FILLED_MAP) return false
+        if (ReflectionUtils.supports(13)) {
+            if (item.type != Material.FILLED_MAP) return false
+        } else {
+            if (item.type != Material.MAP) return false
+        }
         val itemMeta = item.itemMeta ?: return false
         if (itemMeta.displayName != qrCodeDisplayName) return false
         if (itemMeta.lore != qrCoreLore) return false
