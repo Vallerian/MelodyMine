@@ -25,7 +25,7 @@ export const useSoundStore = createWithEqualityFn<State & Actions>((setState) =>
         sounds.forEach(sound => {
             tempSounds.push({
                 name: sound.name,
-                howl: new Howl({src: sound.url, volume: sound.volume, loop: sound.loop, html5: true})
+                howl: new Howl({src: sound.url, volume: sound.volume, loop: sound.loop, html5: true, format: ["mp3"]})
             })
         })
         setState(() => ({soundList: tempSounds}))
