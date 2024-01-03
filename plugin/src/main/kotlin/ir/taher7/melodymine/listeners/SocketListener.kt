@@ -120,6 +120,12 @@ class SocketListener(private val socket: Socket) {
             Storage.onlinePlayers[melodyPlayer.uuid]?.isDeafen = true
 
             Storage.onlinePlayers.values.forEach { player ->
+                if (player.isSendOffer.contains(melodyPlayer.uuid)) {
+                    player.isSendOffer.remove(melodyPlayer.uuid)
+                }
+            }
+
+            Storage.onlinePlayers.values.forEach { player ->
                 if (player.uuid != melodyPlayer.uuid && player.adminMode) {
                     socket.emit(
                         "onPlayerInitAdminModePlugin", mapOf(
