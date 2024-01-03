@@ -48,6 +48,7 @@ const UserList = () => {
     const onNewPlayerLeave = (token: string) => {
         const user = decrypt(token) as IOnlineUsers
         removeUser(user.uuid!)
+
     }
 
     const onPlayerLeaveReceivePlugin = (token: string) => {
@@ -151,15 +152,15 @@ const UserList = () => {
             className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 w-full mt-3 reflection">
             {userOnline?.sort((a, b) => {
                 const uuidComparison = (a.uuid === uuid && b.uuid !== uuid) ? -1 :
-                    (a.uuid !== uuid && b.uuid === uuid) ? 1 : 0;
+                    (a.uuid !== uuid && b.uuid === uuid) ? 1 : 0
 
                 const serverComparison = (a.server === server && b.server !== server) ? -1 :
-                    (a.server !== server && b.server === server) ? 1 : 0;
+                    (a.server !== server && b.server === server) ? 1 : 0
 
                 const adminComparison = (a.isAdminMode && !b.isAdminMode) ? -1 :
-                    (!a.isAdminMode && !b.isAdminMode) ? 1 : 0;
+                    (!a.isAdminMode && !b.isAdminMode) ? 1 : 0
 
-                return serverComparison || uuidComparison || adminComparison;
+                return serverComparison || uuidComparison || adminComparison
             })?.map(user => (
                 <SingleUser key={user.uuid} user={user}/>
             ))}

@@ -28,27 +28,27 @@ class WebsocketRenewData {
                                         val distance = playerLocation.distance(targetLocation)
                                         val maxDistance = Storage.maxDistance
 
-
                                         if (distance < (maxDistance + 50)) {
                                             if (!melodyPlayer.isSendOffer.contains(targetPlayer.uuid)) {
                                                 melodyPlayer.isSendOffer.add(targetPlayer.uuid)
                                                 if (!targetPlayer.isSendOffer.contains(melodyPlayer.uuid)) {
-                                                    melodyPlayer.socketID?.let {
+                                                    targetPlayer.socketID?.let {
                                                         object : BukkitRunnable() {
                                                             override fun run() {
+
                                                                 MelodyManager.enableVoice(
-                                                                    targetPlayer.name,
-                                                                    targetPlayer.uuid,
-                                                                    targetPlayer.server,
+                                                                    melodyPlayer.name,
+                                                                    melodyPlayer.uuid,
+                                                                    melodyPlayer.server,
                                                                     it
                                                                 )
+
                                                             }
                                                         }.runTask(MelodyMine.instance)
                                                     }
                                                 }
                                             }
                                         }
-
 
 
                                         if (distance < (maxDistance + 50)) {
@@ -84,10 +84,9 @@ class WebsocketRenewData {
                                                                 melodyPlayer.server,
                                                                 targetSocketID
                                                             )
+                                                            melodyPlayer.isSendOffer.remove(targetPlayer.uuid)
                                                         }
                                                     }.runTask(MelodyMine.instance)
-
-                                                    melodyPlayer.isSendOffer.remove(targetPlayer.uuid)
                                                 }
                                             }
                                         }

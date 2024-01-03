@@ -16,9 +16,12 @@ import {MdOutlinePhoneCallback} from "react-icons/md";
 import {useSoundStore} from "@/store/SoundStore";
 import UserHead from "@/components/UserHead";
 import UserVolumeLine from "@/components/UserVolumeLine";
+import {useOnlineUsersStore} from "@/store/OnlineUsersStore";
+
 
 const SingleUser = ({user}: { user: IOnlineUsers }) => {
     const {socket, peer} = useSocketStore(state => state)
+    const {users} = useOnlineUsersStore(state => state)
     const {uuid, server, serverIsOnline, isActiveVoice} = useUserStore(state => state)
     const {setUserMute, muteUsers} = useControlStore(state => state)
     const {isValidate} = useValidateStore(state => state)
@@ -55,12 +58,12 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
         call?.peerConnection.close()
         call?.close()
         setCall(undefined)
-
         const peerCall = peer.call(peerUuid!!, stream!!, {
             metadata: {
                 uuid: uuid
             }
         })
+
         setCall(peerCall)
         peerCall.on("stream", remoteStream => {
             if (audioRef.current) {
@@ -70,12 +73,29 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
         })
 
         peerCall.peerConnection.oniceconnectionstatechange = () => {
-            if (peerCall.peerConnection.iceConnectionState === "disconnected") {
-                connectPeerCall(peerUuid)
+            if (peerCall.peerConnection.iceConnectionState === "failed") {
+                console.log("Ice Connection Failed ", user.name)
             }
         }
-    }
 
+        peerCall.peerConnection.onicecandidateerror = () => {
+            console.log("Ice Connection Error ", user.name)
+        }
+
+
+        peer.on("call", call => {
+            if (call.metadata.uuid != user.uuid) return
+            call.answer(stream!!)
+            call.on("stream", remoteStream => {
+                if (audioRef.current) {
+                    audioRef.current.srcObject = remoteStream
+                    setUserStream(remoteStream)
+                }
+            })
+        })
+
+
+    }
 
     const onEnableVoiceReceive = (token: string) => {
         const onlineUser = decrypt(token) as IOnlineUsers
@@ -88,6 +108,13 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
         const onlineUser = decrypt(token) as IOnlineUsers
         if (onlineUser.uuid != user.uuid) return
         if (!call || isInCall) return
+        call?.close()
+        setCall(undefined)
+    }
+
+    const onNewPlayerLeave = (token: string) => {
+        const data = decrypt(token) as IOnlineUsers
+        if (data.uuid != user.uuid || data.uuid == uuid) return
         call?.close()
         setCall(undefined)
     }
@@ -123,19 +150,11 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
 
     }
 
-    const onNewPlayerLeave = (token: string) => {
-        const data = decrypt(token) as IOnlineUsers
-        if (data.uuid != user.uuid || data.uuid == uuid) return
-        call?.close()
-        setCall(undefined)
-    }
-
     const onPlayerLeaveReceivePlugin = (token: string) => {
         const data = decrypt(token) as IOnlineUsers
         if (data.uuid != user.uuid || data.uuid == uuid) return
         call?.close()
         setCall(undefined)
-
     }
 
     const onPlayerChangeServer = (token: string) => {
@@ -275,8 +294,22 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
         }
     }
 
+    const onPeerCall = (call: MediaConnection) => {
+        if (call.metadata.uuid != user.uuid) return
+        call.answer(stream!!)
+        call.on("stream", remoteStream => {
+            if (audioRef.current) {
+                audioRef.current.srcObject = remoteStream
+                setUserStream(remoteStream)
+            }
+        })
+
+    }
+
     useEffect(() => {
             if (!uuid || !stream) return
+
+            peer?.on("call", onPeerCall)
 
             socket?.on("onEnableVoiceReceive", onEnableVoiceReceive)
             socket?.on("onDisableVoiceReceive", onDisableVoiceReceive)
@@ -304,6 +337,9 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
             socket?.on("onDenyCallTargetPluginReceive", onDenyCallTargetPluginReceive)
 
             return () => {
+
+                peer?.off("call", onPeerCall)
+
                 socket?.off("onEnableVoiceReceive", onEnableVoiceReceive)
                 socket?.off("onDisableVoiceReceive", onDisableVoiceReceive)
                 socket?.off("onPlayerInitAdminModeReceive", onPlayerInitAdminModeReceive)
@@ -326,7 +362,7 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
                 socket?.off("onDenyCallTargetPluginReceive", onDenyCallTargetPluginReceive)
             }
 
-        }, [socket, uuid, stream, isValidate, call, callingSound, callingSound2, endCallSound, pannerNode, soundIsActive, isUserMute, user, voiceBack, gain]
+        }, [peer, socket, uuid, stream, isValidate, call, callingSound, callingSound2, endCallSound, pannerNode, soundIsActive, isUserMute, user, voiceBack, gain]
     )
 
     useEffect(() => {
@@ -348,24 +384,6 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
 
         }, [socket, uuid]
     )
-
-    useEffect(() => {
-        if (!peer || !stream) return
-        peer.on("call", call => {
-            if (call.metadata.uuid != user.uuid) return
-            call.answer(stream!!)
-            call.on("stream", remoteStream => {
-                if (audioRef.current) {
-                    audioRef.current.srcObject = remoteStream
-                    setUserStream(remoteStream)
-                }
-            })
-        })
-        return () => {
-            peer?.off("call")
-        }
-    }, [peer, stream])
-
 
     useEffect(() => {
         if (user.uuid == uuid) {
