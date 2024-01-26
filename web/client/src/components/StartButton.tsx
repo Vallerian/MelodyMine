@@ -2,7 +2,7 @@
 import {GiSoundWaves} from "react-icons/gi";
 import {useUserStore} from "@/store/UserStore";
 import {useValidateStore} from "@/store/ValidateStore";
-import {useEffect, useLayoutEffect, useState} from "react";
+import {useLayoutEffect, useState} from "react";
 import Progress from "@/components/Porgress/Progress";
 import {useSocketStore} from "@/store/SocketStore";
 import {io, Socket} from "socket.io-client";
@@ -15,19 +15,19 @@ import {decrypt, encrypt} from "@/utils";
 import {DefaultEventsMap} from "@socket.io/component-emitter";
 import {useControlStore} from "@/store/ControlStore";
 
+
 const StartButton = () => {
 
     const {status} = useSession()
     const user = useUserStore(state => state)
     const {noiseSuppression} = useControlStore(state => state)
-    const {socket, setSocket, disconnectSocket, setPeer, disconnectPeer} = useSocketStore(state => state)
+    const {socket, setSocket, disconnectSocket, addIceServer} = useSocketStore(state => state)
     const {addUser, removeAllOnline, setAdminModeAll} = useOnlineUsersStore(state => state)
     const {initStream, closeStream} = useStreamStore(state => state)
     const {isValidate, setError, setValidate} = useValidateStore(state => state)
     const {startButton, setDisconnectButton} = useLoadingStore(state => state)
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [socketConnected, setSocketConnected] = useState<boolean>(false)
-    const [peerConnection, setPeerConnection] = useState<boolean>(false)
     const route = useRouter()
 
     useLayoutEffect(() => {
@@ -46,16 +46,17 @@ const StartButton = () => {
             } else {
                 try {
                     socket = io(socketURL, {
+                        transports: ["websocket"],
                         auth: {
                             from: "web",
                             token: encrypt({
                                 name: data.name,
                                 uuid: data.uuid,
-                            })
+                            }),
                         },
                     })
                     setSocket(socket)
-
+                    addIceServer(turnServer)
 
                     socket.on("connect", () => {
                         setSocketConnected(true)
@@ -71,36 +72,7 @@ const StartButton = () => {
                         setValidate(false)
                         closeStream()
                         removeAllOnline()
-                        disconnectPeer()
                     })
-
-                    import("peerjs").then(({default: Peer}) => {
-                        const newUrl = new URL(socketURL)
-                        const peer = new Peer(data.uuid, {
-                            host: newUrl.hostname,
-                            port: Number(newUrl.port) || 443,
-                            path: "/melodymine",
-                            config: {
-                                'iceServers': [turnServer]
-                            }
-                        })
-                        setPeer(peer)
-                        setPeerConnection(true)
-
-                        peer.on("connection", () => {
-                            setPeerConnection(true)
-                        })
-
-                        peer.on("disconnected", () => {
-                            setPeerConnection(false)
-                            setValidate(false)
-                            closeStream()
-                            removeAllOnline()
-                            setAdminModeAll()
-                            disconnectSocket()
-                        })
-                    })
-
 
                 } catch (ex) {
 
@@ -115,7 +87,6 @@ const StartButton = () => {
             removeAllOnline()
             setAdminModeAll()
             disconnectSocket()
-            disconnectPeer()
         }
 
     }, [])
@@ -182,7 +153,7 @@ const StartButton = () => {
 
     return (
         <div className="flex self-center">
-            {isLoading || startButton || !socketConnected || !peerConnection ? (
+            {isLoading || startButton || !socketConnected ? (
                 <span className="pr-5 pl-2 self-center">
                         <Progress/>
                     </span>
@@ -190,7 +161,7 @@ const StartButton = () => {
             <button
                 className="text-sm btn-gradient px-3 py-1 rounded text-white shadow-xl flex items-center"
                 onClick={handleStart}
-                disabled={isLoading || status == "loading" || startButton || !socketConnected || !peerConnection}
+                disabled={isLoading || status == "loading" || startButton || !socketConnected}
             >
                 Start
                 <span className="px-1 hidden sm:block text-2xl">

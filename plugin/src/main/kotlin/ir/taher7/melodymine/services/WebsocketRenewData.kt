@@ -13,7 +13,7 @@ class WebsocketRenewData {
     private fun start() {
         object : BukkitRunnable() {
             override fun run() {
-                if (Storage.onlinePlayers.isNotEmpty()) {
+                if (Storage.onlinePlayers.isNotEmpty() && Websocket.socket.isActive) {
                     Storage.onlinePlayers.values.filter { player -> player.webIsOnline && player.isActiveVoice && !player.adminMode }
                         .forEach { melodyPlayer ->
                             Storage.onlinePlayers.values.filter { player -> player.uuid != melodyPlayer.uuid && player.webIsOnline && player.isActiveVoice && !player.adminMode && player.callTarget != melodyPlayer }
@@ -35,14 +35,12 @@ class WebsocketRenewData {
                                                     targetPlayer.socketID?.let {
                                                         object : BukkitRunnable() {
                                                             override fun run() {
-
                                                                 MelodyManager.enableVoice(
                                                                     melodyPlayer.name,
                                                                     melodyPlayer.uuid,
                                                                     melodyPlayer.server,
                                                                     it
                                                                 )
-
                                                             }
                                                         }.runTask(MelodyMine.instance)
                                                     }
@@ -50,8 +48,7 @@ class WebsocketRenewData {
                                             }
                                         }
 
-
-                                        if (distance < (maxDistance + 50)) {
+                                        if (distance < (maxDistance + 75)) {
                                             val targetSocketID = targetPlayer.socketID
                                             if (targetSocketID != null) {
                                                 object : BukkitRunnable() {

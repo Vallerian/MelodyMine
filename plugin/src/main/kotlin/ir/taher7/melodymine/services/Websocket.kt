@@ -24,6 +24,7 @@ object Websocket {
             val uri = URI.create(Storage.websocket)
             val options = IO.Options.builder()
                 .setAuth(auth)
+                .setTransports(arrayOf("websocket"))
                 .build()
 
             socket = IO.socket(uri, options)

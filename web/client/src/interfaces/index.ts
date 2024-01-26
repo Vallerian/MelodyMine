@@ -68,3 +68,9 @@ export interface IReceiveControl {
     type: "mic" | "sound"
     value: boolean
 }
+
+export interface iceServer {
+    urls: string
+    username: string
+    credential: string
+}

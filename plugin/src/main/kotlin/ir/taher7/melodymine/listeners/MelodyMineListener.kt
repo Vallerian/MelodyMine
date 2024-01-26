@@ -2,6 +2,7 @@ package ir.taher7.melodymine.listeners
 
 import io.socket.client.SocketIOException
 import ir.taher7.melodymine.MelodyMine
+import ir.taher7.melodymine.core.MelodyManager
 import ir.taher7.melodymine.database.Database
 import ir.taher7.melodymine.services.Websocket
 import ir.taher7.melodymine.storage.Storage
@@ -10,6 +11,7 @@ import org.bukkit.Bukkit
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.AsyncPlayerChatEvent
+import org.bukkit.event.player.PlayerChangedWorldEvent
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerMoveEvent
 import org.bukkit.event.player.PlayerQuitEvent
@@ -106,6 +108,34 @@ class MelodyMineListener : Listener {
         if (Utils.checkPlayerForce(melodyPlayer)) return
         if (!melodyPlayer.isActiveVoice) {
             event.isCancelled = true
+        }
+    }
+
+    @EventHandler
+    fun onPlayerChangeWorld(event: PlayerChangedWorldEvent) {
+        val melodyPlayer = Storage.onlinePlayers[event.player.uniqueId.toString()] ?: return
+        if (!melodyPlayer.isActiveVoice || melodyPlayer.adminMode) return
+        melodyPlayer.isSendOffer.forEach { uuid ->
+            val targetPlayer = Storage.onlinePlayers[uuid]
+            if (targetPlayer != null) {
+                if (!targetPlayer.adminMode && !targetPlayer.isInCall) {
+                    val targetSocketID = targetPlayer.socketID
+                    if (targetSocketID != null) {
+                        object : BukkitRunnable() {
+                            override fun run() {
+                                MelodyManager.disableVoice(
+                                    melodyPlayer.name,
+                                    melodyPlayer.uuid,
+                                    melodyPlayer.server,
+                                    targetSocketID
+                                )
+                                melodyPlayer.isSendOffer.remove(targetPlayer.uuid)
+                                targetPlayer.isSendOffer.remove(melodyPlayer.uuid)
+                            }
+                        }.runTask(MelodyMine.instance)
+                    }
+                }
+            }
         }
     }
 

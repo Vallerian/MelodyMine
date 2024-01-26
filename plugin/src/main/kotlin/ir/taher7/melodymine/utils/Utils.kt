@@ -114,11 +114,15 @@ object Utils {
     }
 
     fun sendMessageLog(message: String, player: MelodyPlayer) {
-        Storage.onlinePlayers.values.forEach { melodyPlayer ->
-            if (melodyPlayer.player?.hasPermission("melodymine.toggle") == true && melodyPlayer.isToggle) {
-                melodyPlayer.player?.sendMessage(message.replace("{PLAYER}", player.name).toComponent())
+        object : BukkitRunnable() {
+            override fun run() {
+                Storage.onlinePlayers.values.forEach { melodyPlayer ->
+                    if (melodyPlayer.player?.hasPermission("melodymine.toggle") == true && melodyPlayer.isToggle) {
+                        melodyPlayer.player?.sendMessage(message.replace("{PLAYER}", player.name).toComponent())
+                    }
+                }
             }
-        }
+        }.runTask(MelodyMine.instance)
     }
 
     fun createQRCodeMap(view: MapView): ItemStack {

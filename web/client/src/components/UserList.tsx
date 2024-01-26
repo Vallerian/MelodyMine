@@ -74,6 +74,7 @@ const UserList = () => {
         closeStream()
         removeAllOnline(data.server)
         changeUserAdminMode(false)
+        setServer("")
     }
 
     const onPlayerChangeServer = (token: string) => {

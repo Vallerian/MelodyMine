@@ -57,6 +57,7 @@ class SocketListener(private val socket: Socket) {
                     }
                 }.runTask(MelodyMine.instance)
             }
+
             object : BukkitRunnable() {
                 override fun run() {
                     val hasPlayer = Storage.onlinePlayers[melodyPlayer.uuid]
