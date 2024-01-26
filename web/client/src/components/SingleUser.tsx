@@ -70,6 +70,7 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
         peer.oniceconnectionstatechange = () => {
             if (peer.iceConnectionState === 'failed') {
                 console.log("Ice Connection Failed! User: ", user.name)
+                peer.restartIce()
             }
         }
 
