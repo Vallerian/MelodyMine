@@ -9,19 +9,16 @@ import {BiPhoneCall, BiSolidRightArrow, BiSolidUserVoice, BiSolidVolumeMute} fro
 import {RiVoiceprintFill} from "react-icons/ri";
 import {ImUserTie} from "react-icons/im";
 import {useSocketStore} from "@/store/SocketStore";
-import {decrypt} from "@/utils";
-import {MediaConnection} from "peerjs";
+import {decrypt, encrypt} from "@/utils";
 import {useValidateStore} from "@/store/ValidateStore";
 import {MdOutlinePhoneCallback} from "react-icons/md";
 import {useSoundStore} from "@/store/SoundStore";
 import UserHead from "@/components/UserHead";
 import UserVolumeLine from "@/components/UserVolumeLine";
-import {useOnlineUsersStore} from "@/store/OnlineUsersStore";
 
 
 const SingleUser = ({user}: { user: IOnlineUsers }) => {
-    const {socket, peer} = useSocketStore(state => state)
-    const {users} = useOnlineUsersStore(state => state)
+    const {socket, iceServers} = useSocketStore(state => state)
     const {uuid, server, serverIsOnline, isActiveVoice} = useUserStore(state => state)
     const {setUserMute, muteUsers} = useControlStore(state => state)
     const {isValidate} = useValidateStore(state => state)
@@ -34,7 +31,6 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
     const [isSelfMute, setIsSelfMute] = useState<boolean>(true)
     const [isDeafen, setIsDeafen] = useState<boolean>(true)
     const [userIsAdminMode, setUserIsAdminMode] = useState<boolean>(false)
-    const [call, setCall] = useState<MediaConnection | undefined>()
     const [isInCall, setIsInCall] = useState<boolean>(false)
     const [isPendingCall, setIsPendingCall] = useState<boolean>(false)
     const [callingSound, setCallingSound] = useState<Howl>()
@@ -44,6 +40,7 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
     const [gain, setGain] = useState<GainNode>()
     const [audioContext, setAudioContext] = useState<AudioContext>()
     const [enableVoice, setEnableVoice] = useState<boolean>(false)
+    const [RTCPeer, setRTCPeer] = useState<RTCPeerConnection | undefined>()
 
     const audioRef = useRef<HTMLAudioElement>(null)
 
@@ -53,70 +50,112 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
         setEndCallSound(soundList.find(sound => sound.name == "hangUp")?.howl)
     }, [soundList])
 
-    const connectPeerCall = (peerUuid: string) => {
-        if (peerUuid == uuid || !peer) return
-        call?.peerConnection.close()
-        call?.close()
-        setCall(undefined)
-        const peerCall = peer.call(peerUuid!!, stream!!, {
-            metadata: {
-                uuid: uuid
-            }
+
+    const createPeer = () => {
+        RTCPeer?.close()
+        setRTCPeer(undefined)
+        const peer = new RTCPeerConnection({iceServers: iceServers})
+        stream?.getTracks().forEach(track => {
+            peer.addTrack(track, stream)
         })
 
-        setCall(peerCall)
-        peerCall.on("stream", remoteStream => {
+        peer.onicecandidate = async event => {
+            if (!event.candidate) return
+            socket?.emit("onCandidate", encrypt({
+                "uuid": user.uuid,
+                "candidate": event.candidate
+            }))
+        }
+
+        peer.oniceconnectionstatechange = () => {
+            if (peer.iceConnectionState === 'failed') {
+                console.log("Ice Connection Failed! User: ", user.name)
+            }
+        }
+
+        peer.ontrack = event => {
             if (audioRef.current) {
-                audioRef.current.srcObject = remoteStream
-                setUserStream(remoteStream)
-            }
-        })
-
-        peerCall.peerConnection.oniceconnectionstatechange = () => {
-            if (peerCall.peerConnection.iceConnectionState === "failed") {
-                console.log("Ice Connection Failed ", user.name)
+                audioRef.current.srcObject = event.streams[0]
+                setUserStream(event.streams[0])
             }
         }
 
-        peerCall.peerConnection.onicecandidateerror = () => {
-            console.log("Ice Connection Error ", user.name)
-        }
-
-
-        peer.on("call", call => {
-            if (call.metadata.uuid != user.uuid) return
-            call.answer(stream!!)
-            call.on("stream", remoteStream => {
-                if (audioRef.current) {
-                    audioRef.current.srcObject = remoteStream
-                    setUserStream(remoteStream)
-                }
-            })
-        })
-
-
+        return peer
     }
 
-    const onEnableVoiceReceive = (token: string) => {
+    const createOffer = async (uuid: string) => {
+        const peer = createPeer()
+        const offer = await peer.createOffer({offerToReceiveAudio: true})
+        await peer.setLocalDescription(offer)
+        setRTCPeer(peer)
+        socket?.emit("onOffer", encrypt({
+            uuid,
+            offer
+        }))
+    }
+
+    const createAnswer = async (offer: RTCSessionDescription) => {
+        const peer = createPeer()
+        await peer.setRemoteDescription(offer)
+        const answer = await peer.createAnswer()
+        await peer.setLocalDescription(answer)
+        setRTCPeer(peer)
+
+        socket?.emit("onAnswer", encrypt({
+            uuid: user.uuid,
+            answer
+        }))
+    }
+
+
+    const onReceiveOffer = async (token: string) => {
+        const data = decrypt(token) as {
+            uuid: string
+            offer: RTCSessionDescription
+        }
+        if (data.uuid != user.uuid) return
+        await createAnswer(data.offer)
+    }
+
+    const onReceiveAnswer = async (token: string) => {
+        const data = decrypt(token) as {
+            uuid: string
+            answer: RTCSessionDescription
+        }
+        if (data.uuid != user.uuid) return
+        await RTCPeer?.setRemoteDescription(data.answer)
+    }
+
+    const onReceiveCandidate = async (token: string) => {
+        const data = decrypt(token) as {
+            uuid: string
+            candidate: RTCIceCandidate
+        }
+        if (data.uuid != user.uuid) return
+        await RTCPeer?.addIceCandidate(data.candidate)
+    }
+
+    const onEnableVoiceReceive = async (token: string) => {
         const onlineUser = decrypt(token) as IOnlineUsers
         if (onlineUser.uuid != user.uuid) return
-        if (call) return
-        connectPeerCall(onlineUser.uuid!!)
+        await createOffer(onlineUser.uuid!!)
     }
 
     const onDisableVoiceReceive = (token: string) => {
         const onlineUser = decrypt(token) as IOnlineUsers
         if (onlineUser.uuid != user.uuid) return
-        if (!call || isInCall) return
-        call?.close()
-        setCall(undefined)
+        if (isInCall) return
+
+        RTCPeer?.close()
+        setRTCPeer(undefined)
     }
 
     const onNewPlayerLeave = (token: string) => {
         const data = decrypt(token) as IOnlineUsers
         if (data.uuid != user.uuid || data.uuid == uuid) return
-        call?.close()
-        setCall(undefined)
+
+        RTCPeer?.close()
+        setRTCPeer(undefined)
     }
 
     const onPlayerInitAdminModeReceive = (token: string) => {
@@ -127,16 +166,14 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
     }
 
 
-    const onAdminModeEnableReceive = (token: string) => {
+    const onAdminModeEnableReceive = async (token: string) => {
         const data = decrypt(token) as {
             uuid: string,
             server: string
         }
-        if (data.uuid != user.uuid && isValidate) return
+        if (data.uuid != user.uuid || data.uuid == uuid) return
         setUserIsAdminMode(true)
-        if (data.uuid == uuid || !peer) return
-
-        connectPeerCall(data.uuid)
+        await createOffer(data.uuid)
     }
 
     const onAdminModeDisableReceive = (token: string) => {
@@ -145,16 +182,18 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
         }
         if (data.uuid != user.uuid) return
         setUserIsAdminMode(false)
-        call?.close()
-        setCall(undefined)
+
+        RTCPeer?.close()
+        setRTCPeer(undefined)
 
     }
 
     const onPlayerLeaveReceivePlugin = (token: string) => {
         const data = decrypt(token) as IOnlineUsers
         if (data.uuid != user.uuid || data.uuid == uuid) return
-        call?.close()
-        setCall(undefined)
+
+        RTCPeer?.close()
+        setRTCPeer(undefined)
     }
 
     const onPlayerChangeServer = (token: string) => {
@@ -165,8 +204,9 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
         }
         if (data.uuid != user.uuid && data.uuid != uuid) return
         setUserIsAdminMode(false)
-        call?.close()
-        setCall(undefined)
+
+        RTCPeer?.close()
+        setRTCPeer(undefined)
     }
 
     const onSetVolumeReceive = (data: IVolume) => {
@@ -225,10 +265,10 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
         }
     }
 
-    const onAcceptCallTargetPluginReceive = (token: string) => {
+    const onAcceptCallTargetPluginReceive = async (token: string) => {
         const data = decrypt(token) as { name: string, uuid: string }
         if (data.uuid == user.uuid && data.uuid != uuid) {
-            connectPeerCall(data.uuid)
+            await createOffer(data.uuid)
             setIsPendingCall(false)
             setIsInCall(true)
             callingSound?.stop()
@@ -240,8 +280,8 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
         const data = decrypt(token) as { name: string, uuid: string }
         if (data.uuid == user.uuid && data.uuid != uuid) {
             setIsInCall(false)
-            call?.close()
-            setCall(undefined)
+            RTCPeer?.close()
+            setRTCPeer(undefined)
             endCallSound?.play()
         }
     }
@@ -250,8 +290,8 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
         const data = decrypt(token) as { name: string, uuid: string }
         if (data.uuid == user.uuid && data.uuid != uuid) {
             setIsInCall(false)
-            call?.close()
-            setCall(undefined)
+            RTCPeer?.close()
+            setRTCPeer(undefined)
             endCallSound?.play()
         }
     }
@@ -294,23 +334,13 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
         }
     }
 
-    const onPeerCall = (call: MediaConnection) => {
-        if (call.metadata.uuid != user.uuid) return
-        call.answer(stream!!)
-        call.on("stream", remoteStream => {
-            if (audioRef.current) {
-                audioRef.current.srcObject = remoteStream
-                setUserStream(remoteStream)
-            }
-        })
-
-    }
 
     useEffect(() => {
             if (!uuid || !stream) return
 
-            peer?.on("call", onPeerCall)
-
+            socket?.on("onReceiveOffer", onReceiveOffer)
+            socket?.on("onReceiveAnswer", onReceiveAnswer)
+            socket?.on("onReceiveCandidate", onReceiveCandidate)
             socket?.on("onEnableVoiceReceive", onEnableVoiceReceive)
             socket?.on("onDisableVoiceReceive", onDisableVoiceReceive)
             socket?.on("onPlayerInitAdminModeReceive", onPlayerInitAdminModeReceive)
@@ -338,8 +368,10 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
 
             return () => {
 
-                peer?.off("call", onPeerCall)
 
+                socket?.off("onReceiveOffer", onReceiveOffer)
+                socket?.off("onReceiveAnswer", onReceiveAnswer)
+                socket?.off("onReceiveCandidate", onReceiveCandidate)
                 socket?.off("onEnableVoiceReceive", onEnableVoiceReceive)
                 socket?.off("onDisableVoiceReceive", onDisableVoiceReceive)
                 socket?.off("onPlayerInitAdminModeReceive", onPlayerInitAdminModeReceive)
@@ -362,15 +394,15 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
                 socket?.off("onDenyCallTargetPluginReceive", onDenyCallTargetPluginReceive)
             }
 
-        }, [peer, socket, uuid, stream, isValidate, call, callingSound, callingSound2, endCallSound, pannerNode, soundIsActive, isUserMute, user, voiceBack, gain]
+        }, [RTCPeer, socket, uuid, stream, isValidate, callingSound, callingSound2, endCallSound, pannerNode, soundIsActive, isUserMute, user, voiceBack, gain]
     )
 
     useEffect(() => {
         if (isValidate) return
-        call?.close()
-        setCall(undefined)
+        RTCPeer?.close()
+        setRTCPeer(undefined)
         setUserIsAdminMode(false)
-    }, [isValidate, call])
+    }, [isValidate])
 
     useEffect(() => {
             if (!uuid) return

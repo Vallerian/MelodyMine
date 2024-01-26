@@ -6,7 +6,6 @@ import {prisma} from "./utils/connect";
 import {callData, CustomSocket, IClient} from "./interfaces";
 import {decrypt, encrypt} from "./utils";
 import fs from "fs"
-import {ExpressPeerServer} from "peer"
 
 const privateKeyPath = "./ssl/privkey.pem"
 const certPath = "./ssl/cert.pem"
@@ -28,10 +27,13 @@ const PORT = process.env.PORT || 4000
 const io = new Server(server, {
     cors: {
         origin: "*",
+        credentials:false,
+        allowedHeaders:"*"
     },
-    pingInterval: 2500,
-    pingTimeout: 5000,
-
+    pingInterval: 15000,
+    pingTimeout: 10000,
+    transports: ["websocket"],
+    allowEIO3:true,
 })
 
 
@@ -68,6 +70,7 @@ io.use((socket: CustomSocket, next) => {
 io.on("connection", async (socket: CustomSocket) => {
     console.log(`Client connected from: ${socket.melodyClient.from} server: ${socket.melodyClient.server} ${socket.melodyClient.name ? `name: ${socket.melodyClient.name}` : ""}`)
     await socket.join(socket.melodyClient.from)
+
 
     // Plugin Listeners
     socket.on("onPlayerLeavePlugin", async (data) => {
@@ -250,6 +253,55 @@ io.on("connection", async (socket: CustomSocket) => {
 
 
     // Web Listeners
+    socket.on("onOffer", async (token: string) => {
+        const data = decrypt(token)
+        try {
+            const user = await prisma.melodymine.findUnique({
+                where: {uuid: data.uuid},
+                select: {socketID: true, server: true}
+            })
+            io.to(user.socketID).emit("onReceiveOffer", encrypt({
+                uuid: socket.melodyClient.uuid,
+                offer: data.offer,
+            }))
+        } catch (ex) {
+            console.log(ex)
+        }
+    })
+
+    socket.on("onAnswer", async (token: string) => {
+        const data = decrypt(token)
+        try {
+            const user = await prisma.melodymine.findUnique({
+                where: {uuid: data.uuid},
+                select: {socketID: true}
+            })
+            io.to(user.socketID).emit("onReceiveAnswer", encrypt({
+                uuid: socket.melodyClient.uuid,
+                answer: data.answer,
+            }))
+        } catch (ex) {
+            console.log(ex)
+        }
+    })
+
+    socket.on("onCandidate", async (token: string) => {
+        const data = decrypt(token)
+        try {
+            const user = await prisma.melodymine.findUnique({
+                where: {uuid: data.uuid},
+                select: {socketID: true}
+            })
+            io.to(user.socketID).emit("onReceiveCandidate", encrypt({
+                uuid: socket.melodyClient.uuid,
+                candidate: data.candidate,
+            }))
+        } catch (ex) {
+            console.log(ex)
+        }
+    })
+
+
     socket.on("onPlayerChangeControl", token => {
         const data = decrypt(token)
         socket.to("web").emit("onPlayerChangeControlReceive", encrypt(data))
@@ -376,16 +428,6 @@ io.on("connection", async (socket: CustomSocket) => {
             }))
         }
     })
-})
-
-const peerServer = ExpressPeerServer(server, {
-    path: "/melodymine",
-})
-
-app.use("/", peerServer)
-
-peerServer.on("connection", event => {
-    console.log("connection peer: ", event.getId())
 })
 
 server.listen(PORT, async () => {

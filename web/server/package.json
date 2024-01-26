@@ -1,6 +1,6 @@
 {
   "name": "melody_server",
-  "version": "1.4.3",
+  "version": "1.4.4",
   "main": "index.js",
   "scripts": {
     "start": "nodemon server.ts"
@@ -12,7 +12,6 @@
     "crypto-js": "^4.1.1",
     "express": "^4.18.2",
     "nodemon": "^3.0.1",
-    "peer": "^1.0.1",
     "prisma": "^5.4.2",
     "socket.io": "^4.7.2",
     "ts-node": "^10.9.1"

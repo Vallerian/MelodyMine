@@ -100,12 +100,17 @@ object MelodyManager {
         if (preEnableAdminModeEvent.isCancelled) return
 
         targetPlayer.adminMode = true
-        Websocket.socket.emit(
-            "onAdminModeEnablePlugin", mapOf(
-                "uuid" to uuid,
-                "server" to Storage.server
-            )
-        )
+        object : BukkitRunnable() {
+            override fun run() {
+                Websocket.socket.emit(
+                    "onAdminModeEnablePlugin", mapOf(
+                        "uuid" to uuid,
+                        "server" to Storage.server
+                    )
+                )
+            }
+        }.runTaskAsynchronously(MelodyMine.instance)
+
 
         Bukkit.getServer().pluginManager.callEvent(PostEnableAdminMode(targetPlayer))
     }
@@ -117,12 +122,16 @@ object MelodyManager {
         Bukkit.getServer().pluginManager.callEvent(preDisableAdminModeEvent)
         if (preDisableAdminModeEvent.isCancelled) return
 
-        Websocket.socket.emit(
-            "onAdminModeDisablePlugin", mapOf(
-                "uuid" to uuid,
-                "server" to Storage.server
-            )
-        )
+        object : BukkitRunnable() {
+            override fun run() {
+                Websocket.socket.emit(
+                    "onAdminModeDisablePlugin", mapOf(
+                        "uuid" to uuid,
+                        "server" to Storage.server
+                    )
+                )
+            }
+        }.runTaskAsynchronously(MelodyMine.instance)
 
         targetPlayer.adminMode = false
         targetPlayer.isSendOffer = arrayListOf()
@@ -149,13 +158,17 @@ object MelodyManager {
         Bukkit.getServer().pluginManager.callEvent(preEnableVoiceEvent)
         if (preEnableVoiceEvent.isCancelled) return
 
-        Websocket.socket.emit(
-            "onEnableVoicePlugin", mapOf(
-                "uuid" to playerUuid,
-                "server" to playerServer,
-                "socketID" to targetSocketID
-            )
-        )
+        object : BukkitRunnable() {
+            override fun run() {
+                Websocket.socket.emit(
+                    "onEnableVoicePlugin", mapOf(
+                        "uuid" to playerUuid,
+                        "server" to playerServer,
+                        "socketID" to targetSocketID
+                    )
+                )
+            }
+        }.runTaskAsynchronously(MelodyMine.instance)
 
         Bukkit.getServer().pluginManager.callEvent(
             PostEnableVoiceEvent(
@@ -172,13 +185,17 @@ object MelodyManager {
         Bukkit.getServer().pluginManager.callEvent(preDisableVoiceEvent)
         if (preDisableVoiceEvent.isCancelled) return
 
-        Websocket.socket.emit(
-            "onDisableVoicePlugin", mapOf(
-                "uuid" to playerUuid,
-                "server" to playerServer,
-                "socketID" to targetSocketID
-            )
-        )
+        object : BukkitRunnable() {
+            override fun run() {
+                Websocket.socket.emit(
+                    "onDisableVoicePlugin", mapOf(
+                        "uuid" to playerUuid,
+                        "server" to playerServer,
+                        "socketID" to targetSocketID
+                    )
+                )
+            }
+        }.runTaskAsynchronously(MelodyMine.instance)
 
         Bukkit.getServer().pluginManager.callEvent(
             PostDisableVoiceEvent(
@@ -199,44 +216,47 @@ object MelodyManager {
         val preSetVolumeEvent = PreSetVolumeEvent(playerUuid, targetSocketID)
         Bukkit.getServer().pluginManager.callEvent(preSetVolumeEvent)
         if (preSetVolumeEvent.isCancelled) return
-
-        Websocket.socket.emit(
-            "onSetVolumePlugin",
-            mapOf(
-                "uuid" to playerUuid,
-                "distance" to playerLocation.distance(targetLocation),
-                "socketID" to targetSocketID,
-                "settings" to mapOf(
-                    "sound3D" to Storage.sound3D,
-                    "lazyHear" to Storage.lazyHear,
-                    "maxDistance" to Storage.maxDistance,
-                    "refDistance" to Storage.refDistance,
-                    "innerAngle" to Storage.innerAngle,
-                    "outerAngle" to Storage.outerAngle,
-                    "outerVolume" to Storage.outerVolume,
-                ),
-                "playerLocation" to mapOf(
-                    "x" to playerLocation.x,
-                    "y" to playerLocation.y,
-                    "z" to playerLocation.z,
-                ),
-                "targetLocation" to mapOf(
-                    "x" to targetLocation.x,
-                    "y" to targetLocation.y,
-                    "z" to targetLocation.z,
-                ),
-                "playerDirection" to mapOf(
-                    "x" to playerLocation.direction.x,
-                    "y" to playerLocation.direction.y,
-                    "z" to playerLocation.direction.z,
-                ),
-                "targetDirection" to mapOf(
-                    "x" to targetLocation.direction.x,
-                    "y" to targetLocation.direction.y,
-                    "z" to targetLocation.direction.z,
+        object : BukkitRunnable() {
+            override fun run() {
+                Websocket.socket.emit(
+                    "onSetVolumePlugin",
+                    mapOf(
+                        "uuid" to playerUuid,
+                        "distance" to playerLocation.distance(targetLocation),
+                        "socketID" to targetSocketID,
+                        "settings" to mapOf(
+                            "sound3D" to Storage.sound3D,
+                            "lazyHear" to Storage.lazyHear,
+                            "maxDistance" to Storage.maxDistance,
+                            "refDistance" to Storage.refDistance,
+                            "innerAngle" to Storage.innerAngle,
+                            "outerAngle" to Storage.outerAngle,
+                            "outerVolume" to Storage.outerVolume,
+                        ),
+                        "playerLocation" to mapOf(
+                            "x" to playerLocation.x,
+                            "y" to playerLocation.y,
+                            "z" to playerLocation.z,
+                        ),
+                        "targetLocation" to mapOf(
+                            "x" to targetLocation.x,
+                            "y" to targetLocation.y,
+                            "z" to targetLocation.z,
+                        ),
+                        "playerDirection" to mapOf(
+                            "x" to playerLocation.direction.x,
+                            "y" to playerLocation.direction.y,
+                            "z" to playerLocation.direction.z,
+                        ),
+                        "targetDirection" to mapOf(
+                            "x" to targetLocation.direction.x,
+                            "y" to targetLocation.direction.y,
+                            "z" to targetLocation.direction.z,
+                        )
+                    )
                 )
-            )
-        )
+            }
+        }.runTaskAsynchronously(MelodyMine.instance)
 
         Bukkit.getServer().pluginManager.callEvent(PostSetVolumeEvent(playerUuid, targetSocketID))
     }
@@ -247,16 +267,20 @@ object MelodyManager {
         if (prePlayerSetSelfMuteEvent.isCancelled) return
 
         melodyPlayer.isSelfMute = value
-        Websocket.socket.emit(
-            "onSetControlPlugin",
-            mapOf(
-                "name" to melodyPlayer.name,
-                "uuid" to melodyPlayer.uuid,
-                "type" to "mic",
-                "server" to melodyPlayer.server,
-                "value" to value,
-            )
-        )
+        object : BukkitRunnable() {
+            override fun run() {
+                Websocket.socket.emit(
+                    "onSetControlPlugin",
+                    mapOf(
+                        "name" to melodyPlayer.name,
+                        "uuid" to melodyPlayer.uuid,
+                        "type" to "mic",
+                        "server" to melodyPlayer.server,
+                        "value" to value,
+                    )
+                )
+            }
+        }.runTaskAsynchronously(MelodyMine.instance)
 
         Bukkit.getServer().pluginManager.callEvent(PostPlayerSetSelfMuteEvent(melodyPlayer, value))
     }
@@ -267,16 +291,20 @@ object MelodyManager {
         if (prePlayerSetDeafenEvent.isCancelled) return
 
         melodyPlayer.isDeafen = value
-        Websocket.socket.emit(
-            "onSetControlPlugin",
-            mapOf(
-                "name" to melodyPlayer.name,
-                "uuid" to melodyPlayer.uuid,
-                "type" to "sound",
-                "server" to melodyPlayer.server,
-                "value" to value,
-            )
-        )
+        object : BukkitRunnable() {
+            override fun run() {
+                Websocket.socket.emit(
+                    "onSetControlPlugin",
+                    mapOf(
+                        "name" to melodyPlayer.name,
+                        "uuid" to melodyPlayer.uuid,
+                        "type" to "sound",
+                        "server" to melodyPlayer.server,
+                        "value" to value,
+                    )
+                )
+            }
+        }.runTaskAsynchronously(MelodyMine.instance)
 
         Bukkit.getServer().pluginManager.callEvent(PostPlayerSetDeafenEvent(melodyPlayer, value))
     }
@@ -318,21 +346,25 @@ object MelodyManager {
         melodyPlayer.pendingTask = callTask
         targetPlayer.pendingTask = callTask
 
-        Websocket.socket.emit(
-            "onStartCallPlugin",
-            mapOf(
-                "player" to mapOf(
-                    "name" to targetPlayer.name,
-                    "uuid" to targetPlayer.uuid,
-                    "socketID" to melodyPlayer.socketID,
-                ),
-                "target" to mapOf(
-                    "name" to melodyPlayer.name,
-                    "uuid" to melodyPlayer.uuid,
-                    "socketID" to targetPlayer.socketID,
-                ),
-            )
-        )
+        object : BukkitRunnable() {
+            override fun run() {
+                Websocket.socket.emit(
+                    "onStartCallPlugin",
+                    mapOf(
+                        "player" to mapOf(
+                            "name" to targetPlayer.name,
+                            "uuid" to targetPlayer.uuid,
+                            "socketID" to melodyPlayer.socketID,
+                        ),
+                        "target" to mapOf(
+                            "name" to melodyPlayer.name,
+                            "uuid" to melodyPlayer.uuid,
+                            "socketID" to targetPlayer.socketID,
+                        ),
+                    )
+                )
+            }
+        }.runTaskAsynchronously(MelodyMine.instance)
 
         if (preStartCallEvent.canSendMessage) {
             preStartCallEvent.canSendMessage = true
@@ -370,22 +402,25 @@ object MelodyManager {
         targetPlayer.callTarget = null
         targetPlayer.isStartCall = false
 
-
-        Websocket.socket.emit(
-            "onEndCallPlugin",
-            mapOf(
-                "player" to mapOf(
-                    "name" to targetPlayer.name,
-                    "uuid" to targetPlayer.uuid,
-                    "socketID" to melodyPlayer.socketID,
-                ),
-                "target" to mapOf(
-                    "name" to melodyPlayer.name,
-                    "uuid" to melodyPlayer.uuid,
-                    "socketID" to targetPlayer.socketID,
-                ),
-            )
-        )
+        object : BukkitRunnable() {
+            override fun run() {
+                Websocket.socket.emit(
+                    "onEndCallPlugin",
+                    mapOf(
+                        "player" to mapOf(
+                            "name" to targetPlayer.name,
+                            "uuid" to targetPlayer.uuid,
+                            "socketID" to melodyPlayer.socketID,
+                        ),
+                        "target" to mapOf(
+                            "name" to melodyPlayer.name,
+                            "uuid" to melodyPlayer.uuid,
+                            "socketID" to targetPlayer.socketID,
+                        ),
+                    )
+                )
+            }
+        }.runTaskAsynchronously(MelodyMine.instance)
 
         val player = melodyPlayer.player ?: return
         if (preEndCallEvent.canSendMessage) {
@@ -416,21 +451,27 @@ object MelodyManager {
         melodyPlayer.pendingTask = null
         targetPlayer.pendingTask = null
 
-        Websocket.socket.emit(
-            "onPendingCallEndPlugin",
-            mapOf(
-                "player" to mapOf(
-                    "name" to targetPlayer.name,
-                    "uuid" to targetPlayer.uuid,
-                    "socketID" to melodyPlayer.socketID,
-                ),
-                "target" to mapOf(
-                    "name" to melodyPlayer.name,
-                    "uuid" to melodyPlayer.uuid,
-                    "socketID" to targetPlayer.socketID,
-                ),
-            )
-        )
+        object : BukkitRunnable() {
+            override fun run() {
+                Websocket.socket.emit(
+                    "onPendingCallEndPlugin",
+                    mapOf(
+                        "player" to mapOf(
+                            "name" to targetPlayer.name,
+                            "uuid" to targetPlayer.uuid,
+                            "socketID" to melodyPlayer.socketID,
+                        ),
+                        "target" to mapOf(
+                            "name" to melodyPlayer.name,
+                            "uuid" to melodyPlayer.uuid,
+                            "socketID" to targetPlayer.socketID,
+                        ),
+                    )
+                )
+            }
+        }.runTaskAsynchronously(MelodyMine.instance)
+
+
         if (prePendingCallEndEvent.canSendMessage) {
             prePendingCallEndEvent.canSendMessage = true
             melodyPlayer.player?.sendMessage("<prefix><count_color>${targetPlayer.name} <text>is not Available Please try Again later.".toComponent())
@@ -464,21 +505,26 @@ object MelodyManager {
         melodyPlayer.pendingTask = null
         targetPlayer.pendingTask = null
 
-        Websocket.socket.emit(
-            "onAcceptCallPlugin",
-            mapOf(
-                "player" to mapOf(
-                    "name" to targetPlayer.name,
-                    "uuid" to targetPlayer.uuid,
-                    "socketID" to melodyPlayer.socketID,
-                ),
-                "target" to mapOf(
-                    "name" to melodyPlayer.name,
-                    "uuid" to melodyPlayer.uuid,
-                    "socketID" to targetPlayer.socketID,
-                ),
-            )
-        )
+        object : BukkitRunnable() {
+            override fun run() {
+                Websocket.socket.emit(
+                    "onAcceptCallPlugin",
+                    mapOf(
+                        "player" to mapOf(
+                            "name" to targetPlayer.name,
+                            "uuid" to targetPlayer.uuid,
+                            "socketID" to melodyPlayer.socketID,
+                        ),
+                        "target" to mapOf(
+                            "name" to melodyPlayer.name,
+                            "uuid" to melodyPlayer.uuid,
+                            "socketID" to targetPlayer.socketID,
+                        ),
+                    )
+                )
+            }
+        }.runTaskAsynchronously(MelodyMine.instance)
+
         if (preAcceptChangeServerEvent.canSendMessage) {
             preAcceptChangeServerEvent.canSendMessage = true
             val player = melodyPlayer.player ?: return
@@ -509,21 +555,26 @@ object MelodyManager {
         melodyPlayer.pendingTask = null
         targetPlayer.pendingTask = null
 
-        Websocket.socket.emit(
-            "onDenyCallPlugin",
-            mapOf(
-                "player" to mapOf(
-                    "name" to targetPlayer.name,
-                    "uuid" to targetPlayer.uuid,
-                    "socketID" to melodyPlayer.socketID,
-                ),
-                "target" to mapOf(
-                    "name" to melodyPlayer.name,
-                    "uuid" to melodyPlayer.uuid,
-                    "socketID" to targetPlayer.socketID,
-                ),
-            )
-        )
+
+        object : BukkitRunnable() {
+            override fun run() {
+                Websocket.socket.emit(
+                    "onDenyCallPlugin",
+                    mapOf(
+                        "player" to mapOf(
+                            "name" to targetPlayer.name,
+                            "uuid" to targetPlayer.uuid,
+                            "socketID" to melodyPlayer.socketID,
+                        ),
+                        "target" to mapOf(
+                            "name" to melodyPlayer.name,
+                            "uuid" to melodyPlayer.uuid,
+                            "socketID" to targetPlayer.socketID,
+                        ),
+                    )
+                )
+            }
+        }.runTaskAsynchronously(MelodyMine.instance)
         if (preDenyCallEvent.canSendMessage) {
             preDenyCallEvent.canSendMessage = true
             val player = melodyPlayer.player ?: return
@@ -557,14 +608,19 @@ object MelodyManager {
         val prePlaySoundEvent = PrePlaySoundEvent(soundName, sendToAll, socketID)
         Bukkit.getServer().pluginManager.callEvent(prePlaySoundEvent)
         if (prePlaySoundEvent.isCancelled) return
-        Websocket.socket.emit(
-            "onPlaySoundPlugin",
-            mapOf(
-                "socketID" to socketID!!,
-                "soundName" to soundName,
-                "sendToAll" to sendToAll
-            )
-        )
+
+        object : BukkitRunnable() {
+            override fun run() {
+                Websocket.socket.emit(
+                    "onPlaySoundPlugin",
+                    mapOf(
+                        "socketID" to socketID!!,
+                        "soundName" to soundName,
+                        "sendToAll" to sendToAll
+                    )
+                )
+            }
+        }.runTaskAsynchronously(MelodyMine.instance)
         Bukkit.getServer().pluginManager.callEvent(PostPlaySoundEvent(soundName, sendToAll, socketID))
     }
 
@@ -572,14 +628,18 @@ object MelodyManager {
         val prePauseSoundEvent = PrePauseSoundEvent(soundName, sendToAll, socketID)
         Bukkit.getServer().pluginManager.callEvent(prePauseSoundEvent)
         if (prePauseSoundEvent.isCancelled) return
-        Websocket.socket.emit(
-            "onPauseSoundPlugin",
-            mapOf(
-                "socketID" to socketID!!,
-                "soundName" to soundName,
-                "sendTOAll" to sendToAll
-            )
-        )
+        object : BukkitRunnable() {
+            override fun run() {
+                Websocket.socket.emit(
+                    "onPauseSoundPlugin",
+                    mapOf(
+                        "socketID" to socketID!!,
+                        "soundName" to soundName,
+                        "sendTOAll" to sendToAll
+                    )
+                )
+            }
+        }.runTaskAsynchronously(MelodyMine.instance)
         Bukkit.getServer().pluginManager.callEvent(PrePauseSoundEvent(soundName, sendToAll, socketID))
     }
 
@@ -587,14 +647,19 @@ object MelodyManager {
         val preStopSoundEvent = PreStopSoundEvent(soundName, sendToAll, socketID)
         Bukkit.getServer().pluginManager.callEvent(preStopSoundEvent)
         if (preStopSoundEvent.isCancelled) return
-        Websocket.socket.emit(
-            "onStopSoundPlugin",
-            mapOf(
-                "socketID" to socketID!!,
-                "soundName" to soundName,
-                "sendTOAll" to sendToAll
-            )
-        )
+        object : BukkitRunnable() {
+            override fun run() {
+                Websocket.socket.emit(
+                    "onStopSoundPlugin",
+                    mapOf(
+                        "socketID" to socketID!!,
+                        "soundName" to soundName,
+                        "sendTOAll" to sendToAll
+                    )
+                )
+            }
+        }.runTaskAsynchronously(MelodyMine.instance)
+
         Bukkit.getServer().pluginManager.callEvent(PostStopSoundEvent(soundName, sendToAll, socketID))
     }
 
