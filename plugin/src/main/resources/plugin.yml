@@ -23,6 +23,7 @@ permissions:
       melodymine.mute: true
       melodymine.unmute: true
       melodymine.toggle: true
+      melodymine.status.others: true
   melodymine.start:
     description: Get website link to establish a voice connection.
     default: true
@@ -74,3 +75,9 @@ permissions:
   melodymine.call.toggle:
     description: player can toggle call
     default: true
+  melodymine.status:
+    description: check player voice status
+    default: true
+  melodymine.status.others:
+    description: check other player voice status
+    default: op

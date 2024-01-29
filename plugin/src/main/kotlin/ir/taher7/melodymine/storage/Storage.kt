@@ -48,6 +48,7 @@ object Storage {
     lateinit var reloadDescription: String
     lateinit var adminmodeDescription: String
     lateinit var startDescription: String
+    lateinit var statusDescription: String
     lateinit var muteDescription: String
     lateinit var unmuteDescription: String
     lateinit var toggleDescription: String
@@ -153,6 +154,7 @@ object Storage {
         reloadDescription = config.getString("reload-description") ?: ""
         adminmodeDescription = config.getString("adminmode-description") ?: ""
         startDescription = config.getString("start-description") ?: ""
+        statusDescription = config.getString("status-description") ?: ""
         muteDescription = config.getString("mute-description") ?: ""
         unmuteDescription = config.getString("unmute-description") ?: ""
         toggleDescription = config.getString("toggle-description") ?: ""

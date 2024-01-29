@@ -73,6 +73,7 @@ unmute-description: "Unmute player in voice chat."
 toggle-description: "toggle join & leave voice logs"
 control-description: "Mute / Deafen Yourself in website."
 call-description: "Call to Another Player."
+status-description: "Check Player Voice Status."
 
 
 # Placeholder Messages

@@ -21,6 +21,7 @@ class CommandManager : CommandExecutor {
         Storage.subCommands.add(Unmute())
         Storage.subCommands.add(Control())
         Storage.subCommands.add(Call())
+        Storage.subCommands.add(Status())
     }
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
@@ -40,7 +41,7 @@ class CommandManager : CommandExecutor {
                 if (sender.hasPermission(subCommand.permission)) {
                     subCommand.handler(sender, args)
                 } else {
-                    sender.sendMessage("<prefix>You dont have permission to use this command.".toComponent())
+                    sender.sendMessage("<prefix>You don't have permission to use this command.".toComponent())
                 }
             }
         }
