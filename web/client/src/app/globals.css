@@ -36,7 +36,6 @@
 
 .imgAnimated {
     animation: animate 2s infinite ease alternate;
-
 }
 
 @keyframes animate {
@@ -153,3 +152,8 @@
         opacity: 0;
     }
 }
+
+.bg-status {
+    background-image: linear-gradient(270.3deg, rgba(24, 24, 24, 0) 0.2%, rgb(16, 16, 16) 50%);
+}
+
