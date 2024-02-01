@@ -544,7 +544,7 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
             >
             </audio>
             <div className={`${isPendingCall ? "shake" : ""}`}>
-                {showUserStatus && user.uuid != uuid ? <UserStatus
+                {showUserStatus && isValidate && user.uuid != uuid ? <UserStatus
                     iceState={RTCPeer?.signalingState!!}
                     descriptionType={RTCPeer?.remoteDescription?.type!!}
                     connectionType={RTCPeer ? userIsAdminMode ? "Admin Mode" : isInCall ? "Call" : "Normal" : ""}

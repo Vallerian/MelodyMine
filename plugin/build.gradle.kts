@@ -55,6 +55,7 @@ dependencies {
     implementation("net.kyori:adventure-platform-bukkit:4.3.1")
     implementation("net.kyori:adventure-text-minimessage:4.14.0")
 
+
     implementation("cloud.commandframework:cloud-paper:1.9.0-SNAPSHOT")
     implementation("cloud.commandframework:cloud-minecraft-extras:1.9.0-SNAPSHOT")
 
@@ -80,9 +81,6 @@ tasks {
     val relocate = task<ConfigureShadowRelocation>("relocateShadowJar") {
         target = shadowJar.get()
         prefix = "ir.taher7.melodymine"
-        this.target.apply {
-            relocate("net.kyori.", "net.kyori.")
-        }
     }
 
     shadowJar {
@@ -90,6 +88,7 @@ tasks {
         exclude("META-INF/**")
         archiveFileName.set("${project.name}-${version}.jar")
         minimize()
+
     }
 
     compileJava {
