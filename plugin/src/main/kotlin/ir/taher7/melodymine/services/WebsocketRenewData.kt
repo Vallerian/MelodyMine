@@ -42,13 +42,13 @@ class WebsocketRenewData {
                                                                     it
                                                                 )
                                                             }
-                                                        }.runTask(MelodyMine.instance)
+                                                        }.runTaskLater(MelodyMine.instance,5)
                                                     }
                                                 }
                                             }
                                         }
 
-                                        if (distance < (maxDistance + 75)) {
+                                        if (distance < (maxDistance + 100)) {
                                             val targetSocketID = targetPlayer.socketID
                                             if (targetSocketID != null) {
                                                 object : BukkitRunnable() {
@@ -69,7 +69,7 @@ class WebsocketRenewData {
                                         }
 
 
-                                        if (distance > (maxDistance + 100)) {
+                                        if (distance > (maxDistance + 150)) {
                                             if (melodyPlayer.isSendOffer.contains(targetPlayer.uuid)) {
                                                 val targetSocketID = targetPlayer.socketID
                                                 if (targetSocketID != null) {

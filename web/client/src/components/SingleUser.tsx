@@ -69,6 +69,7 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
             }))
         }
 
+
         peer.oniceconnectionstatechange = () => {
             if (peer.iceConnectionState === 'failed') {
                 console.log("Ice Connection Failed! User: ", user.name)
@@ -146,27 +147,42 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
         }
     }
 
+    const closeRTC = () => {
+        RTCPeer?.close()
+        setRTCPeer(undefined)
+    }
+
+    const startRTC = async (uuid: string) => {
+        await createOffer(uuid)
+    }
+
+    const closeRTCStream = () => {
+        console.log(RTCPeer?.getSenders())
+        console.log(RTCPeer?.getSenders().find(e => e.track?.kind === 'audio'))
+        RTCPeer?.removeTrack(RTCPeer?.getSenders().find(e => e.track?.kind === 'audio')!!)
+    }
+
     const onEnableVoiceReceive = async (token: string) => {
         const onlineUser = decrypt(token) as IOnlineUsers
         if (onlineUser.uuid != user.uuid) return
-        await createOffer(onlineUser.uuid!!)
+        await startRTC(onlineUser.uuid!!)
     }
+
 
     const onDisableVoiceReceive = (token: string) => {
         const onlineUser = decrypt(token) as IOnlineUsers
         if (onlineUser.uuid != user.uuid) return
         if (isInCall || userIsAdminMode) return
 
-        RTCPeer?.close()
-        setRTCPeer(undefined)
+        // closeRTCStream()
+        closeRTC()
     }
 
     const onNewPlayerLeave = (token: string) => {
         const data = decrypt(token) as IOnlineUsers
         if (data.uuid != user.uuid || data.uuid == uuid) return
 
-        RTCPeer?.close()
-        setRTCPeer(undefined)
+        closeRTC()
     }
 
     const onPlayerInitAdminModeReceive = (token: string) => {
@@ -184,7 +200,7 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
         }
         if (data.uuid != user.uuid || data.uuid == uuid) return
         setUserIsAdminMode(true)
-        await createOffer(data.uuid)
+        await startRTC(data.uuid)
     }
 
     const onAdminModeDisableReceive = (token: string) => {
@@ -194,17 +210,15 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
         if (data.uuid != user.uuid) return
         setUserIsAdminMode(false)
 
-        RTCPeer?.close()
-        setRTCPeer(undefined)
-
+        // closeRTCStream()
+        closeRTC()
     }
 
     const onPlayerLeaveReceivePlugin = (token: string) => {
         const data = decrypt(token) as IOnlineUsers
         if (data.uuid != user.uuid || data.uuid == uuid) return
 
-        RTCPeer?.close()
-        setRTCPeer(undefined)
+        closeRTC()
     }
 
     const onPlayerChangeServer = (token: string) => {
@@ -216,8 +230,7 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
         if (data.uuid != user.uuid && data.uuid != uuid) return
         setUserIsAdminMode(false)
 
-        RTCPeer?.close()
-        setRTCPeer(undefined)
+        closeRTC()
     }
 
     const onSetVolumeReceive = (data: IVolume) => {
@@ -279,7 +292,7 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
     const onAcceptCallTargetPluginReceive = async (token: string) => {
         const data = decrypt(token) as { name: string, uuid: string }
         if (data.uuid == user.uuid && data.uuid != uuid) {
-            await createOffer(data.uuid)
+            await startRTC(data.uuid)
             setIsPendingCall(false)
             setIsInCall(true)
             callingSound?.stop()
@@ -291,8 +304,9 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
         const data = decrypt(token) as { name: string, uuid: string }
         if (data.uuid == user.uuid && data.uuid != uuid) {
             setIsInCall(false)
-            RTCPeer?.close()
-            setRTCPeer(undefined)
+
+            // closeRTCStream()
+            closeRTC()
             endCallSound?.play()
         }
     }
@@ -301,8 +315,9 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
         const data = decrypt(token) as { name: string, uuid: string }
         if (data.uuid == user.uuid && data.uuid != uuid) {
             setIsInCall(false)
-            RTCPeer?.close()
-            setRTCPeer(undefined)
+
+            // closeRTCStream()
+            closeRTC()
             endCallSound?.play()
         }
     }
@@ -410,8 +425,7 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
 
     useEffect(() => {
         if (isValidate) return
-        RTCPeer?.close()
-        setRTCPeer(undefined)
+        closeRTC()
         setUserIsAdminMode(false)
     }, [isValidate])
 
