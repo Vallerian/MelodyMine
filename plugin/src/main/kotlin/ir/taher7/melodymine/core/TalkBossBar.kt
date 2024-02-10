@@ -22,13 +22,13 @@ class TalkBossBar(val player: Player) {
     private fun initTalkBossBar() {
         val serverMute = Storage.bossbarConfigs["server-mute"] ?: return
         bossBar = BossBar.bossBar(
-            if (melodyPlayer.isMute) serverMute.text.toComponent() else "<gradient:#f20ae5:#FFF4E4>MelodyMine</gradient>".toComponent(),
+            if (melodyPlayer.isMute) serverMute.text.toComponent() else "".toComponent(),
             1f,
             if (melodyPlayer.isMute) BossBar.Color.RED else BossBar.Color.PURPLE,
             BossBar.Overlay.PROGRESS
         )
 
-        if (serverMute.enable && melodyPlayer.isMute || !Storage.isEnableBossBar) {
+        if (serverMute.enable && melodyPlayer.isMute && !Storage.isEnableBossBar) {
             showTalkBossBar()
         } else {
             hideTalkBossBar()

@@ -6,7 +6,9 @@ import com.comphenix.protocol.events.PacketContainer
 import com.comphenix.protocol.wrappers.EnumWrappers.ItemSlot
 import com.comphenix.protocol.wrappers.Pair
 import com.comphenix.protocol.wrappers.WrappedDataValue
+import com.comphenix.protocol.wrappers.WrappedDataWatcher
 import com.comphenix.protocol.wrappers.WrappedDataWatcher.Registry
+import com.cryptomorin.xseries.ReflectionUtils
 import ir.taher7.melodymine.MelodyMine
 import ir.taher7.melodymine.models.NameTagConfig
 import ir.taher7.melodymine.storage.Storage
@@ -105,19 +107,44 @@ class TalkNameTag(val player: Player) {
         val packet = PacketContainer(PacketType.Play.Server.ENTITY_METADATA)
 
         packet.integers.writeSafely(0, id)
-        packet.dataValueCollectionModifier.writeSafely(
-            0, listOf(
-                WrappedDataValue(
-                    2,
-                    Registry.getChatComponentSerializer(true),
-                    Optional.of(MinecraftComponentSerializer.get().serialize(config.text.toComponent()))
-                ),
-                WrappedDataValue(3, Registry.get(Boolean::class.javaObjectType), config.textVisible),
-                WrappedDataValue(0, Registry.get(Byte::class.javaObjectType), 0x20.toByte()),
-                WrappedDataValue(5, Registry.get(Boolean::class.javaObjectType), true),
-                WrappedDataValue(15, Registry.get(Byte::class.javaObjectType), (0x01 or 0x08 or 0x10).toByte()),
+
+
+        if (ReflectionUtils.supports(20)) {
+            packet.dataValueCollectionModifier.writeSafely(
+                0, listOf(
+                    WrappedDataValue(
+                        2,
+                        Registry.getChatComponentSerializer(true),
+                        Optional.of(MinecraftComponentSerializer.get().serialize(config.text.toComponent()))
+                    ),
+                    WrappedDataValue(3, Registry.get(Boolean::class.javaObjectType), config.textVisible),
+                    WrappedDataValue(0, Registry.get(Byte::class.javaObjectType), 0x20.toByte()),
+                    WrappedDataValue(15, Registry.get(Byte::class.javaObjectType), (0x01 or 0x08 or 0x10).toByte()),
+                )
             )
-        )
+
+        } else {
+
+            val metadata = WrappedDataWatcher()
+            val byteSerializer = Registry.get(Byte::class.javaObjectType)
+            val booleanSerializer = Registry.get(Boolean::class.javaObjectType)
+            val chatSerializer = Registry.getChatComponentSerializer(true)
+
+            val invisible = WrappedDataWatcher.WrappedDataWatcherObject(0, byteSerializer)
+            val displayName = WrappedDataWatcher.WrappedDataWatcherObject(2, chatSerializer)
+            val displayNameVisible = WrappedDataWatcher.WrappedDataWatcherObject(3, booleanSerializer)
+            val base = WrappedDataWatcher.WrappedDataWatcherObject(15, byteSerializer)
+
+
+            metadata.setObject(invisible, 0x20.toByte())
+            metadata.setObject(
+                displayName,
+                Optional.of(MinecraftComponentSerializer.get().serialize(config.text.toComponent()))
+            )
+            metadata.setObject(displayNameVisible, config.textVisible)
+            metadata.setObject(base, (0x01 or 0x08 or 0x10).toByte())
+            packet.watchableCollectionModifier.write(0, metadata.watchableObjects)
+        }
 
         return packet
     }

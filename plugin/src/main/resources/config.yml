@@ -163,7 +163,6 @@ nametag-talk:
       enable: true
       text-visible: true
       text: "<green>🎤"
-      custom-data: 69
       position:
         x: 0.0
         y: 2.1
@@ -177,7 +176,6 @@ nametag-talk:
       enable: false
       text-visible: true
       text: ""
-      custom-data: 0
       position:
         x: 0.0
         y: 2.1

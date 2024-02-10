@@ -698,7 +698,7 @@ object MelodyManager {
             }
         }
 
-        if (Storage.isEnableBossBar) {
+        if (Storage.isEnableNameTag) {
             if (player.isMute) {
                 player.talkNameTag?.setNameTagServerMute()
             } else {
