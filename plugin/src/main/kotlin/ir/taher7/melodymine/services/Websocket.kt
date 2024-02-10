@@ -31,13 +31,16 @@ object Websocket {
             socket.connect()
             SocketListener(socket)
 
+
             socket.on(Socket.EVENT_CONNECT) {
                 MelodyMine.instance.logger.info("Successfully connected to Websocket.")
                 Database.updateSocketPlayer()
             }
 
+
             socket.on(Socket.EVENT_DISCONNECT) {
                 MelodyMine.instance.logger.severe("Websocket connection failed check your connection")
+                Database.updateSocketPlayer()
                 if (!socket.isActive) connect()
             }
 

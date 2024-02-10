@@ -191,6 +191,7 @@ object Database {
         closeConnection(connection)
     }
 
+
     fun updateSocketPlayer() {
         object : BukkitRunnable() {
             override fun run() {
