@@ -1,6 +1,8 @@
 package ir.taher7.melodymine.models
 
 import com.google.gson.annotations.Expose
+import ir.taher7.melodymine.core.TalkBossBar
+import ir.taher7.melodymine.core.TalkNameTag
 import org.bukkit.entity.Player
 import org.bukkit.scheduler.BukkitTask
 
@@ -26,6 +28,9 @@ data class MelodyPlayer(
     @Expose var callToggle: Boolean = false,
     @Expose var isStartCall: Boolean = false,
     @Expose var pendingTask: BukkitTask? = null,
+    @Expose var isTalk: Boolean = false,
+    @Expose(deserialize = false) var talkBossBar: TalkBossBar? = null,
+    @Expose(deserialize = false) var talkNameTag: TalkNameTag? = null,
     @Expose(deserialize = false) var isSendOffer: ArrayList<String> = arrayListOf(),
 ) {
 
@@ -40,6 +45,14 @@ data class MelodyPlayer(
         when (control.type) {
             "mic" -> {
                 isSelfMute = control.value
+                if (!control.value) {
+                    talkBossBar?.setBossBarSelfMute()
+                    talkNameTag?.setNameTagSelfMute()
+
+                } else {
+                    talkBossBar?.setBossBarInactive()
+                    talkNameTag?.setNameTagInactive()
+                }
             }
 
             "sound" -> {

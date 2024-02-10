@@ -1,11 +1,16 @@
 import Image from "next/image";
 import {useEffect, useState} from "react";
 import {SoundMeter} from "@/utils/SoundMeter";
+import {IOnlineUsers} from "@/interfaces";
+import {useSocketStore} from "@/store/SocketStore";
+import {encrypt} from "@/utils";
 
 interface props {
     stream?: MediaStream
     audioContext?: AudioContext
     name?: string
+    uuid?: string
+    user: IOnlineUsers
     volume?: number
     soundIsActive: boolean
     isMute?: boolean
@@ -13,8 +18,23 @@ interface props {
     enableVoice: boolean
 }
 
-const UserHead = ({stream, audioContext, isSelfMute, isMute, volume, soundIsActive, name,enableVoice}: props) => {
+const UserHead = ({
+                      stream,
+                      audioContext,
+                      isSelfMute,
+                      isMute,
+                      volume,
+                      soundIsActive,
+                      name,
+                      uuid,
+                      user,
+                      enableVoice
+                  }: props) => {
+
+    const {socket} = useSocketStore(state => state)
     const [instant, setInstant] = useState(0.00)
+    const [isTalk, setIsTalk] = useState<boolean>(false)
+
     useEffect(() => {
         let interval: any
         let soundMaster: any
@@ -24,7 +44,7 @@ const UserHead = ({stream, audioContext, isSelfMute, isMute, volume, soundIsActi
                 if (!event) {
                     interval = setInterval(() => {
                         setInstant(soundMaster.instant.toFixed(2))
-                    }, 200)
+                    }, 250)
                 }
             })
         }
@@ -33,6 +53,35 @@ const UserHead = ({stream, audioContext, isSelfMute, isMute, volume, soundIsActi
             clearInterval(interval)
         }
     }, [stream, audioContext, isSelfMute, isMute, volume, soundIsActive, name])
+
+    useEffect(() => {
+        if (!uuid) return
+        if (uuid != user.uuid) return
+        if (isSelfMute || isMute) return
+
+        if (instant == 0) {
+            setIsTalk(false)
+            socket?.emit("onPlayerTalk", encrypt({
+                uuid,
+                server: user.server,
+                isTalk: false,
+            }))
+            console.log("false")
+        } else {
+            if (!isTalk) {
+                setIsTalk(true)
+                socket?.emit("onPlayerTalk", encrypt({
+                    uuid,
+                    server: user.server,
+                    isTalk: true,
+                }))
+                console.log("true")
+            }
+        }
+
+
+    }, [instant, uuid, isMute, isMute])
+
 
     return (
         <>

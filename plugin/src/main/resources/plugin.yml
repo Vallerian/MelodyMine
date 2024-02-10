@@ -1,8 +1,10 @@
 name: MelodyMine
-version: '1.4.5'
+version: '1.5.0'
 main: ir.taher7.melodymine.MelodyMine
 api-version: '1.13'
 author: taher7
+depend:
+  - ProtocolLib
 softdepend:
   - PlaceholderAPI
 commands:

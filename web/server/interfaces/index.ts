@@ -24,3 +24,48 @@ export interface callData {
         socketID: string
     }
 }
+
+
+
+export interface RenewData {
+    name: string
+    uuid: string
+    server: string
+    enableVoice: EnableVoiceTask[]
+    disableVoice: DisableVoiceTask[]
+    volume: VolumeTask[]
+}
+
+export interface EnableVoiceTask {
+    socketID: string
+}
+
+export interface DisableVoiceTask {
+    socketID: string
+}
+
+export interface Location {
+    x: number
+    y: number
+    z: number
+}
+
+export interface VolumeTask {
+    socketID: string
+    distance: number
+    settings:SoundSettings
+    playerLocation: Location
+    targetLocation: Location
+    playerDirection: Location
+    targetDirection: Location
+}
+
+export interface SoundSettings {
+    sound3D: boolean,
+    lazyHear: boolean,
+    maxDistance: number,
+    refDistance: number,
+    innerAngle: number,
+    outerAngle: number,
+    outerVolume: number,
+}

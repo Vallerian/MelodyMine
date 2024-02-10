@@ -2,8 +2,9 @@ package ir.taher7.melodymine.storage
 
 import ir.taher7.melodymine.MelodyMine
 import ir.taher7.melodymine.commands.SubCommand
-import ir.taher7.melodymine.models.MelodyPlayer
+import ir.taher7.melodymine.models.*
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 object Storage {
@@ -103,6 +104,13 @@ object Storage {
     val muteCoolDown = hashMapOf<UUID, Long>()
     val playerMuteShortcut = ArrayList<UUID>()
 
+    // talk view data
+    var isEnableBossBar: Boolean = true
+    var isEnableNameTag: Boolean = true
+
+    val bossbarConfigs = hashMapOf<String, BossBarConfig>()
+    val nameTagConfigs = hashMapOf<String, NameTagConfig>()
+
 
     init {
         reload()
@@ -139,10 +147,10 @@ object Storage {
 
         prefix = config.getString("prefix") ?: ""
         text = config.getString("text") ?: ""
-        textHover = config.getString("text_hover") ?: ""
-        count_color = config.getString("count_color") ?: ""
-        contentHeader = config.getString("content_header") ?: ""
-        contentFooter = config.getString("content_footer") ?: ""
+        textHover = config.getString("text-hover") ?: ""
+        count_color = config.getString("count-color") ?: ""
+        contentHeader = config.getString("content-header") ?: ""
+        contentFooter = config.getString("content-footer") ?: ""
 
         websiteMessage = config.getString("website-message") ?: ""
 
@@ -196,6 +204,42 @@ object Storage {
         unDeafenToggleMessage = config.getString("un-deafen-toggle-message") ?: ""
 
         callPendingTime = config.getLong("call-pending-time")
+
+        val bossBarSection = MelodyMine.instance.config.getConfigurationSection("bossbar-talk") ?: return
+        val nameTagSection = MelodyMine.instance.config.getConfigurationSection("nametag-talk") ?: return
+        isEnableBossBar = bossBarSection.getBoolean("enable")
+        isEnableNameTag = nameTagSection.getBoolean("enable")
+
+        val bossBarConfigSection = bossBarSection.getConfigurationSection("configs") ?: return
+        val nameTagConfigSection = nameTagSection.getConfigurationSection("configs") ?: return
+
+        for (key in bossBarConfigSection.getKeys(false)) {
+            val config = bossBarConfigSection.getConfigurationSection(key) ?: continue
+            bossbarConfigs[key] = BossBarConfig(
+                enable = config.getBoolean("enable"),
+                color = config.getString("color") ?: "white",
+                text = config.getString("text") ?: ""
+            )
+        }
+
+        for (key in nameTagConfigSection.getKeys(false)) {
+            val config = nameTagConfigSection.getConfigurationSection(key) ?: continue
+            nameTagConfigs[key] = NameTagConfig(
+                enable = config.getBoolean("enable"),
+                textVisible = config.getBoolean("text-visible"),
+                text = config.getString("text") ?: "",
+                position = Position(
+                    x = config.getConfigurationSection("position")?.getDouble("x") ?: 0.0,
+                    y = config.getConfigurationSection("position")?.getDouble("y") ?: 2.1,
+                    z = config.getConfigurationSection("position")?.getDouble("z") ?: 0.0,
+                ),
+                item = Item(
+                    type = config.getConfigurationSection("item")?.getString("type") ?: "AIR",
+                    customData = config.getConfigurationSection("item")?.getInt("custom-data") ?: 0,
+                )
+            )
+        }
+
 
     }
 

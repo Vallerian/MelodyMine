@@ -3,9 +3,11 @@ package ir.taher7.melodymine.listeners
 import io.socket.client.SocketIOException
 import ir.taher7.melodymine.MelodyMine
 import ir.taher7.melodymine.core.MelodyManager
+import ir.taher7.melodymine.core.TalkBossBar
 import ir.taher7.melodymine.database.Database
 import ir.taher7.melodymine.services.Websocket
 import ir.taher7.melodymine.storage.Storage
+import ir.taher7.melodymine.core.TalkNameTag
 import ir.taher7.melodymine.utils.Utils
 import org.bukkit.Bukkit
 import org.bukkit.event.EventHandler
@@ -35,6 +37,8 @@ class MelodyMineListener : Listener {
                 result.verifyCode = Utils.getVerifyCode()
                 Database.updatePlayer(result, false)
                 Storage.onlinePlayers[result.uuid] = result
+                Storage.onlinePlayers[result.uuid]?.talkBossBar = TalkBossBar(event.player)
+                Storage.onlinePlayers[result.uuid]?.talkNameTag = TalkNameTag(event.player)
 
                 if (result.webIsOnline && result.isActiveVoice) {
                     Storage.onlinePlayers.values.forEach { player ->
@@ -75,6 +79,7 @@ class MelodyMineListener : Listener {
                                 ex.printStackTrace()
                             }
 
+                            Storage.onlinePlayers[result.uuid]?.talkNameTag?.clearNameTag()
                             Storage.onlinePlayers.remove(result.uuid)
                             Storage.onlinePlayers.values.forEach { player ->
                                 if (player.isSendOffer.contains(result.uuid)) {

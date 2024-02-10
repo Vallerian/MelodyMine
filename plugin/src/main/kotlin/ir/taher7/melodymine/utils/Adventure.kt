@@ -3,6 +3,7 @@ package ir.taher7.melodymine.utils
 import ir.taher7.melodymine.MelodyMine
 import ir.taher7.melodymine.storage.Storage
 import net.kyori.adventure.audience.Audience
+import net.kyori.adventure.bossbar.BossBar
 import net.kyori.adventure.platform.bukkit.BukkitAudiences
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.MiniMessage
@@ -48,6 +49,7 @@ object Adventure {
         this.audience().sendActionBar(component)
     }
 
+
     fun String.toComponent(vararg placeholders: TagResolver): Component {
         return miniMessage.deserialize(this, *placeholders)
     }
@@ -55,5 +57,15 @@ object Adventure {
     fun Player.showTitle(title: Title) {
         audience.sender(this).showTitle(title)
     }
+
+    fun Player.showBossBar(bossBar: BossBar) {
+        audience.sender(this).showBossBar(bossBar)
+    }
+
+    fun Player.hideBossBar(bossBar: BossBar) {
+        audience.sender(this).hideBossBar(bossBar)
+    }
+
+
 
 }

@@ -571,6 +571,8 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
                             stream={userStream}
                             audioContext={audioContext}
                             name={user.name}
+                            uuid={uuid}
+                            user={user}
                             volume={audioRef?.current?.volume}
                             soundIsActive={soundIsActive}
                             isMute={user.isMute}

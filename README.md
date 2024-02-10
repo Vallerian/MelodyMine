@@ -25,15 +25,11 @@ MelodyMine is a revolutionary system for Minecraft servers where players can sim
 ## Key Features 🌟
 
 
-<img style="margin-bottom:10px;border-radius: 5px" src="https://cdn.discordapp.com/attachments/1159034838783893567/1171346459858325554/image.png?ex=655c5866&is=6549e366&hm=ad63d33eb0047f053aebc91c0f4df56c449bc92cfa23333c082b9ad512d483f0&"/>
+<img style="margin-bottom:10px;border-radius: 5px" src="https://cdn.discordapp.com/attachments/1159034838783893567/1205854434911977502/image.png?ex=65d9e274&is=65c76d74&hm=9e3b24bfc4fd60da2ff89ac3a18d9d6f43667c06c22a0bea5d4222dbeb2b7d6a&"/>
 
 - 🗣️ **Admin Mode:** Admins can communicate with players across the entire server and listen to their conversations, even from a distance. Maintain control and ensure a safe environment. 🔊🔒
 
 <img style="margin-bottom:10px;border-radius: 5px" src="https://cdn.discordapp.com/attachments/1159034838783893567/1159038696255934594/image.png?ex=651e6e67&is=651d1ce7&hm=8ad93989d50b1655494aec5d998a58ebdb6d3307b5adc148d614ed268aecbc4d&"/>
-
-- 📼 **Toggle Logger:** Users can easily record player interactions and voice conversations. Starting and stopping voice recordings is a breeze, providing valuable insights into your server's activities. 📜📼
-
-<img style="margin-bottom:10px;border-radius: 5px" src="https://cdn.discordapp.com/attachments/1159034838783893567/1159039652272025710/image.png?ex=651e6f4b&is=651d1dcb&hm=edc4ae3e39e0ff2afedea7b657ec0d6eeac6b72f9d788c4bd267c64c768edf8c&"/>
 
 - 🔇 **Player Mute/Unmute:** Users can mute or unmute players directly from the web interface, ensuring that no one's voice goes unnoticed. Manage the voice communication effectively. 🧏‍♂️📢
 
@@ -47,7 +43,7 @@ MelodyMine is a revolutionary system for Minecraft servers where players can sim
 
 - 🌐 **Automatic Login:** Users can obtain an automatic login link by using the `/melodymine start link` command, simplifying website login and reducing hassle. 🌐🚪
 
-<img style="margin-bottom:10px;border-radius: 5px" src="https://cdn.discordapp.com/attachments/1159034838783893567/1159041197218746379/image.png?ex=651e70bb&is=651d1f3b&hm=dd83a23900e58a03fd6732ee1db6baf39e2b8d496f2139a1be21357d3c105b65&"/>
+<img style="margin-bottom:10px;border-radius: 5px" src="https://cdn.discordapp.com/attachments/1159034838783893567/1205854983271227412/image.png?ex=65d9e2f7&is=65c76df7&hm=aec2c7dfd963844a13d06899ed24ce01cf61a10d988d77829fae948fc8275550&"/>
 
 - 🌐 **QRCode Automatic Login:** Players can obtain a QR code by using the command `/melodymine start qrcode`, and by scanning it, they can enter the website. 🌍✨
 
@@ -79,28 +75,6 @@ websocket-url: "ws://localhost:4000"
 
 # websocket auth security key !!! (important) change that after install plugin !!!
 websocket-auth-key: "" # must be the same in web server auth key
-
-# users must be online in website and active voice chat.
-force-voice: false
-
-# shortcut for toggle self mute in website (Shift + F)
-mute-toggle-shortcut: true
-
-# call configs
-call-pending-time: 600 # must be Long (10L = 0.5s, 20L = 1s,...)
-
-# ------ sound configs ------
-
-3D-sound: true # player voice 3D mode.
-hear-lazy: true # default player volume (when 3DSound is "false" you can use this feature).
-max-distance: 30 # distance that players can hear each other.
-ref-distance: 5  # distance that players can hear each other max volume.
-inner-angle: 120 # angle that players can hear each other max volume.
-outer-angle: 180 # angle that players can hear each other.
-outer-volume: 0.3 # outer angle volume.
-
-# update player distance time (as Long)
-update-distance-time: 10 # must be Long (10L = 0.5s, 20L = 1s,...)
 ```
 
 - 📞 **Call System:** You have the ability to make a call using the command `/melodymine call start <player>` to call other players.
@@ -110,6 +84,10 @@ update-distance-time: 10 # must be Long (10L = 0.5s, 20L = 1s,...)
 - 🎧 **3D Voice Capability:** Player sounds are played in 3D, and you can determine the player's position through sound.
 
 <img style="margin-bottom:10px;border-radius: 5px" src="https://cdn.discordapp.com/attachments/1159034838783893567/1176601670650703933/melody-sound4.png?ex=656f76b2&is=655d01b2&hm=08004a4c29ab3370656f0b6963689fb76c27dc22128b939d75d5dad32fb73333&">
+
+- 🔊 **Talk NamTag and BossBar:** When a player speaks in voice chat on the Minecraft server, a nametag is displayed for all players, and a bossbar is shown for the player themselves, which you can fully customize even the config by placing an item with customData instead of displayName.
+
+<img style="margin-bottom:10px;border-radius: 5px" src="https://cdn.discordapp.com/attachments/1159034838783893567/1205853641064456203/nametag-bossbar.png?ex=65d9e1b7&is=65c76cb7&hm=4c6b5e520f7a4f8c8faaaff99881fa824662e76dc7feb07da9feebbb66cd4143&">
 
 - 🐞 **Robust System:** MelodyMine is a highly reliable and secure system with minimal bugs. Any discovered bugs are promptly addressed and fixed, ensuring a smooth and hassle-free experience for all users. Be part of a community that values your experience and offers continuous improvement. Find announcements and updates on our [GitHub repository](https://github.com/vallerian/MelodyMine). 🛠️🐛
 
