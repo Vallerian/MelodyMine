@@ -30,7 +30,7 @@ const io = new Server(server, {
         credentials: false,
         allowedHeaders: "*"
     },
-    pingInterval: 30000,
+    pingInterval: 60000,
     pingTimeout: 120000,
     transports: ["websocket"],
     allowEIO3: true,
@@ -466,6 +466,8 @@ io.on("connection", async (socket: CustomSocket) => {
                     serverIsOnline: false
                 },
             })
+
+
             socket.broadcast.except("plugin").emit("onPluginDisabled", encrypt({
                 server: socket.melodyClient.server
             }))
