@@ -77,6 +77,7 @@ class SocketListener(private val socket: Socket) {
 
             Utils.clearUpCall(Storage.onlinePlayers[melodyPlayer.uuid])
             Storage.onlinePlayers[melodyPlayer.uuid]?.talkBossBar?.hideTalkBossBar()
+            Storage.onlinePlayers[melodyPlayer.uuid]?.talkNameTag?.clearNameTag()
 
             val targetForce = Storage.onlinePlayers[melodyPlayer.uuid]
             if (targetForce != null) Utils.forceVoice(targetForce)
