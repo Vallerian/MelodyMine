@@ -3,7 +3,7 @@ import http from "http"
 import https from "https";
 import {Server} from "socket.io"
 import {prisma} from "./utils/connect";
-import {callData, CustomSocket, IClient} from "./interfaces";
+import {callData, CustomSocket, IClient, RenewData, SoundSettings} from "./interfaces";
 import {decrypt, encrypt} from "./utils";
 import fs from "fs"
 
@@ -27,13 +27,13 @@ const PORT = process.env.PORT || 4000
 const io = new Server(server, {
     cors: {
         origin: "*",
-        credentials:false,
-        allowedHeaders:"*"
+        credentials: false,
+        allowedHeaders: "*"
     },
-    pingInterval: 15000,
-    pingTimeout: 10000,
+    // pingInterval: 15000,
+    // pingTimeout: 10000,
     transports: ["websocket"],
-    allowEIO3:true,
+    allowEIO3: true,
 })
 
 
@@ -68,7 +68,7 @@ io.use((socket: CustomSocket, next) => {
 })
 
 io.on("connection", async (socket: CustomSocket) => {
-    console.log(`Client connected from: ${socket.melodyClient.from} server: ${socket.melodyClient.server} ${socket.melodyClient.name ? `name: ${socket.melodyClient.name}` : ""}`)
+    // console.log(`Client connected from: ${socket.melodyClient.from} server: ${socket.melodyClient.server} ${socket.melodyClient.name ? `name: ${socket.melodyClient.name}` : ""}`)
     await socket.join(socket.melodyClient.from)
 
 
@@ -252,7 +252,51 @@ io.on("connection", async (socket: CustomSocket) => {
     })
 
 
+    socket.on("onRenewData", (data) => {
+        const {soundSettings, playerList} = data
+
+        JSON.parse(playerList)?.forEach((player: RenewData) => {
+            player.enableVoice.forEach(enableVoice => {
+                setTimeout(() => {
+                    io.to(enableVoice.socketID).emit("onEnableVoiceReceive", encrypt({
+                        uuid: player.uuid,
+                        server: player.server
+                    }))
+                }, 5)
+            })
+
+
+            player.volume.forEach(volume => {
+                io.to(volume.socketID).emit("onSetVolumeReceive", {
+                    uuid: player.uuid,
+                    distance: volume.distance,
+                    settings: JSON.parse(soundSettings),
+                    playerLocation: volume.playerLocation,
+                    targetLocation: volume.targetLocation,
+                    playerDirection: volume.playerDirection,
+                    targetDirection: volume.targetDirection
+                })
+            })
+
+            player.disableVoice.forEach(disableVoice => {
+
+                io.to(disableVoice.socketID).emit("onDisableVoiceReceive", encrypt({
+                    uuid: player.uuid,
+                }))
+
+            })
+        })
+
+    })
+
+
     // Web Listeners
+    socket.on("onPlayerTalk", token => {
+        const data = decrypt(token)
+        socket.to("plugin").emit("onPlayerTalkReceive", data)
+    })
+
+
     socket.on("onOffer", async (token: string) => {
         const data = decrypt(token)
         try {
@@ -372,6 +416,7 @@ io.on("connection", async (socket: CustomSocket) => {
         }
     })
 
+
     socket.on("onPlayerEndVoice", async (token: string) => {
         const data = decrypt(token)
         socket.leave(data.server)
@@ -389,7 +434,7 @@ io.on("connection", async (socket: CustomSocket) => {
 
 
     socket.on("disconnect", async () => {
-        console.log(`Client disconnected from: ${socket.melodyClient.from} server: ${socket.melodyClient.server} ${socket.melodyClient.name ? `name: ${socket.melodyClient.name}` : ""}`)
+        // console.log(`Client disconnected from: ${socket.melodyClient.from} server: ${socket.melodyClient.server} ${socket.melodyClient.name ? `name: ${socket.melodyClient.name}` : ""}`)
         if (socket.melodyClient.from != "plugin") {
             try {
                 const findUser = await prisma.melodymine.findUnique({

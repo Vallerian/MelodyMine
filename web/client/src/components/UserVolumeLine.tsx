@@ -12,8 +12,19 @@ interface props {
     enableVoice: boolean
 }
 
-const UserVolumeLine = ({stream, audioContext, isSelfMute, isMute, volume, soundIsActive, name,enableVoice}: props) => {
+const UserVolumeLine = ({
+                            stream,
+                            audioContext,
+                            isSelfMute,
+                            isMute,
+                            volume,
+                            soundIsActive,
+                            name,
+                            enableVoice
+                        }: props) => {
+
     const [instant, setInstant] = useState(0.00)
+
     useEffect(() => {
         let interval: any
         let soundMaster: any
@@ -32,6 +43,9 @@ const UserVolumeLine = ({stream, audioContext, isSelfMute, isMute, volume, sound
             clearInterval(interval)
         }
     }, [stream, audioContext, isSelfMute, isMute, volume, soundIsActive, name])
+
+
+
     return (
         <>
             <div

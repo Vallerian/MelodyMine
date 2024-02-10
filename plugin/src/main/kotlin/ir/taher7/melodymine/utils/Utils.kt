@@ -53,8 +53,7 @@ object Utils {
         player.sendMessage(Storage.contentFooter.toComponent())
     }
 
-    fun getVerifyCode(): String {
-        val length = 20
+    fun getVerifyCode(length: Int = 20): String {
         val stringBuilder = StringBuilder(length)
         repeat(length) {
             val digit = Random.nextInt(10)
@@ -211,6 +210,7 @@ object Utils {
             }
         }.runTask(MelodyMine.instance)
     }
+
 
     fun sendMelodyFiglet() {
         val consoleSender = MelodyMine.instance.server.consoleSender

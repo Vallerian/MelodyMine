@@ -30,7 +30,7 @@ mute-toggle-shortcut: true
 call-pending-time: 600 # must be Long (10L = 0.5s, 20L = 1s,...)
 
 
-# ------ sound configs ------
+# ------ Sound Configs ------
 
 3D-sound: true # player voice 3D mode.
 hear-lazy: true # default player volume (when 3DSound is "false" you can use this feature).
@@ -45,15 +45,16 @@ outer-volume: 0.3 # outer angle volume.
 update-distance-time: 10 # must be Long (10L = 0.5s, 20L = 1s,...)
 
 
+
 # ----- Message configs -----
 
 # main plugin prefix.
 prefix: "<gradient:#f20ae5:#FFF4E4>MelodyMine</gradient> <#EAEAEA><bold>|</bold> <text>"
 text: "<gradient:#EAEAEA:#E3ACF9>"
-text_hover: "<gradient:#f20ae5:#FFF4E4>"
-count_color: "<#FFD369>"
-content_header: "<st><gradient:#121F31:#F04FE7>                     </gradient></st> <bold><gradient:#F04FE7:#FFF4E4:#F04FE7>MelodyMine</gradient></bold> <st><gradient:#F04FE7:#121F31>                      </st>"
-content_footer: "<st><gradient:#121F31:#F04FE7:#121F31><st>                                                             "
+text-hover: "<gradient:#f20ae5:#FFF4E4>"
+count-color: "<#FFD369>"
+content-header: "<st><gradient:#121F31:#F04FE7>                     </gradient></st> <bold><gradient:#F04FE7:#FFF4E4:#F04FE7>MelodyMine</gradient></bold> <st><gradient:#F04FE7:#121F31>                      </st>"
+content-footer: "<st><gradient:#121F31:#F04FE7:#121F31><st>                                                             "
 
 # open website link message.
 website-message: "Click to open website and start voice chat."
@@ -121,3 +122,92 @@ deafen-toggle-message: "<prefix>You have Deafen from website."
 un-deafen-toggle-message: "<prefix>You have unDeafen from website."
 
 
+# ------ Talk View Configs ------
+bossbar-talk:
+  # Enable Feature
+  enable: true
+
+  configs:
+    # on Active Talk Configs
+    active:
+      enable: true
+      color: "green"
+      text: "<green>🎤"
+
+    # on Inactive Talk Configs
+    inactive:
+      enable: false
+      color: ""
+      text: ""
+
+    # on Player Self Mute Configs
+    self-mute:
+      enable: true
+      color: "yellow"
+      text: "<yellow>🔇"
+
+    # on Player Server Mute Configs
+    server-mute:
+      enable: true
+      color: "red"
+      text: "<red>🚫"
+
+
+nametag-talk:
+  # Enable Feature
+  enable: true
+
+  configs:
+    # on Active Talk Configs
+    active:
+      enable: true
+      text-visible: true
+      text: "<green>🎤"
+      custom-data: 69
+      position:
+        x: 0.0
+        y: 2.1
+        z: 0.0
+      item:
+        type: "AIR"
+        custom-data: 0
+
+    # on Inactive Talk Configs
+    inactive:
+      enable: false
+      text-visible: true
+      text: ""
+      custom-data: 0
+      position:
+        x: 0.0
+        y: 2.1
+        z: 0.0
+      item:
+        type: "AIR"
+        custom-data: 0
+
+    # on Player Self Mute Configs
+    self-mute:
+      enable: false
+      text-visible: true
+      text: "<yellow>🔇"
+      position:
+        x: 0.0
+        y: 2.1
+        z: 0.0
+      item:
+        type: "AIR"
+        custom-data: 0
+
+    # on Player Server Mute Configs
+    server-mute:
+      enable: true
+      text-visible: true
+      text: "<red>🚫"
+      position:
+        x: 0.0
+        y: 2.1
+        z: 0.0
+      item:
+        type: "AIR"
+        custom-data: 0

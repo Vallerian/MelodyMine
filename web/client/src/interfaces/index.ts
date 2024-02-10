@@ -36,6 +36,7 @@ export interface ISoundSettings {
     innerAngle: number
     outerAngle: number
     outerVolume: number
+    talkView: boolean
 }
 
 export interface ILocation {

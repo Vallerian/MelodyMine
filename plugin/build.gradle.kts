@@ -39,6 +39,9 @@ repositories {
 
     // Update checker
     maven("https://hub.jeff-media.com/nexus/repository/jeff-media-public/")
+
+    // ProtocolLib
+    maven("https://repo.dmulloy2.net/repository/public/")
 }
 
 dependencies {
@@ -66,6 +69,8 @@ dependencies {
     implementation("com.github.kenglxn.QRGen:javase:3.0.1")
 
     implementation("com.zaxxer:HikariCP:4.0.3")
+
+    compileOnly("com.comphenix.protocol:ProtocolLib:5.1.0")
 
 }
 

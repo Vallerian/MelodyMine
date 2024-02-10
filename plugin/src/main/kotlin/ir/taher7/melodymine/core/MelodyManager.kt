@@ -1,9 +1,12 @@
 package ir.taher7.melodymine.core
 
+import com.google.gson.GsonBuilder
 import ir.taher7.melodymine.MelodyMine
 import ir.taher7.melodymine.api.events.*
 import ir.taher7.melodymine.database.Database
 import ir.taher7.melodymine.models.MelodyPlayer
+import ir.taher7.melodymine.models.RenewData
+import ir.taher7.melodymine.models.SoundSettings
 import ir.taher7.melodymine.services.Websocket
 import ir.taher7.melodymine.storage.Storage
 import ir.taher7.melodymine.utils.Adventure.sendMessage
@@ -25,6 +28,9 @@ object MelodyManager {
         Bukkit.getServer().pluginManager.callEvent(prePlayerMuteEvent)
         if (prePlayerMuteEvent.isCancelled) return
 
+        targetPlayer.talkBossBar?.setBossBarServerMute()
+        targetPlayer.talkNameTag?.setNameTagServerMute()
+
         targetPlayer.isMute = true
         Database.updatePlayer(targetPlayer, false)
         Websocket.socket.emit(
@@ -42,6 +48,9 @@ object MelodyManager {
         val prePlayerUnMuteEvent = PreUnMutePlayerEvent(targetPlayer)
         Bukkit.getServer().pluginManager.callEvent(prePlayerUnMuteEvent)
         if (prePlayerUnMuteEvent.isCancelled) return
+
+        targetPlayer.talkBossBar?.setBossBarInactive()
+        targetPlayer.talkNameTag?.setNameTagInactive()
 
         targetPlayer.isMute = false
         Database.updatePlayer(targetPlayer, false)
@@ -207,6 +216,7 @@ object MelodyManager {
         )
     }
 
+
     fun setVolume(
         playerUuid: String,
         targetSocketID: String,
@@ -265,7 +275,14 @@ object MelodyManager {
         val prePlayerSetSelfMuteEvent = PrePlayerSetSelfMuteEvent(melodyPlayer, value)
         Bukkit.getServer().pluginManager.callEvent(prePlayerSetSelfMuteEvent)
         if (prePlayerSetSelfMuteEvent.isCancelled) return
+        if (!value) {
+            melodyPlayer.talkBossBar?.setBossBarSelfMute()
+            melodyPlayer.talkNameTag?.setNameTagSelfMute()
 
+        } else {
+            melodyPlayer.talkBossBar?.setBossBarInactive()
+            melodyPlayer.talkNameTag?.setNameTagInactive()
+        }
         melodyPlayer.isSelfMute = value
         object : BukkitRunnable() {
             override fun run() {
@@ -662,5 +679,84 @@ object MelodyManager {
 
         Bukkit.getServer().pluginManager.callEvent(PostStopSoundEvent(soundName, sendToAll, socketID))
     }
+
+
+    fun showPlayerIsTalking(player: MelodyPlayer) {
+        if (Storage.isEnableBossBar) {
+            if (player.isMute) {
+                player.talkBossBar?.setBossBarServerMute()
+            } else {
+                if (!player.isSelfMute) {
+                    player.talkBossBar?.setBossBarSelfMute()
+                } else {
+                    if (player.isTalk) {
+                        player.talkBossBar?.setBossBarActive()
+                    } else {
+                        player.talkBossBar?.setBossBarInactive()
+                    }
+                }
+            }
+        }
+
+        if (Storage.isEnableBossBar) {
+            if (player.isMute) {
+                player.talkNameTag?.setNameTagServerMute()
+            } else {
+                if (!player.isSelfMute) {
+                    player.talkNameTag?.setNameTagSelfMute()
+                } else {
+                    if (player.isTalk) {
+                        player.talkNameTag?.setNameTagActive()
+                    } else {
+                        player.talkNameTag?.setNameTagInactive()
+                    }
+                }
+            }
+        }
+    }
+
+
+    fun renewData(data: MutableList<RenewData>) {
+        if (data.isEmpty()) return
+        val preRenewDataEvent = PreRenewData(data)
+        object : BukkitRunnable() {
+            override fun run() {
+                Bukkit.getServer().pluginManager.callEvent(preRenewDataEvent)
+            }
+        }.runTask(MelodyMine.instance)
+
+        if (preRenewDataEvent.isCancelled) return
+        val builder = GsonBuilder()
+        builder.excludeFieldsWithoutExposeAnnotation()
+        val gson = builder.create()
+
+        object : BukkitRunnable() {
+            override fun run() {
+                Websocket.socket.emit(
+                    "onRenewData", mapOf(
+                        "soundSettings" to gson.toJson(
+                            SoundSettings(
+                                sound3D = Storage.sound3D,
+                                lazyHear = Storage.lazyHear,
+                                maxDistance = Storage.maxDistance,
+                                refDistance = Storage.refDistance,
+                                innerAngle = Storage.innerAngle,
+                                outerAngle = Storage.outerAngle,
+                                outerVolume = Storage.outerVolume
+                            )
+                        ),
+                        "playerList" to gson.toJson(data)
+                    )
+                )
+            }
+        }.runTaskAsynchronously(MelodyMine.instance)
+        object : BukkitRunnable() {
+            override fun run() {
+                Bukkit.getServer().pluginManager.callEvent(PostRenewData(data))
+            }
+        }.runTask(MelodyMine.instance)
+
+    }
+
 
 }

@@ -4,8 +4,10 @@ import com.google.gson.GsonBuilder
 import io.socket.client.Socket
 import ir.taher7.melodymine.MelodyMine
 import ir.taher7.melodymine.api.events.*
+import ir.taher7.melodymine.core.MelodyManager
 import ir.taher7.melodymine.models.MelodyControl
 import ir.taher7.melodymine.models.MelodyPlayer
+import ir.taher7.melodymine.models.MelodyTalk
 import ir.taher7.melodymine.storage.Storage
 import ir.taher7.melodymine.utils.Adventure.sendActionbar
 import ir.taher7.melodymine.utils.Adventure.sendMessage
@@ -74,6 +76,7 @@ class SocketListener(private val socket: Socket) {
             updateMelodyPlayer(melodyPlayer)
 
             Utils.clearUpCall(Storage.onlinePlayers[melodyPlayer.uuid])
+            Storage.onlinePlayers[melodyPlayer.uuid]?.talkBossBar?.hideTalkBossBar()
 
             val targetForce = Storage.onlinePlayers[melodyPlayer.uuid]
             if (targetForce != null) Utils.forceVoice(targetForce)
@@ -119,6 +122,8 @@ class SocketListener(private val socket: Socket) {
             Storage.onlinePlayers[melodyPlayer.uuid]?.adminMode = false
             Storage.onlinePlayers[melodyPlayer.uuid]?.isSelfMute = true
             Storage.onlinePlayers[melodyPlayer.uuid]?.isDeafen = true
+            Storage.onlinePlayers[melodyPlayer.uuid]?.talkBossBar?.showTalkBossBar()
+            Storage.onlinePlayers[melodyPlayer.uuid]?.talkNameTag?.clearNameTag()
 
             Storage.onlinePlayers.values.forEach { player ->
                 if (player.isSendOffer.contains(melodyPlayer.uuid)) {
@@ -171,6 +176,9 @@ class SocketListener(private val socket: Socket) {
             if (melodyPlayer.server != Storage.server) return@on
 
             Utils.clearUpCall(Storage.onlinePlayers[melodyPlayer.uuid])
+            Storage.onlinePlayers[melodyPlayer.uuid]?.talkBossBar?.hideTalkBossBar()
+            Storage.onlinePlayers[melodyPlayer.uuid]?.talkNameTag?.clearNameTag()
+
             Storage.onlinePlayers[melodyPlayer.uuid]?.isSendOffer = arrayListOf()
             Storage.onlinePlayers.values.forEach { player ->
                 if (player.isSendOffer.contains(melodyPlayer.uuid)) {
@@ -239,6 +247,21 @@ class SocketListener(private val socket: Socket) {
             object : BukkitRunnable() {
                 override fun run() {
                     Bukkit.getServer().pluginManager.callEvent(PlayerChangeControlWebEvent(melodyPlayer, melodyControl))
+                }
+            }.runTask(MelodyMine.instance)
+        }
+
+        socket.on("onPlayerTalkReceive") { args ->
+            val melodyTalk = gson.fromJson(args[0].toString(), MelodyTalk::class.java)
+            if (melodyTalk.server != Storage.server) return@on
+            val playerTalk = Storage.onlinePlayers[melodyTalk.uuid] ?: return@on
+            Storage.onlinePlayers[melodyTalk.uuid]?.isTalk = melodyTalk.isTalk
+
+            MelodyManager.showPlayerIsTalking(playerTalk)
+
+            object : BukkitRunnable() {
+                override fun run() {
+                    Bukkit.getServer().pluginManager.callEvent(PlayerChangeTalkEvent(playerTalk, melodyTalk))
                 }
             }.runTask(MelodyMine.instance)
         }
