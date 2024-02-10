@@ -257,12 +257,10 @@ io.on("connection", async (socket: CustomSocket) => {
 
         JSON.parse(playerList)?.forEach((player: RenewData) => {
             player.enableVoice.forEach(enableVoice => {
-                setTimeout(() => {
-                    io.to(enableVoice.socketID).emit("onEnableVoiceReceive", encrypt({
-                        uuid: player.uuid,
-                        server: player.server
-                    }))
-                }, 5)
+                io.to(enableVoice.socketID).emit("onEnableVoiceReceive", encrypt({
+                    uuid: player.uuid,
+                    server: player.server
+                }))
             })
 
 
