@@ -30,8 +30,8 @@ const io = new Server(server, {
         credentials: false,
         allowedHeaders: "*"
     },
-    // pingInterval: 15000,
-    // pingTimeout: 10000,
+    pingInterval: 30000,
+    pingTimeout: 120000,
     transports: ["websocket"],
     allowEIO3: true,
 })
