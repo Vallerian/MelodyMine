@@ -40,7 +40,7 @@ class TalkNameTag(val player: Player) {
     }
 
     private fun initNameTags() {
-        nameTagId = Utils.getVerifyCode(5).toInt()
+        nameTagId = Utils.getVerifyCode(9).toInt()
         nameTagUUID = UUID.randomUUID()
         nameTagType = if (melodyPlayer.isMute) "serverMute" else "inactive"
         refreshNameTag()
