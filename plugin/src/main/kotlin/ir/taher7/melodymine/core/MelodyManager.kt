@@ -33,11 +33,15 @@ object MelodyManager {
 
         targetPlayer.isMute = true
         Database.updatePlayer(targetPlayer, false)
-        Websocket.socket.emit(
-            "onPlayerMutePlugin", mapOf(
-                "uuid" to targetPlayer.uuid
-            )
-        )
+        object :BukkitRunnable(){
+            override fun run() {
+                Websocket.socket.emit(
+                    "onPlayerMutePlugin", mapOf(
+                        "uuid" to targetPlayer.uuid
+                    )
+                )
+            }
+        }.runTaskAsynchronously(MelodyMine.instance)
 
         Bukkit.getServer().pluginManager.callEvent(PostPlayerMuteEvent(targetPlayer))
     }
@@ -54,11 +58,15 @@ object MelodyManager {
 
         targetPlayer.isMute = false
         Database.updatePlayer(targetPlayer, false)
-        Websocket.socket.emit(
-            "onPlayerUnmutePlugin", mapOf(
-                "uuid" to targetPlayer.uuid
-            )
-        )
+        object :BukkitRunnable(){
+            override fun run() {
+                Websocket.socket.emit(
+                    "onPlayerUnmutePlugin", mapOf(
+                        "uuid" to targetPlayer.uuid
+                    )
+                )
+            }
+        }.runTaskAsynchronously(MelodyMine.instance)
 
         Bukkit.getServer().pluginManager.callEvent(PostUnMutePlayerEvent(targetPlayer))
     }

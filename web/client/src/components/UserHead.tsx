@@ -66,7 +66,6 @@ const UserHead = ({
                 server: user.server,
                 isTalk: false,
             }))
-            console.log("false")
         } else {
             if (!isTalk) {
                 setIsTalk(true)
@@ -75,7 +74,6 @@ const UserHead = ({
                     server: user.server,
                     isTalk: true,
                 }))
-                console.log("true")
             }
         }
 
