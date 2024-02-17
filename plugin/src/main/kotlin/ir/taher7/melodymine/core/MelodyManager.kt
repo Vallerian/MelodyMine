@@ -33,7 +33,7 @@ object MelodyManager {
 
         targetPlayer.isMute = true
         Database.updatePlayer(targetPlayer, false)
-        object :BukkitRunnable(){
+        object : BukkitRunnable() {
             override fun run() {
                 Websocket.socket.emit(
                     "onPlayerMutePlugin", mapOf(
@@ -58,7 +58,7 @@ object MelodyManager {
 
         targetPlayer.isMute = false
         Database.updatePlayer(targetPlayer, false)
-        object :BukkitRunnable(){
+        object : BukkitRunnable() {
             override fun run() {
                 Websocket.socket.emit(
                     "onPlayerUnmutePlugin", mapOf(
@@ -738,26 +738,24 @@ object MelodyManager {
         builder.excludeFieldsWithoutExposeAnnotation()
         val gson = builder.create()
 
-        object : BukkitRunnable() {
-            override fun run() {
-                Websocket.socket.emit(
-                    "onRenewData", mapOf(
-                        "soundSettings" to gson.toJson(
-                            SoundSettings(
-                                sound3D = Storage.sound3D,
-                                lazyHear = Storage.lazyHear,
-                                maxDistance = Storage.maxDistance,
-                                refDistance = Storage.refDistance,
-                                innerAngle = Storage.innerAngle,
-                                outerAngle = Storage.outerAngle,
-                                outerVolume = Storage.outerVolume
-                            )
-                        ),
-                        "playerList" to gson.toJson(data)
+        Websocket.socket.emit(
+            "onRenewData", mapOf(
+                "soundSettings" to gson.toJson(
+                    SoundSettings(
+                        sound3D = Storage.sound3D,
+                        lazyHear = Storage.lazyHear,
+                        maxDistance = Storage.maxDistance,
+                        refDistance = Storage.refDistance,
+                        innerAngle = Storage.innerAngle,
+                        outerAngle = Storage.outerAngle,
+                        outerVolume = Storage.outerVolume
                     )
-                )
-            }
-        }.runTaskAsynchronously(MelodyMine.instance)
+                ),
+                "playerList" to gson.toJson(data)
+            )
+        )
+
+
         object : BukkitRunnable() {
             override fun run() {
                 Bukkit.getServer().pluginManager.callEvent(PostRenewData(data))

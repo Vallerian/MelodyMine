@@ -37,13 +37,13 @@ const io = new Server(server, {
 })
 
 
-io.use((socket: CustomSocket, next) => {
+io.use(async (socket: CustomSocket, next) => {
     const from = socket.handshake.auth.from
     if (from) {
         if (from == "web") {
             const token = socket.handshake.auth.token
             if (!token) return next(new Error('Authentication failed'))
-            const data = decrypt(token)
+            const data = await decrypt(token)
             if (data) {
                 socket.melodyClient = {
                     from: from,
@@ -289,15 +289,15 @@ io.on("connection", async (socket: CustomSocket) => {
 
 
     // Web Listeners
-    socket.on("onPlayerTalk", token => {
-        const data = decrypt(token)
+    socket.on("onPlayerTalk", async (token) => {
+        const data = await decrypt(token)
         socket.to("plugin").emit("onPlayerTalkReceive", data)
     })
 
 
     socket.on("onOffer", async (token: string) => {
-        const data = decrypt(token)
         try {
+            const data = await decrypt(token)
             const user = await prisma.melodymine.findUnique({
                 where: {uuid: data.uuid},
                 select: {socketID: true, server: true}
@@ -312,8 +312,8 @@ io.on("connection", async (socket: CustomSocket) => {
     })
 
     socket.on("onAnswer", async (token: string) => {
-        const data = decrypt(token)
         try {
+            const data = await decrypt(token)
             const user = await prisma.melodymine.findUnique({
                 where: {uuid: data.uuid},
                 select: {socketID: true}
@@ -328,8 +328,8 @@ io.on("connection", async (socket: CustomSocket) => {
     })
 
     socket.on("onCandidate", async (token: string) => {
-        const data = decrypt(token)
         try {
+            const data = await decrypt(token)
             const user = await prisma.melodymine.findUnique({
                 where: {uuid: data.uuid},
                 select: {socketID: true}
@@ -344,15 +344,15 @@ io.on("connection", async (socket: CustomSocket) => {
     })
 
 
-    socket.on("onPlayerChangeControl", token => {
-        const data = decrypt(token)
+    socket.on("onPlayerChangeControl", async (token) => {
+        const data = await decrypt(token)
         socket.to("web").emit("onPlayerChangeControlReceive", encrypt(data))
         socket.to("plugin").emit("onPlayerChangeControlReceive", data)
 
     })
 
     socket.on("onPlayerJoin", async (token: string) => {
-        const data = decrypt(token) as IClient
+        const data = await decrypt(token) as IClient
         try {
             const findUser = await prisma.melodymine.findUnique({
                 where: {uuid: data.uuid}
@@ -394,7 +394,7 @@ io.on("connection", async (socket: CustomSocket) => {
     })
 
     socket.on("onPlayerStartVoice", async (token: string) => {
-        const data = decrypt(token) as IClient
+        const data = await decrypt(token) as IClient
         socket.melodyClient.server = data.server
         await socket.join(data.server)
         try {
@@ -416,7 +416,7 @@ io.on("connection", async (socket: CustomSocket) => {
 
 
     socket.on("onPlayerEndVoice", async (token: string) => {
-        const data = decrypt(token)
+        const data = await decrypt(token)
         socket.leave(data.server)
         try {
             const result = await prisma.melodymine.update({
