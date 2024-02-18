@@ -41,10 +41,10 @@ outer-angle: 180 # angle that players can hear each other.
 outer-volume: 0.3 # outer angle volume.
 
 # update player voice connection time (as Long)
-update-connection-time: 60 # must be Long (10L = 0.5s, 20L = 1s,...)
+update-connection-time: 80 # must be Long (10L = 0.5s, 20L = 1s,...)
 
 # update player distance time (as Long)
-update-distance-time: 20 # must be Long (10L = 0.5s, 20L = 1s,...)
+update-distance-time: 40 # must be Long (10L = 0.5s, 20L = 1s,...)
 
 
 # ----- Message configs -----
