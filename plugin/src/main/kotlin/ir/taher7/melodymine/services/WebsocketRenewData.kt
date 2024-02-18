@@ -49,7 +49,7 @@ class WebsocketRenewData {
                                             val distance = playerLocation.distance(targetLocation)
                                             val maxDistance = Storage.maxDistance
 
-                                            if (distance < (maxDistance + 50)) {
+                                            if (distance < (maxDistance + 80)) {
                                                 if (!melodyPlayer.isSendOffer.contains(targetPlayer.uuid)) {
                                                     melodyPlayer.isSendOffer.add(targetPlayer.uuid)
                                                     if (!targetPlayer.isSendOffer.contains(melodyPlayer.uuid)) {
@@ -66,7 +66,7 @@ class WebsocketRenewData {
                                             }
 
 
-                                            if (distance > (maxDistance + 200)) {
+                                            if (distance > (maxDistance + 500)) {
                                                 if (melodyPlayer.isSendOffer.contains(targetPlayer.uuid)) {
                                                     val targetSocketID = targetPlayer.socketID
                                                     if (targetSocketID != null) {
@@ -127,7 +127,7 @@ class WebsocketRenewData {
                                             val maxDistance = Storage.maxDistance
 
 
-                                            if (distance < (maxDistance + 120)) {
+                                            if (distance < (maxDistance + 250)) {
                                                 val targetSocketID = targetPlayer.socketID
                                                 if (targetSocketID != null) {
                                                     melodyPlayer.player?.eyeLocation?.let { playerLocation ->
