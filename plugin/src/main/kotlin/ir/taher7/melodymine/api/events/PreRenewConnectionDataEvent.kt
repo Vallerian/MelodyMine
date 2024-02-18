@@ -1,11 +1,11 @@
 package ir.taher7.melodymine.api.events
 
-import ir.taher7.melodymine.models.RenewData
+import ir.taher7.melodymine.models.RenewConnectionData
 import org.bukkit.event.Cancellable
 import org.bukkit.event.Event
 import org.bukkit.event.HandlerList
 
-class PreRenewData (val data: List<RenewData>) : Event(), Cancellable {
+class PreRenewConnectionDataEvent (val data: List<RenewConnectionData>) : Event(), Cancellable {
 
     private var cancelled = false
     override fun isCancelled(): Boolean {

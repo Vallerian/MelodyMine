@@ -252,10 +252,11 @@ io.on("connection", async (socket: CustomSocket) => {
     })
 
 
-    socket.on("onRenewData", (data) => {
-        const {soundSettings, playerList} = data
+    socket.on("onRenewConnectionData", (data) => {
+        const {playerList} = data
 
         JSON.parse(playerList)?.forEach((player: RenewData) => {
+
             player.enableVoice.forEach(enableVoice => {
                 io.to(enableVoice.socketID).emit("onEnableVoiceReceive", encrypt({
                     uuid: player.uuid,
@@ -263,6 +264,19 @@ io.on("connection", async (socket: CustomSocket) => {
                 }))
             })
 
+            player.disableVoice.forEach(disableVoice => {
+                io.to(disableVoice.socketID).emit("onDisableVoiceReceive", encrypt({
+                    uuid: player.uuid,
+                }))
+            })
+        })
+
+    })
+
+    socket.on("onRenewDistanceData", (data) => {
+        const {soundSettings, playerList} = data
+
+        JSON.parse(playerList)?.forEach((player: RenewData) => {
 
             player.volume.forEach(volume => {
                 io.to(volume.socketID).emit("onSetVolumeReceive", {
@@ -274,14 +288,6 @@ io.on("connection", async (socket: CustomSocket) => {
                     playerDirection: volume.playerDirection,
                     targetDirection: volume.targetDirection
                 })
-            })
-
-            player.disableVoice.forEach(disableVoice => {
-
-                io.to(disableVoice.socketID).emit("onDisableVoiceReceive", encrypt({
-                    uuid: player.uuid,
-                }))
-
             })
         })
 
