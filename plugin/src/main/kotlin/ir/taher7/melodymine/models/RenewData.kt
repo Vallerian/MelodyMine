@@ -2,12 +2,19 @@ package ir.taher7.melodymine.models
 
 import com.google.gson.annotations.Expose
 
-data class RenewData(
+data class RenewConnectionData(
     @Expose val name: String,
     @Expose val uuid: String,
     @Expose val server: String,
     @Expose val enableVoice: MutableList<EnableVoiceTask>,
     @Expose val disableVoice: MutableList<DisableVoiceTask>,
+)
+
+
+data class RenewDistanceData(
+    @Expose val name: String,
+    @Expose val uuid: String,
+    @Expose val server: String,
     @Expose val volume: MutableList<VolumeTask>,
 )
 
