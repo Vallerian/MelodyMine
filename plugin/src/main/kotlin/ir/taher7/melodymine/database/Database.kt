@@ -11,6 +11,7 @@ import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.scheduler.BukkitRunnable
 import java.sql.Connection
+import java.sql.Statement
 import java.util.function.Consumer
 
 
@@ -83,25 +84,35 @@ object Database {
                 try {
                     val connection = createConnection() ?: return
                     val statement = connection.prepareStatement(
-                        "INSERT INTO melodymine(uuid,name,verifyCode,server,serverIsOnline) VALUES (?,?,?,?,?)"
+                        "INSERT INTO melodymine(uuid,name,verifyCode,server,serverIsOnline) VALUES (?,?,?,?,?)",
+                        Statement.RETURN_GENERATED_KEYS
                     )
 
-                    val melodyPlayer = MelodyPlayer(
-                        player = player.player,
-                        uuid = player.player?.uniqueId.toString(),
-                        name = player.name,
-                        verifyCode = Utils.getVerifyCode(),
-                        server = Storage.server,
-                        serverIsOnline = true,
-                    )
 
-                    statement.setString(1, melodyPlayer.uuid)
-                    statement.setString(2, melodyPlayer.name)
-                    statement.setString(3, melodyPlayer.verifyCode)
-                    statement.setString(4, melodyPlayer.server)
-                    statement.setBoolean(5, melodyPlayer.serverIsOnline)
+                    val verifyCode = Utils.getVerifyCode()
+
+                    statement.setString(1, player.player?.uniqueId.toString())
+                    statement.setString(2, player.name)
+                    statement.setString(3, verifyCode)
+                    statement.setString(4, Storage.server)
+                    statement.setBoolean(5, true)
                     statement.executeUpdate()
-                    consumer.accept(melodyPlayer)
+
+                    val generatedKeys = statement.generatedKeys
+                    if (generatedKeys.next()) {
+                        val id = generatedKeys.getLong(1)
+                        val melodyPlayer = MelodyPlayer(
+                            id = id.toInt(),
+                            player = player.player,
+                            uuid = player.player?.uniqueId.toString(),
+                            name = player.name,
+                            verifyCode = verifyCode,
+                            server = Storage.server,
+                            serverIsOnline = true,
+                        )
+                        consumer.accept(melodyPlayer)
+                    }
+
                     closeConnection(connection)
                 } catch (ex: Exception) {
                     ex.printStackTrace()
@@ -121,6 +132,7 @@ object Database {
                     if (result.next()) {
                         consumer.accept(
                             MelodyPlayer(
+                                id = result.getInt("id"),
                                 uuid = result.getString("uuid"),
                                 name = result.getString("name"),
                                 server = result.getString("server"),
@@ -237,7 +249,8 @@ object Database {
                         consumer.accept(result.getString("verifyCode"))
                     } else {
                         val verifyCode = Utils.getVerifyCode()
-                        val statement = connection.prepareStatement("UPDATE melodymine SET verifyCode = ? WHERE uuid = ? "
+                        val statement = connection.prepareStatement(
+                            "UPDATE melodymine SET verifyCode = ? WHERE uuid = ? "
                         )
                         statement.setString(1, player.uniqueId.toString())
                         statement.executeUpdate()

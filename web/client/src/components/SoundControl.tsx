@@ -14,7 +14,8 @@ import Progress from "@/components/Porgress/Progress";
 import {decrypt, encrypt} from "@/utils";
 import {MdOutlineNoiseAware} from "react-icons/md";
 import {useControlStore} from "@/store/ControlStore";
-import {IReceiveControl} from "@/interfaces";
+import {IReceiveControl, ISoundSettings} from "@/interfaces";
+import {useSoundStore} from "@/store/SoundStore";
 
 const SoundControl = () => {
 
@@ -46,6 +47,7 @@ const SoundControl = () => {
         }
     }
 
+
     useEffect(() => {
         let interval: any
         let soundMaster: any
@@ -76,8 +78,10 @@ const SoundControl = () => {
     useEffect(() => {
         if (!uuid) return
         socket?.on("onSetControlPluginReceive", onSetControlPluginReceive)
+
         return () => {
             socket?.off("onSetControlPluginReceive", onSetControlPluginReceive)
+
         }
 
     }, [socket, uuid])

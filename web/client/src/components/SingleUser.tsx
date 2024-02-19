@@ -9,7 +9,7 @@ import {BiPhoneCall, BiSolidRightArrow, BiSolidUserVoice, BiSolidVolumeMute} fro
 import {RiVoiceprintFill} from "react-icons/ri";
 import {ImUserTie} from "react-icons/im";
 import {useSocketStore} from "@/store/SocketStore";
-import {decrypt, encrypt} from "@/utils";
+import {calculateDistance, decrypt, encrypt} from "@/utils";
 import {useValidateStore} from "@/store/ValidateStore";
 import {MdOutlinePhoneCallback} from "react-icons/md";
 import {useSoundStore} from "@/store/SoundStore";
@@ -23,7 +23,7 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
     const {uuid, server, serverIsOnline, isActiveVoice} = useUserStore(state => state)
     const {setUserMute, muteUsers} = useControlStore(state => state)
     const {isValidate} = useValidateStore(state => state)
-    const {soundList} = useSoundStore(state => state)
+    const {soundList, soundSettings} = useSoundStore(state => state)
     const {stream} = useStreamStore(state => state)
     const {soundIsActive} = useStreamStore(state => state)
     const [userStream, setUserStream] = useState<MediaStream>()
@@ -420,7 +420,7 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
                 socket?.off("onDenyCallTargetPluginReceive", onDenyCallTargetPluginReceive)
             }
 
-        }, [RTCPeer, socket, uuid, stream, isValidate, callingSound, callingSound2, endCallSound, pannerNode, soundIsActive, isUserMute, user, voiceBack, gain]
+        }, [RTCPeer, socket, uuid, stream, isValidate, callingSound, callingSound2, endCallSound, pannerNode, soundIsActive, isUserMute, user, voiceBack, gain, soundSettings]
     )
 
     useEffect(() => {
@@ -454,8 +454,16 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
 
     const updatePannerPosition = (data: IVolume) => {
         if (!pannerNode || !audioContext || !gain || isInCall) return
-        const {playerLocation, playerDirection, settings, distance} = data
-        if (distance > settings.maxDistance || checkPlayerCanTalk()) {
+        const {playerLocation, playerDirection, targetLocation} = data
+        const distance = calculateDistance(
+            playerLocation.x,
+            playerLocation.y,
+            playerLocation.z,
+            targetLocation.x,
+            targetLocation.y,
+            targetLocation.z,
+        )
+        if (distance > soundSettings.maxDistance || checkPlayerCanTalk()) {
             gain.gain.value = 0
             setEnableVoice(false)
             return
@@ -463,23 +471,23 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
             gain.gain.value = 1
             setEnableVoice(true)
         }
-        if (settings.sound3D) {
+        if (soundSettings.sound3D) {
             const {x, y, z} = playerLocation
             const {x: Dx, y: Dy, z: Dz} = playerDirection
             pannerNode.panningModel = "HRTF"
             pannerNode.distanceModel = "inverse"
-            pannerNode.maxDistance = settings.maxDistance
-            pannerNode.refDistance = settings.refDistance
+            pannerNode.maxDistance = soundSettings.maxDistance
+            pannerNode.refDistance = soundSettings.refDistance
             pannerNode.rolloffFactor = 1
-            pannerNode.coneInnerAngle = settings.innerAngle
-            pannerNode.coneOuterAngle = settings.outerAngle
-            pannerNode.coneOuterGain = settings.outerVolume
+            pannerNode.coneInnerAngle = soundSettings.innerAngle
+            pannerNode.coneOuterAngle = soundSettings.outerAngle
+            pannerNode.coneOuterGain = soundSettings.outerVolume
             pannerNode.setPosition(x, y, z)
             pannerNode.setOrientation(Dx, Dy, Dz)
 
         } else {
-            if (!settings.lazyHear) return
-            let volume = (settings.maxDistance - distance) / settings.maxDistance
+            if (!soundSettings.lazyHear) return
+            let volume = (soundSettings.maxDistance - distance) / soundSettings.maxDistance
             gain.gain.value = volume
             if (userIsAdminMode) gain.gain.value = 1
             if (checkPlayerCanTalk()) {
@@ -495,8 +503,8 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
     const updateListenerPosition = (data: IVolume) => {
         const listener = audioContext?.listener
         if (!audioContext || !listener) return
-        const {targetLocation, targetDirection, settings} = data
-        if (!settings.sound3D) return
+        const {targetLocation, targetDirection} = data
+        if (!soundSettings.sound3D) return
         const {x, y, z} = targetLocation
         const {x: Dx, y: Dy, z: Dz} = targetDirection
         listener.setPosition(x, y, z)

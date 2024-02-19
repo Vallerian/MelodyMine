@@ -26,38 +26,10 @@ export interface callData {
 }
 
 
-
-export interface RenewData {
-    name: string
-    uuid: string
-    server: string
-    enableVoice: EnableVoiceTask[]
-    disableVoice: DisableVoiceTask[]
-    volume: VolumeTask[]
-}
-
-export interface EnableVoiceTask {
-    socketID: string
-}
-
-export interface DisableVoiceTask {
-    socketID: string
-}
-
 export interface Location {
     x: number
     y: number
     z: number
-}
-
-export interface VolumeTask {
-    socketID: string
-    distance: number
-    settings:SoundSettings
-    playerLocation: Location
-    targetLocation: Location
-    playerDirection: Location
-    targetDirection: Location
 }
 
 export interface SoundSettings {
@@ -68,4 +40,17 @@ export interface SoundSettings {
     innerAngle: number,
     outerAngle: number,
     outerVolume: number,
+}
+
+export interface RenewPlayer {
+    id: number
+    l: [number, number, number]
+    d: [number, number, number]
+}
+
+export interface RenewData {
+    p: RenewPlayer[]
+    c?: [number, number]
+    d?: [number, number]
+    v?: [number, number]
 }

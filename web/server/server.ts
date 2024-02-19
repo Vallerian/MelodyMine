@@ -4,7 +4,7 @@ import https from "https";
 import {Server} from "socket.io"
 import {prisma} from "./utils/connect";
 import {callData, CustomSocket, IClient, RenewData, SoundSettings} from "./interfaces";
-import {decrypt, encrypt} from "./utils";
+import {decrypt, encrypt, getLocation} from "./utils";
 import fs from "fs"
 
 const privateKeyPath = "./ssl/privkey.pem"
@@ -251,43 +251,57 @@ io.on("connection", async (socket: CustomSocket) => {
         }))
     })
 
-
-    socket.on("onRenewConnectionData", (data) => {
-        const {playerList} = data
-
-        JSON.parse(playerList)?.forEach((player: RenewData) => {
-
-            player.enableVoice.forEach(enableVoice => {
-                io.to(enableVoice.socketID).emit("onEnableVoiceReceive", encrypt({
-                    uuid: player.uuid,
-                    server: player.server
-                }))
-            })
-
-            player.disableVoice.forEach(disableVoice => {
-                io.to(disableVoice.socketID).emit("onDisableVoiceReceive", encrypt({
-                    uuid: player.uuid,
-                }))
-            })
-        })
-
+    socket.on("onSoundSettings", (data) => {
+        io.to(data.socketID).emit("onSoundSettingReceive", encrypt(JSON.parse(data.soundSettings)))
     })
 
-    socket.on("onRenewDistanceData", (data) => {
-        const {soundSettings, playerList} = data
+    socket.on("onRenewData", async (data) => {
+        const renewData: RenewData = JSON.parse(data)
+        const players = await prisma.melodymine.findMany({
+            where: {
+                id: {
+                    in: renewData.p.map(player => player.id)
+                }
+            },
+            select: {
+                id: true,
+                uuid: true,
+                socketID: true
+            },
+        })
 
-        JSON.parse(playerList)?.forEach((player: RenewData) => {
+        const renewPlayers = players.map(player => ({
+            ...player,
+            location: getLocation(renewData.p.find(item => item.id == player.id).l),
+            direction: getLocation(renewData.p.find(item => item.id == player.id).d),
+        }))
 
-            player.volume.forEach(volume => {
-                io.to(volume.socketID).emit("onSetVolumeReceive", {
-                    uuid: player.uuid,
-                    distance: volume.distance,
-                    settings: JSON.parse(soundSettings),
-                    playerLocation: volume.playerLocation,
-                    targetLocation: volume.targetLocation,
-                    playerDirection: volume.playerDirection,
-                    targetDirection: volume.targetDirection
-                })
+        renewData.c?.forEach(item => {
+            const player = renewPlayers.find(player => player.id == renewData.p[item[0]].id)
+            const target = renewPlayers.find(player => player.id == renewData.p[item[1]].id)
+            io.to(target.socketID).emit("onEnableVoiceReceive", encrypt({
+                uuid: player.uuid,
+            }))
+        })
+
+        renewData.d?.forEach(item => {
+            const player = renewPlayers.find(player => player.id == renewData.p[item[0]].id)
+            const target = renewPlayers.find(player => player.id == renewData.p[item[1]].id)
+            io.to(target.socketID).emit("onDisableVoiceReceive", encrypt({
+                uuid: player.uuid,
+            }))
+        })
+
+
+        renewData.v?.forEach(item => {
+            const player = renewPlayers.find(player => player.id == renewData.p[item[0]].id)
+            const target = renewPlayers.find(player => player.id == renewData.p[item[1]].id)
+            io.to(target.socketID).emit("onSetVolumeReceive", {
+                uuid: player.uuid,
+                playerLocation: player.location,
+                targetLocation: target.location,
+                playerDirection: player.direction,
+                targetDirection: target.direction
             })
         })
 

@@ -7,7 +7,7 @@ import StartButton from "@/components/StartButton";
 import {signOut, useSession} from "next-auth/react";
 import {useUserStore} from "@/store/UserStore";
 import {useValidateStore} from "@/store/ValidateStore";
-import {IUser} from "@/interfaces";
+import {ISoundSettings, IUser} from "@/interfaces";
 import {BsFillMicMuteFill, BsFillPeopleFill} from "react-icons/bs";
 import {useOnlineUsersStore} from "@/store/OnlineUsersStore";
 import {useEffect, useState} from "react";
@@ -24,8 +24,9 @@ interface UserInfoProps {
 
 const UserInfo = ({user, websocketKey}: UserInfoProps) => {
     const {server, setSecretKey, isMute} = useUserStore(state => state)
+
     const {isValidate} = useValidateStore(state => state)
-    const {initSounds, soundList} = useSoundStore(state => state)
+    const {initSounds, soundList, setSoundSettings} = useSoundStore(state => state)
     const {socket} = useSocketStore(state => state)
     const {users} = useOnlineUsersStore(state => state)
     const {status} = useSession()
@@ -72,6 +73,11 @@ const UserInfo = ({user, websocketKey}: UserInfoProps) => {
         sound?.stop()
     }
 
+    const onSoundSettingReceive = (token: string) => {
+        const data = decrypt(token) as ISoundSettings
+        setSoundSettings(data)
+    }
+
 
     useEffect(() => {
         setSecretKey(websocketKey!!)
@@ -84,6 +90,7 @@ const UserInfo = ({user, websocketKey}: UserInfoProps) => {
         socket?.on("onPlaySoundReceive", onPlaySoundReceive)
         socket?.on("onPauseSoundReceive", onPauseSoundReceive)
         socket?.on("onStopSoundReceive", onStopSoundReceive)
+        socket?.on("onSoundSettingReceive", onSoundSettingReceive)
 
         return () => {
             socket?.off("onAdminModeEnableReceive", onAdminModeEnableReceive)
@@ -91,6 +98,7 @@ const UserInfo = ({user, websocketKey}: UserInfoProps) => {
             socket?.off("onPlaySoundReceive", onPlaySoundReceive)
             socket?.off("onPauseSoundReceive", onPauseSoundReceive)
             socket?.off("onStopSoundReceive", onStopSoundReceive)
+            socket?.off("onSoundSettingReceive", onSoundSettingReceive)
         }
 
     }, [socket, soundList])

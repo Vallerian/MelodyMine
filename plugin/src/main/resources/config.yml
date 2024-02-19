@@ -29,7 +29,6 @@ mute-toggle-shortcut: true
 # call configs
 call-pending-time: 600 # must be Long (10L = 0.5s, 20L = 1s,...)
 
-
 # ------ Sound Configs ------
 
 3D-sound: true # player voice 3D mode.
@@ -40,11 +39,9 @@ inner-angle: 120 # angle that players can hear each other max volume.
 outer-angle: 180 # angle that players can hear each other.
 outer-volume: 0.3 # outer angle volume.
 
-# update player voice connection time (as Long)
-update-connection-time: 80 # must be Long (10L = 0.5s, 20L = 1s,...)
 
 # update player distance time (as Long)
-update-distance-time: 40 # must be Long (10L = 0.5s, 20L = 1s,...)
+update-distance-time: 10 # must be Long (10L = 0.5s, 20L = 1s,...)
 
 
 # ----- Message configs -----

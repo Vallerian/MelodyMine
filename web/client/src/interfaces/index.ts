@@ -36,7 +36,6 @@ export interface ISoundSettings {
     innerAngle: number
     outerAngle: number
     outerVolume: number
-    talkView: boolean
 }
 
 export interface ILocation {
@@ -53,8 +52,6 @@ export interface IDirection {
 
 export interface IVolume {
     uuid: string
-    distance: number
-    settings: ISoundSettings
     playerLocation: ILocation
     targetLocation: ILocation
     playerDirection: IDirection

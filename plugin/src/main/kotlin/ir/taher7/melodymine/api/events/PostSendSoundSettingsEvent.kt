@@ -1,11 +1,10 @@
 package ir.taher7.melodymine.api.events
 
-
-import ir.taher7.melodymine.models.RenewConnectionData
 import org.bukkit.event.Event
 import org.bukkit.event.HandlerList
 
-class PostRenewConnectionDataEvent(val data: List<RenewConnectionData>) : Event() {
+class PostSendSoundSettingsEvent(val socketID: String) : Event() {
+
     override fun getHandlers(): HandlerList {
         return handlerList
     }

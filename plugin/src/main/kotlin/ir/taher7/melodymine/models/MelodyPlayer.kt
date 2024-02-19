@@ -8,6 +8,7 @@ import org.bukkit.scheduler.BukkitTask
 
 data class MelodyPlayer(
     @Expose(deserialize = false) var player: Player? = null,
+    @Expose var id: Int,
     @Expose val uuid: String,
     @Expose val name: String,
     @Expose var server: String,
