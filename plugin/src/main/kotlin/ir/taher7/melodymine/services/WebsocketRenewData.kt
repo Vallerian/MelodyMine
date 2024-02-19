@@ -3,25 +3,28 @@ package ir.taher7.melodymine.services
 import com.google.common.util.concurrent.ThreadFactoryBuilder
 import ir.taher7.melodymine.MelodyMine
 import ir.taher7.melodymine.core.MelodyManager
-import ir.taher7.melodymine.models.*
+import ir.taher7.melodymine.models.MelodyPlayer
+import ir.taher7.melodymine.models.RenewData
+import ir.taher7.melodymine.models.RenewPlayer
 import ir.taher7.melodymine.storage.Storage
 import org.bukkit.scheduler.BukkitRunnable
+import java.text.DecimalFormat
 import java.util.concurrent.Executors
 
 
 class WebsocketRenewData {
     init {
         startConnectionTrack()
-        startDistanceTrack()
     }
 
+    val decimalFormat = DecimalFormat("#0.0")
     val threadFactory =
         ThreadFactoryBuilder()
             .setNameFormat("${MelodyMine.instance.description.name.lowercase()}-renew-data-thread-%d")
             .build()
 
     val connectionThreadPool = Executors.newFixedThreadPool(10, threadFactory)
-    val distanceThreadPool = Executors.newFixedThreadPool(10, threadFactory)
+
 
     private fun startConnectionTrack() {
 
@@ -30,13 +33,13 @@ class WebsocketRenewData {
 
                 connectionThreadPool.submit {
                     if (Storage.onlinePlayers.isNotEmpty() && Websocket.socket.isActive) {
-                        val playerList: MutableList<RenewConnectionData> = mutableListOf()
+                        val players: MutableList<RenewPlayer> = mutableListOf()
+                        val connect: MutableList<List<Int>> = mutableListOf()
+                        val disconnect: MutableList<List<Int>> = mutableListOf()
+                        val volume: MutableList<List<Int>> = mutableListOf()
+
                         Storage.onlinePlayers.values.filter { player -> player.webIsOnline && player.isActiveVoice && !player.adminMode }
                             .forEach { melodyPlayer ->
-                                val enableVoiceTask: MutableList<EnableVoiceTask> = mutableListOf()
-                                val disableVoiceTask: MutableList<DisableVoiceTask> = mutableListOf()
-
-
                                 Storage.onlinePlayers.values.filter { player -> player.uuid != melodyPlayer.uuid && player.webIsOnline && player.isActiveVoice && !player.adminMode && player.callTarget != melodyPlayer }
                                     .forEach { targetPlayer ->
                                         val playerLocation = melodyPlayer.player?.location
@@ -52,138 +55,96 @@ class WebsocketRenewData {
                                             if (distance < (maxDistance + 80)) {
                                                 if (!melodyPlayer.isSendOffer.contains(targetPlayer.uuid)) {
                                                     melodyPlayer.isSendOffer.add(targetPlayer.uuid)
+
                                                     if (!targetPlayer.isSendOffer.contains(melodyPlayer.uuid)) {
-                                                        targetPlayer.socketID?.let { socketID ->
-                                                            enableVoiceTask.add(
-                                                                EnableVoiceTask(
-                                                                    socketID = socketID
-                                                                )
+                                                        val renewPlayer = createRenewPlayer(melodyPlayer)
+                                                        if (!players.contains(renewPlayer)) players.add(renewPlayer)
+
+                                                        val renewTarget = createRenewPlayer(targetPlayer)
+                                                        if (!players.contains(renewTarget)) players.add(renewTarget)
+
+                                                        connect.add(
+                                                            listOf(
+                                                                players.indexOf(renewPlayer),
+                                                                players.indexOf(renewTarget)
                                                             )
-                                                        }
+                                                        )
 
                                                     }
                                                 }
+                                            }
+
+
+                                            if (distance < (maxDistance + 250)) {
+
+                                                val renewPlayer = createRenewPlayer(melodyPlayer)
+                                                if (!players.contains(renewPlayer)) players.add(renewPlayer)
+
+                                                val renewTarget = createRenewPlayer(targetPlayer)
+                                                if (!players.contains(renewTarget)) players.add(renewTarget)
+
+                                                volume.add(
+                                                    listOf(
+                                                        players.indexOf(renewPlayer),
+                                                        players.indexOf(renewTarget)
+                                                    )
+                                                )
                                             }
 
 
                                             if (distance > (maxDistance + 500)) {
                                                 if (melodyPlayer.isSendOffer.contains(targetPlayer.uuid)) {
-                                                    val targetSocketID = targetPlayer.socketID
-                                                    if (targetSocketID != null) {
-                                                        disableVoiceTask.add(
-                                                            DisableVoiceTask(
-                                                                socketID = targetSocketID
-                                                            )
+                                                    val renewPlayer = createRenewPlayer(melodyPlayer)
+                                                    if (!players.contains(renewPlayer)) players.add(renewPlayer)
+
+                                                    val renewTarget = createRenewPlayer(targetPlayer)
+                                                    if (!players.contains(renewTarget)) players.add(renewTarget)
+
+                                                    disconnect.add(
+                                                        listOf(
+                                                            players.indexOf(renewPlayer),
+                                                            players.indexOf(renewTarget)
                                                         )
-                                                        melodyPlayer.isSendOffer.remove(targetPlayer.uuid)
-                                                    }
+                                                    )
+                                                    melodyPlayer.isSendOffer.remove(targetPlayer.uuid)
                                                 }
                                             }
                                         }
                                     }
-
-                                if (enableVoiceTask.isNotEmpty() || disableVoiceTask.isNotEmpty()) {
-                                    playerList.add(
-                                        RenewConnectionData(
-                                            name = melodyPlayer.name,
-                                            uuid = melodyPlayer.uuid,
-                                            server = melodyPlayer.server,
-                                            enableVoice = enableVoiceTask,
-                                            disableVoice = disableVoiceTask,
-                                        )
-                                    )
-                                }
                             }
-
-                        MelodyManager.renewConnectionData(playerList)
-
-                    }
-                }
-            }
-        }.runTaskTimer(MelodyMine.instance, 0L, Storage.updateConnectionTime)
-    }
-
-
-    private fun startDistanceTrack() {
-        object : BukkitRunnable() {
-            override fun run() {
-                distanceThreadPool.submit {
-                    if (Storage.onlinePlayers.isNotEmpty() && Websocket.socket.isActive) {
-                        val playerList: MutableList<RenewDistanceData> = mutableListOf()
-                        Storage.onlinePlayers.values.filter { player -> player.webIsOnline && player.isActiveVoice && !player.adminMode }
-                            .forEach { melodyPlayer ->
-                                val volumeTask: MutableList<VolumeTask> = mutableListOf()
-
-                                Storage.onlinePlayers.values.filter { player -> player.uuid != melodyPlayer.uuid && player.webIsOnline && player.isActiveVoice && !player.adminMode && player.callTarget != melodyPlayer }
-                                    .forEach { targetPlayer ->
-                                        val playerLocation = melodyPlayer.player?.location
-                                        val targetLocation = targetPlayer.player?.location
-
-                                        if (playerLocation != null &&
-                                            targetLocation != null &&
-                                            playerLocation.world == targetLocation.world
-                                        ) {
-                                            val distance = playerLocation.distance(targetLocation)
-                                            val maxDistance = Storage.maxDistance
-
-
-                                            if (distance < (maxDistance + 250)) {
-                                                val targetSocketID = targetPlayer.socketID
-                                                if (targetSocketID != null) {
-                                                    melodyPlayer.player?.eyeLocation?.let { playerLocation ->
-                                                        targetPlayer.player?.eyeLocation?.let { targetLocation ->
-                                                            volumeTask.add(
-                                                                VolumeTask(
-                                                                    socketID = targetSocketID,
-                                                                    distance = playerLocation.distance(targetLocation),
-                                                                    playerLocation = Location(
-                                                                        x = playerLocation.x,
-                                                                        y = playerLocation.y,
-                                                                        z = playerLocation.z,
-                                                                    ),
-                                                                    targetLocation = Location(
-                                                                        x = targetLocation.x,
-                                                                        y = targetLocation.y,
-                                                                        z = targetLocation.z,
-                                                                    ),
-                                                                    playerDirection = Location(
-                                                                        x = playerLocation.direction.x,
-                                                                        y = playerLocation.direction.y,
-                                                                        z = playerLocation.direction.z,
-                                                                    ),
-                                                                    targetDirection = Location(
-                                                                        x = targetLocation.direction.x,
-                                                                        y = targetLocation.direction.y,
-                                                                        z = targetLocation.direction.z,
-                                                                    )
-                                                                )
-                                                            )
-
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-
-                                if (volumeTask.isNotEmpty()) {
-                                    playerList.add(
-                                        RenewDistanceData(
-                                            name = melodyPlayer.name,
-                                            uuid = melodyPlayer.uuid,
-                                            server = melodyPlayer.server,
-                                            volume = volumeTask,
-                                        )
-                                    )
-                                }
-                            }
-
-                        MelodyManager.renewDistance(playerList)
+                        if (connect.isNotEmpty() || disconnect.isNotEmpty() || volume.isNotEmpty())
+                            MelodyManager.renewData(
+                                RenewData(
+                                    players,
+                                    connect.ifEmpty { null },
+                                    disconnect.ifEmpty { null },
+                                    volume.ifEmpty { null }
+                                )
+                            )
 
                     }
                 }
             }
         }.runTaskTimer(MelodyMine.instance, 0L, Storage.updateDistanceTime)
-
     }
+
+    private fun createRenewPlayer(melodyPlayer: MelodyPlayer): RenewPlayer {
+
+
+        return RenewPlayer(
+            id = melodyPlayer.id,
+            l = listOf(
+                melodyPlayer.player?.location?.x?.toInt()!!,
+                melodyPlayer.player?.location?.y?.toInt()!!,
+                melodyPlayer.player?.location?.z?.toInt()!!,
+            ),
+            d = listOf(
+                decimalFormat.format(melodyPlayer.player?.location?.direction?.x).toDouble(),
+                decimalFormat.format(melodyPlayer.player?.location?.direction?.y).toDouble(),
+                decimalFormat.format(melodyPlayer.player?.location?.direction?.z).toDouble(),
+            )
+        )
+    }
+
+
 }

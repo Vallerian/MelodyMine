@@ -2,6 +2,7 @@ import {createWithEqualityFn} from "zustand/traditional";
 import {shallow} from "zustand/shallow";
 import {Howl} from "howler";
 import sounds from "@/sounds";
+import {ISoundSettings} from "@/interfaces";
 
 export interface sound {
     name: string
@@ -12,13 +13,25 @@ export interface sound {
 
 interface State {
     soundList: sound[]
+    soundSettings: ISoundSettings
 }
 
 interface Actions {
     initSounds: () => void
+    setSoundSettings: (soundSettings: ISoundSettings) => void
 }
 
 export const useSoundStore = createWithEqualityFn<State & Actions>((setState) => ({
+    soundSettings: {
+        sound3D: true,
+        lazyHear: true,
+        maxDistance: 30,
+        refDistance: 5,
+        innerAngle: 120,
+        outerAngle: 180,
+        outerVolume: 0.3
+
+    },
     soundList: [],
     initSounds: () => {
         const tempSounds: sound[] = []
@@ -29,7 +42,9 @@ export const useSoundStore = createWithEqualityFn<State & Actions>((setState) =>
             })
         })
         setState(() => ({soundList: tempSounds}))
-    }
+    },
+    setSoundSettings: (soundSettings) => setState(() => ({soundSettings}))
+
 
 }), shallow)
 

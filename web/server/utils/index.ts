@@ -1,9 +1,10 @@
 import CryptoJS from 'crypto-js';
+import {Location} from "../interfaces";
 
 export const encrypt = (data: any) => {
     try {
         const key = process.env.WEBSOCKET_WEB_AUTH_KEY
-        return  CryptoJS.AES.encrypt(JSON.stringify(data), key).toString()
+        return CryptoJS.AES.encrypt(JSON.stringify(data), key).toString()
     } catch (e) {
         return null
     }
@@ -19,3 +20,10 @@ export const decrypt = async (token: string) => {
     }
 }
 
+export const getLocation = (location: [number, number, number]): Location => {
+    return {
+        x: location[0],
+        y: location[1],
+        z: location[2]
+    }
+}

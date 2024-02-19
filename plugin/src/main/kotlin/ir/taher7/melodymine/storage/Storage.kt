@@ -27,7 +27,6 @@ object Storage {
     var outerAngle: Int = 180
     var outerVolume: Double = 0.3
     var forceVoice: Boolean = false
-    var updateConnectionTime: Long = 60L
     var updateDistanceTime: Long = 10L
     var websocketKey: String = ""
 
@@ -143,7 +142,6 @@ object Storage {
         outerAngle = config.getInt("outer-angle")
         outerVolume = config.getDouble("outer-volume")
 
-        updateConnectionTime = config.getLong("update-connection-time")
         updateDistanceTime = config.getLong("update-distance-time")
         forceVoice = config.getBoolean("force-voice")
 

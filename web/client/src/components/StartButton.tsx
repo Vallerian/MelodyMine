@@ -2,7 +2,7 @@
 import {GiSoundWaves} from "react-icons/gi";
 import {useUserStore} from "@/store/UserStore";
 import {useValidateStore} from "@/store/ValidateStore";
-import {useLayoutEffect, useState} from "react";
+import {useEffect, useLayoutEffect, useState} from "react";
 import Progress from "@/components/Porgress/Progress";
 import {useSocketStore} from "@/store/SocketStore";
 import {io, Socket} from "socket.io-client";
@@ -14,6 +14,8 @@ import {useLoadingStore} from "@/store/LoadingStore";
 import {decrypt, encrypt} from "@/utils";
 import {DefaultEventsMap} from "@socket.io/component-emitter";
 import {useControlStore} from "@/store/ControlStore";
+import {ISoundSettings} from "@/interfaces";
+import {useSoundStore} from "@/store/SoundStore";
 
 
 const StartButton = () => {
@@ -29,6 +31,7 @@ const StartButton = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [socketConnected, setSocketConnected] = useState<boolean>(false)
     const route = useRouter()
+
 
     useLayoutEffect(() => {
         let socket: Socket<DefaultEventsMap, DefaultEventsMap>
@@ -65,6 +68,7 @@ const StartButton = () => {
                             uuid: data.uuid
                         }))
                     })
+
 
 
                     socket.on("disconnect", () => {

@@ -5,10 +5,7 @@ import com.google.gson.GsonBuilder
 import ir.taher7.melodymine.MelodyMine
 import ir.taher7.melodymine.api.events.*
 import ir.taher7.melodymine.database.Database
-import ir.taher7.melodymine.models.MelodyPlayer
-import ir.taher7.melodymine.models.RenewConnectionData
-import ir.taher7.melodymine.models.RenewDistanceData
-import ir.taher7.melodymine.models.SoundSettings
+import ir.taher7.melodymine.models.*
 import ir.taher7.melodymine.services.Websocket
 import ir.taher7.melodymine.storage.Storage
 import ir.taher7.melodymine.utils.Adventure.sendMessage
@@ -735,49 +732,40 @@ object MelodyManager {
     }
 
 
-    fun renewConnectionData(data: MutableList<RenewConnectionData>) {
-        if (data.isEmpty()) return
-        val preRenewConnectionDataEvent = PreRenewConnectionDataEvent(data)
+    fun renewData(data: RenewData) {
+        val preRenewDataEvent = PreRenewDataEvent(data)
         object : BukkitRunnable() {
             override fun run() {
-                Bukkit.getServer().pluginManager.callEvent(preRenewConnectionDataEvent)
+                Bukkit.getServer().pluginManager.callEvent(preRenewDataEvent)
             }
         }.runTask(MelodyMine.instance)
 
-        if (preRenewConnectionDataEvent.isCancelled) return
-
-        val builder = GsonBuilder()
-        builder.excludeFieldsWithoutExposeAnnotation()
-        val gson = builder.create()
+        if (preRenewDataEvent.isCancelled) return
 
         Websocket.socket.emit(
-            "onRenewConnectionData",
-            mapOf(
-                "playerList" to gson.toJson(data)
-            )
+            "onRenewData", gson.toJson(data)
         )
-
-
         object : BukkitRunnable() {
             override fun run() {
-                Bukkit.getServer().pluginManager.callEvent(PostRenewConnectionDataEvent(data))
+                Bukkit.getServer().pluginManager.callEvent(PostRenewDataEvent(data))
             }
         }.runTask(MelodyMine.instance)
-
     }
 
-    fun renewDistance(data: MutableList<RenewDistanceData>) {
-        if (data.isEmpty()) return
-        val preRenewDistanceDataEvent = PreRenewDistanceDataEvent(data)
+    fun sendSoundSetting(socketID: String) {
+
+        val preSoundSettingsEvent = PreSendSoundSettingsEvent(socketID)
         object : BukkitRunnable() {
             override fun run() {
-                Bukkit.getServer().pluginManager.callEvent(preRenewDistanceDataEvent)
+                Bukkit.getServer().pluginManager.callEvent(preSoundSettingsEvent)
             }
         }.runTask(MelodyMine.instance)
 
-        if (preRenewDistanceDataEvent.isCancelled) return
+        if (preSoundSettingsEvent.isCancelled) return
+
         Websocket.socket.emit(
-            "onRenewDistanceData", mapOf(
+            "onSoundSettings", mapOf(
+                "socketID" to socketID,
                 "soundSettings" to gson.toJson(
                     SoundSettings(
                         sound3D = Storage.sound3D,
@@ -789,17 +777,14 @@ object MelodyManager {
                         outerVolume = Storage.outerVolume
                     )
                 ),
-                "playerList" to gson.toJson(data)
             )
         )
 
+
         object : BukkitRunnable() {
             override fun run() {
-                Bukkit.getServer().pluginManager.callEvent(PostRenewDistanceDataEvent(data))
+                Bukkit.getServer().pluginManager.callEvent(PostSendSoundSettingsEvent(socketID))
             }
         }.runTask(MelodyMine.instance)
-
     }
-
-
 }

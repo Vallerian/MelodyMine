@@ -32,6 +32,7 @@ class SocketListener(private val socket: Socket) {
             val melodyPlayer = gson.fromJson(args[0].toString(), MelodyPlayer::class.java)
             if (melodyPlayer.server != Storage.server) return@on
             updateMelodyPlayer(melodyPlayer)
+            Storage.onlinePlayers[melodyPlayer.uuid]?.socketID?.let { MelodyManager.sendSoundSetting(it) }
             Storage.onlinePlayers[melodyPlayer.uuid]?.isSendOffer = arrayListOf()
             Storage.onlinePlayers.values.forEach { player ->
                 if (player.isSendOffer.contains(melodyPlayer.uuid)) {
