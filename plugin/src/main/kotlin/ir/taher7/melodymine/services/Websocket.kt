@@ -36,13 +36,17 @@ object Websocket {
                 MelodyMine.instance.logger.info("Successfully connected to Websocket.")
                 Database.updateSocketPlayer()
             }
-
-
-            socket.on(Socket.EVENT_DISCONNECT) {
+            
+            socket.on(Socket.EVENT_DISCONNECT) { args ->
                 MelodyMine.instance.logger.severe("Websocket connection failed check your connection")
+//                MelodyMine.instance.logger.severe("EVENT_DISCONNECT: ${args.joinToString(", ")}")
                 Database.updateSocketPlayer()
                 if (!socket.isActive) connect()
             }
+
+//            socket.on(Socket.EVENT_CONNECT_ERROR) { args ->
+//                MelodyMine.instance.logger.severe("EVENT_CONNECT_ERROR: ${args.joinToString(", ")}")
+//            }
 
         } catch (ex: SocketIOException) {
             MelodyMine.instance.logger.info("Websocket failed.")
