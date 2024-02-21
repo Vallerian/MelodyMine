@@ -50,6 +50,12 @@ renew-configs:
   disconnect-distance: 230 # disconnect player to other players distance.
 
 
+# The worlds in which voice chat is disabled.
+disable-worlds:
+  - "world_nether"
+#  - "world_the_nether"
+
+
 # ----- Message configs -----
 
 # main plugin prefix.

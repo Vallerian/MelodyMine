@@ -126,6 +126,7 @@ class SocketListener(private val socket: Socket) {
             Storage.onlinePlayers[melodyPlayer.uuid]?.isDeafen = true
             Storage.onlinePlayers[melodyPlayer.uuid]?.talkBossBar?.showTalkBossBar()
             Storage.onlinePlayers[melodyPlayer.uuid]?.talkNameTag?.clearNameTag()
+            Storage.onlinePlayers[melodyPlayer.uuid]?.socketID?.let { MelodyManager.sendSoundSetting(it) }
 
             Storage.onlinePlayers.values.forEach { player ->
                 if (player.isSendOffer.contains(melodyPlayer.uuid)) {

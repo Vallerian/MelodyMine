@@ -78,8 +78,13 @@ class Call : SubCommand() {
                     return
                 }
 
+                if (Storage.disableWorld.contains(player.world.name)) {
+                    player.sendMessage("<prefix>Call is Disable in this World.".toComponent())
+                    return
+                }
+
                 val targetPlayer = Storage.onlinePlayers[bukkitPlayer.uniqueId.toString()] ?: return
-                if (!targetPlayer.isActiveVoice || targetPlayer.isInCall || targetPlayer.isCallPending || targetPlayer.callToggle) {
+                if (!targetPlayer.isActiveVoice || targetPlayer.isInCall || targetPlayer.isCallPending || targetPlayer.callToggle || Storage.disableWorld.contains(targetPlayer.player?.world?.name)) {
                     player.sendMessage("<prefix><count_color>${targetPlayer.name} <text>is not Available Please try Again later.".toComponent())
                     return
                 }
@@ -155,8 +160,13 @@ class Call : SubCommand() {
                     return
                 }
 
+                if (Storage.disableWorld.contains(player.world.name)) {
+                    player.sendMessage("<prefix>Call is Disable in this World.".toComponent())
+                    return
+                }
+
                 val targetPlayer = Storage.onlinePlayers[melodyPlayer.callPendingTarget?.uuid] ?: return
-                if (!targetPlayer.isActiveVoice || targetPlayer.isInCall || !targetPlayer.isCallPending || targetPlayer.callToggle || targetPlayer.adminMode) {
+                if (!targetPlayer.isActiveVoice || targetPlayer.isInCall || !targetPlayer.isCallPending || targetPlayer.callToggle || targetPlayer.adminMode || Storage.disableWorld.contains(targetPlayer.player?.world?.name)) {
                     player.sendMessage("<prefix><count_color>${targetPlayer.name} <text>is not Available Please try Again later.".toComponent())
                     return
                 }

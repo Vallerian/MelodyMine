@@ -29,6 +29,8 @@ object Storage {
     var forceVoice: Boolean = false
     var websocketKey: String = ""
 
+    var disableWorld: MutableList<String> = mutableListOf()
+
     // renew configs
     var updateDistanceInterval: Long = 10L
     var updateConnectionDistance: Int = 30
@@ -251,6 +253,8 @@ object Storage {
         updateVolumeDistance = renewSection.getInt("volume-distance")
         updateDisconnectDistance = renewSection.getInt("disconnect-distance")
 
+
+        disableWorld = config.getStringList("disable-worlds")
 
     }
 
