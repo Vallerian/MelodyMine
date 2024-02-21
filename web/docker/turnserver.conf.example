@@ -1,0 +1,38 @@
+# TURN server name and realm
+realm=YOUR_DOMAIN
+server-name=melodymine
+
+# Use fingerprint in TURN message
+fingerprint
+
+# IPs the TURN server listens to
+listening-ip=0.0.0.0
+
+# External IP-Address of the TURN server
+external-ip=YOUR_IP
+
+# Main listening port
+listening-port=3478
+
+# Further ports that are open for communication
+# min-port=10000
+# max-port=20000
+
+# Log file path
+# log-file=/var/log/turnserver.log
+
+# Enable verbose logging
+verbose
+
+# Specify the user for the TURN authentification
+user=melodymine:melodymine
+
+# Enable long-term credential mechanism
+lt-cred-mech
+
+# If running coturn version older than 4.5.2, uncomment these rules and ensure
+# that you have listening-ip set to ipv4 addresses only.
+# Prevent Loopback bypass https://github.com/coturn/coturn/security/advisories/GHSA-6g6j-r9rf-cm7p
+#denied-peer-ip=0.0.0.0-0.255.255.255
+#denied-peer-ip=127.0.0.0-127.255.255.255
+#denied-peer-ip=::1

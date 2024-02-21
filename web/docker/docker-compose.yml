@@ -26,13 +26,14 @@ services:
     restart: unless-stopped
 
   coturn:
-    build:
-      dockerfile: turnserver.dockerfile
-      args:
-        TURN_DOMAIN: ${TURN_DOMAIN}
-        TURN_USERNAME: ${TURN_USERNAME}
-        TURN_PASSWORD: ${TURN_PASSWORD}
+    image: coturn/coturn
+    volumes:
+      - ./turnserver.conf:/etc/coturn/turnserver.conf
     restart: unless-stopped
+    ports:
+      - 3478:3478
+      - 3478:3478/udp
+        #      - 19900-20000
 
   nginx:
     image: nginx:latest
@@ -44,3 +45,4 @@ services:
       - client
       - websocket_server
       - coturn
+    restart: unless-stopped
