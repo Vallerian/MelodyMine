@@ -40,8 +40,14 @@ outer-angle: 180 # angle that players can hear each other.
 outer-volume: 0.3 # outer angle volume.
 
 
-# update player distance time (as Long)
-update-distance-time: 10 # must be Long (10L = 0.5s, 20L = 1s,...)
+# Renew Player Location data from Server to Web
+# !!!important!!!  (max-distance < connect-distance < volume-distance < disconnect-distance) !!!important!!!
+# Example: max-distance: 30 < connect-distance: 80 < volume-distance: 130 < disconnect-distance: 230
+renew-configs:
+  update-interval: 30 # must be Long (10L = 0.5s, 20L = 1s,...)
+  connect-distance: 80 # connect player to other players distance.
+  volume-distance: 130 # update player location to other players distance.
+  disconnect-distance: 230 # disconnect player to other players distance.
 
 
 # ----- Message configs -----

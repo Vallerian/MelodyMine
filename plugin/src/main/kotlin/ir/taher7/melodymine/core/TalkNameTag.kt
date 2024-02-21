@@ -188,7 +188,7 @@ class TalkNameTag(val player: Player) {
     }
 
 
-    fun refreshNameTag() {
+    private fun refreshNameTag() {
         val config = getConfig() ?: return
         if (config.enable) {
 

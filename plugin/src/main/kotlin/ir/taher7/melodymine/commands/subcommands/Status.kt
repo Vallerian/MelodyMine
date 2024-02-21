@@ -12,7 +12,7 @@ class Status : SubCommand() {
     private val coolDown = hashMapOf<UUID, Long>()
 
     override var name = "status"
-    override var description = Storage.startDescription
+    override var description = Storage.statusDescription
     override var syntax = "/melodymine status"
     override var permission = "melodymine.status"
 

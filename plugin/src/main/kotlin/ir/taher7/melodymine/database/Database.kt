@@ -209,23 +209,20 @@ object Database {
             override fun run() {
                 try {
                     val connection = createConnection() ?: return
-                    val uuidLIst = arrayListOf<String>()
+                    val uuidList = arrayListOf<String>()
                     Bukkit.getOnlinePlayers().forEach { player: Player ->
-                        uuidLIst.add(player.uniqueId.toString())
+                        uuidList.add(player.uniqueId.toString())
                     }
-                    if (uuidLIst.isNotEmpty()) {
-                        val stringList = uuidLIst.joinToString(
-                            separator = "','",
-                            prefix = "'",
-                            postfix = "'"
-                        )
-                        val statement = connection.prepareStatement(
-                            "UPDATE melodymine SET serverIsOnline = ? WHERE melodymine.uuid IN (?)"
-                        )
-                        statement.setBoolean(1, true)
-                        statement.setString(2, stringList)
-                        statement.executeUpdate()
-                    }
+                    if (uuidList.isNotEmpty()) {
+                          val placeholders = uuidList.joinToString(separator = ",", prefix = "(", postfix = ")") { "?" }
+                          val sql = "UPDATE melodymine SET serverIsOnline = ? WHERE uuid IN $placeholders"
+                          val statement = connection.prepareStatement(sql)
+                          statement.setBoolean(1, true)
+                          uuidList.forEachIndexed { index, uuid ->
+                              statement.setString(index + 2, uuid)
+                          }
+                          statement.executeUpdate()
+                      }
                     closeConnection(connection)
                 } catch (ex: Exception) {
                     ex.printStackTrace()

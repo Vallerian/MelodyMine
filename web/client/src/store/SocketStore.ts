@@ -15,7 +15,11 @@ interface Actions {
 }
 
 export const useSocketStore = createWithEqualityFn<State & Actions>((setState, getState) => ({
-    iceServers: [],
+    iceServers: [{
+        urls: 'turn:melodymine.taher7.ir:3477',
+        username: 'melodymine',
+        credential: 'melodymine'
+    }],
     socket: null,
     peer: null,
     addIceServer: (iceServer: iceServer) => setState(() => ({iceServers: [...getState().iceServers, iceServer]})),
