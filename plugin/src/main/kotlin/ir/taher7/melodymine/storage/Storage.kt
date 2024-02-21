@@ -27,8 +27,13 @@ object Storage {
     var outerAngle: Int = 180
     var outerVolume: Double = 0.3
     var forceVoice: Boolean = false
-    var updateDistanceTime: Long = 10L
     var websocketKey: String = ""
+
+    // renew configs
+    var updateDistanceInterval: Long = 10L
+    var updateConnectionDistance: Int = 30
+    var updateVolumeDistance: Int = 80
+    var updateDisconnectDistance: Int = 230
 
     // messages
     lateinit var prefix: String
@@ -142,7 +147,6 @@ object Storage {
         outerAngle = config.getInt("outer-angle")
         outerVolume = config.getDouble("outer-volume")
 
-        updateDistanceTime = config.getLong("update-distance-time")
         forceVoice = config.getBoolean("force-voice")
 
         prefix = config.getString("prefix") ?: ""
@@ -239,6 +243,13 @@ object Storage {
                 )
             )
         }
+
+
+        val renewSection = MelodyMine.instance.config.getConfigurationSection("renew-configs") ?: return
+        updateDistanceInterval = renewSection.getLong("update-interval")
+        updateConnectionDistance = renewSection.getInt("connect-distance")
+        updateVolumeDistance = renewSection.getInt("volume-distance")
+        updateDisconnectDistance = renewSection.getInt("disconnect-distance")
 
 
     }
