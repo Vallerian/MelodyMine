@@ -1,0 +1,62 @@
+events {
+  worker_connections 1024;
+}
+
+http {
+  upstream client {
+    server client:3000;  # Assuming your client app runs on port 3000
+  }
+
+  upstream websocket_server {
+    server websocket_server:4000;  # Assuming your websocket_server app runs on port 4000
+  }
+
+  upstream coturn {
+    server coturn:3478;  # Assuming Coturn is running on port 5349
+  }
+
+  server {
+    listen 80;
+    server_name voice.example.ir;
+
+    location / {
+      proxy_pass http://client;
+      proxy_set_header Host $host;
+      proxy_set_header X-Real-IP $remote_addr;
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header X-Forwarded-Proto $scheme;
+    }
+  }
+
+  server {
+    listen 80;
+    server_name websocket.example.ir;
+
+    location / {
+      proxy_pass http://websocket_server;
+
+      proxy_set_header X-Real-IP $remote_addr;
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header Host $http_host;
+      proxy_set_header X-NginX-Proxy true;
+      proxy_redirect off;
+      proxy_http_version 1.1;
+      proxy_set_header Upgrade $http_upgrade;
+      proxy_set_header Connection "upgrade";
+    }
+  }
+
+  server {
+    listen 80;
+    server_name turn.example.ir;
+
+    location / {
+      proxy_pass http://coturn;
+      proxy_set_header Host $host;
+      proxy_set_header X-Real-IP $remote_addr;
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header X-Forwarded-Proto $scheme;
+    }
+  }
+}
+

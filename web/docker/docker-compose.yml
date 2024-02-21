@@ -1,0 +1,46 @@
+version: '3'
+
+services:
+  client:
+    build:
+      context: ../client
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
+      - NEXTAUTH_URL=${NEXTAUTH_URL}
+      - WEBSOCKET_URL=${WEBSOCKET_URL}
+      - WEBSOCKET_KEY=${WEBSOCKET_KEY}
+      - TURN_URL=${TURN_URL}
+      - TURN_USERNAME=${TURN_USERNAME}
+      - TURN_PASSWORD=${TURN_PASSWORD}
+    restart: unless-stopped
+
+  websocket_server:
+    build:
+      context: ../server
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - SSL=${SSL}
+      - WEBSOCKET_PLUGIN_AUTH_KEY=${WEBSOCKET_PLUGIN_AUTH_KEY}
+      - WEBSOCKET_WEB_AUTH_KEY=${WEBSOCKET_WEB_AUTH_KEY}
+    restart: unless-stopped
+
+  coturn:
+    build:
+      dockerfile: turnserver.dockerfile
+      args:
+        TURN_DOMAIN: ${TURN_DOMAIN}
+        TURN_USERNAME: ${TURN_USERNAME}
+        TURN_PASSWORD: ${TURN_PASSWORD}
+    restart: unless-stopped
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - "${WEBSERVER_PORT}:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - client
+      - websocket_server
+      - coturn
