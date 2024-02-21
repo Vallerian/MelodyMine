@@ -52,7 +52,7 @@ class WebsocketRenewData {
                                             val distance = playerLocation.distance(targetLocation)
                                             val maxDistance = Storage.maxDistance
 
-                                            if (distance < (maxDistance + 50)) {
+                                            if (distance < (Storage.updateConnectionDistance)) {
                                                 if (!melodyPlayer.isSendOffer.contains(targetPlayer.uuid)) {
                                                     melodyPlayer.isSendOffer.add(targetPlayer.uuid)
 
@@ -75,7 +75,7 @@ class WebsocketRenewData {
                                             }
 
 
-                                            if (distance < (maxDistance + 100)) {
+                                            if (distance < (Storage.updateVolumeDistance)) {
 
                                                 val renewPlayer = createRenewPlayer(melodyPlayer)
                                                 if (!players.contains(renewPlayer)) players.add(renewPlayer)
@@ -92,7 +92,7 @@ class WebsocketRenewData {
                                             }
 
 
-                                            if (distance > (maxDistance + 200)) {
+                                            if (distance > (Storage.updateDisconnectDistance)) {
                                                 if (melodyPlayer.isSendOffer.contains(targetPlayer.uuid)) {
                                                     val renewPlayer = createRenewPlayer(melodyPlayer)
                                                     if (!players.contains(renewPlayer)) players.add(renewPlayer)
@@ -125,7 +125,7 @@ class WebsocketRenewData {
                     }
                 }
             }
-        }.runTaskTimer(MelodyMine.instance, 0L, Storage.updateDistanceTime)
+        }.runTaskTimer(MelodyMine.instance, 0L, Storage.updateDistanceInterval)
     }
 
     private fun createRenewPlayer(melodyPlayer: MelodyPlayer): RenewPlayer {
