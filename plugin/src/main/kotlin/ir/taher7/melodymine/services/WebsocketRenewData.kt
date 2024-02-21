@@ -45,12 +45,15 @@ class WebsocketRenewData {
                                         val playerLocation = melodyPlayer.player?.location
                                         val targetLocation = targetPlayer.player?.location
 
+                                        if (Storage.disableWorld.contains(playerLocation?.world?.name) ||
+                                            Storage.disableWorld.contains(targetLocation?.world?.name)
+                                        ) return@forEach
+
                                         if (playerLocation != null &&
                                             targetLocation != null &&
                                             playerLocation.world == targetLocation.world
                                         ) {
                                             val distance = playerLocation.distance(targetLocation)
-                                            val maxDistance = Storage.maxDistance
 
                                             if (distance < (Storage.updateConnectionDistance)) {
                                                 if (!melodyPlayer.isSendOffer.contains(targetPlayer.uuid)) {

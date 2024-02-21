@@ -1,6 +1,6 @@
 {
   "name": "melody_server",
-  "version": "1.5.3",
+  "version": "1.5.4",
   "main": "index.js",
   "scripts": {
     "start": "nodemon server.ts"

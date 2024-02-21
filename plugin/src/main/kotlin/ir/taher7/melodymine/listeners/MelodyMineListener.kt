@@ -120,6 +120,11 @@ class MelodyMineListener : Listener {
     fun onPlayerChangeWorld(event: PlayerChangedWorldEvent) {
         val melodyPlayer = Storage.onlinePlayers[event.player.uniqueId.toString()] ?: return
         if (!melodyPlayer.isActiveVoice || melodyPlayer.adminMode) return
+
+        if (melodyPlayer.isInCall && Storage.disableWorld.contains(event.player.world.name)) {
+            melodyPlayer.callTarget?.let { MelodyManager.endCall(melodyPlayer, it) }
+        }
+
         melodyPlayer.isSendOffer.forEach { uuid ->
             val targetPlayer = Storage.onlinePlayers[uuid]
             if (targetPlayer != null) {
