@@ -56,7 +56,15 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
     const createPeer = () => {
         RTCPeer?.close()
         setRTCPeer(undefined)
-        const peer = new RTCPeerConnection({iceServers: iceServers})
+        const peer = new RTCPeerConnection({
+            iceServers: [
+                ...iceServers,
+                {urls: 'stun:stun2.l.google.com:19302'},
+                {urls: 'turns:freestun.net:5350', username: 'free', credential: 'free'},
+                {urls: 'turn:freestun.net:3479', username: 'free', credential: 'free'},
+            ],
+            iceCandidatePoolSize: 10,
+        })
         stream?.getTracks().forEach(track => {
             peer.addTrack(track, stream)
         })
