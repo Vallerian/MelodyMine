@@ -109,7 +109,7 @@ class TalkNameTag(val player: Player) {
         packet.integers.writeSafely(0, id)
 
 
-        if (ReflectionUtils.supports(20)) {
+        if (ReflectionUtils.supports(19,3)) {
             packet.dataValueCollectionModifier.writeSafely(
                 0, listOf(
                     WrappedDataValue(
