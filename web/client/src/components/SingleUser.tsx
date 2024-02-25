@@ -335,6 +335,7 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
         if (data.uuid == user.uuid && data.uuid != uuid) {
             setIsPendingCall(false)
             callingSound?.stop()
+            callingSound2?.stop()
             endCallSound?.play()
         }
     }
@@ -344,6 +345,7 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
         if (data.uuid == user.uuid && data.uuid != uuid) {
             setIsPendingCall(false)
             callingSound2?.stop()
+            callingSound?.stop()
             endCallSound?.play()
         }
     }
