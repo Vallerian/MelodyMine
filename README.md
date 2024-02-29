@@ -1,5 +1,5 @@
 <p align="center">
-  <img style="width:100px;" src="https://cdn.discordapp.com/attachments/1159034838783893567/1159035012260319242/melody-logo.png?ex=651e6af8&is=651d1978&hm=1ef9304af11367211103a9fa1cd7329b29c3408f2399cff73cdb842fe108efcf" alt="MelodyMine Logo">
+  <img style="width:100px;" src="https://i.ibb.co/vdsLHcp/melody-logo.png" alt="MelodyMine Logo">
 </p>
 
 <h1 align="center" style="font-size: 36px; color: #7E3FAA; background: linear-gradient(to right, #8D5E8D, #7E3FAA); padding: 16px 0; border-radius: 8px;color:white">MelodyMine (Minecraft Voice Plugin) </h1>
@@ -25,29 +25,29 @@ MelodyMine is a revolutionary system for Minecraft servers where players can sim
 ## Key Features 🌟
 
 
-<img style="margin-bottom:10px;border-radius: 5px" src="https://cdn.discordapp.com/attachments/1159034838783893567/1209724257962303518/image.png?ex=65e7f682&is=65d58182&hm=5081dd774519e0a528a84731546e77d2a34b028781033ef2cbbec893a42b466f&"/>
+<img style="margin-bottom:10px;border-radius: 5px" src="https://i.ibb.co/BTGHTPM/image.png"/>
 
 - 🗣️ **Admin Mode:** Admins can communicate with players across the entire server and listen to their conversations, even from a distance. Maintain control and ensure a safe environment. 🔊🔒
 
-<img style="margin-bottom:10px;border-radius: 5px" src="https://cdn.discordapp.com/attachments/1159034838783893567/1159038696255934594/image.png?ex=651e6e67&is=651d1ce7&hm=8ad93989d50b1655494aec5d998a58ebdb6d3307b5adc148d614ed268aecbc4d&"/>
+<img style="margin-bottom:10px;border-radius: 5px" src="https://i.ibb.co/TYbYYPK/Screenshot-2023-10-04-113549.png"/>
 
 - 🔇 **Player Mute/Unmute:** Users can mute or unmute players directly from the web interface, ensuring that no one's voice goes unnoticed. Manage the voice communication effectively. 🧏‍♂️📢
 
-<img style="margin-bottom:10px;border-radius: 5px" src="https://cdn.discordapp.com/attachments/1159034838783893567/1159040155890483290/image.png?ex=651e6fc3&is=651d1e43&hm=6ae140b8535c2c8f6a879eab70a939e04cde9cd946b420a7c141a06151cf8bd9&"/>
+<img style="margin-bottom:10px;border-radius: 5px" src="https://i.ibb.co/4dB3RTM/Screenshot-2023-10-04-114141.png"/>
 
 - 🌐 **Proxy-Less Plugin:** MelodyMine can change players' game modes on the website without the need for a proxy like Velocity or BungeeCord. It also captures the voices of players in the same game mode and those nearby, creating a seamless experience. 🏹🖥️
 
 - 🔒 **AuthMe Support:** Seamlessly integrate with AuthMe, allowing players to enter the server using their username and password. Enhance security and accessibility. 🔒🔑
 
-<img style="margin-bottom:10px;border-radius: 5px" src="https://cdn.discordapp.com/attachments/1159034838783893567/1159040820444414003/image.png?ex=651e7061&is=651d1ee1&hm=e50a9d3d80701c47f25a9ce54a6028ad5aaee1725e884d5268a30299c7eb6de1&"/>
+<img style="margin-bottom:10px;border-radius: 5px" src="https://i.ibb.co/tLB1vyg/image.png"/>
 
 - 🌐 **Automatic Login:** Users can obtain an automatic login link by using the `/melodymine start link` command, simplifying website login and reducing hassle. 🌐🚪
 
-<img style="margin-bottom:10px;border-radius: 5px" src="https://cdn.discordapp.com/attachments/1159034838783893567/1205854983271227412/image.png?ex=65d9e2f7&is=65c76df7&hm=aec2c7dfd963844a13d06899ed24ce01cf61a10d988d77829fae948fc8275550&"/>
+<img style="margin-bottom:10px;border-radius: 5px" src="https://i.ibb.co/dfD1rc7/start.png"/>
 
 - 🌐 **QRCode Automatic Login:** Players can obtain a QR code by using the command `/melodymine start qrcode`, and by scanning it, they can enter the website. 🌍✨
 
-<img style="margin-bottom:10px;border-radius: 5px" src="https://cdn.discordapp.com/attachments/1159034838783893567/1161726011247968276/melody-qrcode.png?ex=653958a8&is=6526e3a8&hm=a512f1de25c741d6da891b2254fc2e2a7ed39ffd4e519c3c4eba0ea16788cf6c&"/>
+<img style="margin-bottom:10px;border-radius: 5px" src="https://i.ibb.co/y5MntSP/qrcode.png"/>
 
 - 🛠️ **Comprehensive API:** Developers have access to a comprehensive API, including events like `PlayerJoinWebEvent` and `PlayerLeaveWebEvent`, enabling the creation of custom plugins and expanding the possibilities of your server. 📚👩‍💻
 
@@ -79,15 +79,15 @@ websocket-auth-key: "" # must be the same in web server auth key
 
 - 📞 **Call System:** You have the ability to make a call using the command `/melodymine call start <player>` to call other players.
 
-<img style="margin-bottom:10px;border-radius: 5px" src="https://media.discordapp.net/attachments/1159034838783893567/1171354819643047977/callpng.png?ex=655c602f&is=6549eb2f&hm=310550c82085cfd69735ad77502dc30d57b94605187fbab68229c619ec435fc7&="/>
+<img style="margin-bottom:10px;border-radius: 5px" src="https://i.ibb.co/pyjTX8N/callpng.png"/>
 
 - 🎧 **3D Voice Capability:** Player sounds are played in 3D, and you can determine the player's position through sound.
 
-<img style="margin-bottom:10px;border-radius: 5px" src="https://cdn.discordapp.com/attachments/1159034838783893567/1176601670650703933/melody-sound4.png?ex=656f76b2&is=655d01b2&hm=08004a4c29ab3370656f0b6963689fb76c27dc22128b939d75d5dad32fb73333&">
+<img style="margin-bottom:10px;border-radius: 5px" src="https://i.ibb.co/dtc33MG/melody-sound4.png">
 
 - 🔊 **Talk NamTag and BossBar:** When a player speaks in voice chat on the Minecraft server, a nametag is displayed for all players, and a bossbar is shown for the player themselves, which you can fully customize even the config by placing an item with customData instead of displayName.
 
-<img style="margin-bottom:10px;border-radius: 5px" src="https://cdn.discordapp.com/attachments/1159034838783893567/1205853641064456203/nametag-bossbar.png?ex=65d9e1b7&is=65c76cb7&hm=4c6b5e520f7a4f8c8faaaff99881fa824662e76dc7feb07da9feebbb66cd4143&">
+<img style="margin-bottom:10px;border-radius: 5px" src="https://i.ibb.co/sQV9PyL/nametag-bossbar.png">
 
 - 🐞 **Robust System:** MelodyMine is a highly reliable and secure system with minimal bugs. Any discovered bugs are promptly addressed and fixed, ensuring a smooth and hassle-free experience for all users. Be part of a community that values your experience and offers continuous improvement. Find announcements and updates on our [GitHub repository](https://github.com/vallerian/MelodyMine). 🛠️🐛
 
