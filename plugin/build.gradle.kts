@@ -54,9 +54,9 @@ dependencies {
 
     implementation("com.github.cryptomorin:XSeries:9.7.0") { isTransitive = false }
 
-    implementation("net.kyori:adventure-api:4.15.0")
-    implementation("net.kyori:adventure-platform-bukkit:4.3.1")
-    implementation("net.kyori:adventure-text-minimessage:4.14.0")
+    implementation("net.kyori:adventure-api:4.16.0")
+    implementation("net.kyori:adventure-platform-bukkit:4.3.2")
+    implementation("net.kyori:adventure-text-minimessage:4.16.0")
 
 
     implementation("cloud.commandframework:cloud-paper:1.9.0-SNAPSHOT")
