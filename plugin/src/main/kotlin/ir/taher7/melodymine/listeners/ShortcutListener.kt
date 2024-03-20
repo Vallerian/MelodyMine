@@ -34,8 +34,8 @@ class ShortcutListener : Listener {
         val melodyPlayer = Storage.onlinePlayers[event.player.uniqueId.toString()] ?: return
         if (!melodyPlayer.webIsOnline || !melodyPlayer.isActiveVoice) return
         if (!Storage.playerMuteShortcut.contains(event.player.uniqueId)) return
-        if (coolDown.containsKey(player.uniqueId) && (System.currentTimeMillis() - coolDown[player.uniqueId]!!) <= 5000) {
-            player.sendMessage("<prefix>You can toggle after <count_color>${((5000 - (System.currentTimeMillis() - coolDown[player.uniqueId]!!)) / 1000)}<text> second.".toComponent())
+        if (coolDown.containsKey(player.uniqueId) && (System.currentTimeMillis() - coolDown[player.uniqueId]!!) <= 1000) {
+            player.sendMessage("<prefix>You can toggle after <count_color>${((1000 - (System.currentTimeMillis() - coolDown[player.uniqueId]!!)) / 1000)}<text> second.".toComponent())
             return
         }
         MelodyManager.setPlayerSelfMute(melodyPlayer, !melodyPlayer.isSelfMute)
