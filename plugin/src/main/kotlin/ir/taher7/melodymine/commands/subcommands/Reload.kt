@@ -16,11 +16,15 @@ class Reload : SubCommand() {
 
     override fun handler(player: Player, args: Array<out String>) {
         Storage.reload()
+
         Adventure.initMiniMessage()
         player.sendMessage("<prefix>Plugin has been successfully reload.".toComponent())
         Storage.onlinePlayers.values.forEach { melodyPlayer ->
             if (melodyPlayer.webIsOnline) {
                 MelodyManager.sendSoundSetting(melodyPlayer.socketID!!)
+            }
+            if (melodyPlayer.isActiveVoice) {
+                melodyPlayer.talkBossBar?.initTalkBossBar()
             }
         }
     }
