@@ -1,7 +1,6 @@
 package ir.taher7.melodymine.core
 
 
-
 import ir.taher7.melodymine.storage.Storage
 import ir.taher7.melodymine.utils.Adventure.hideBossBar
 import ir.taher7.melodymine.utils.Adventure.showBossBar
@@ -19,7 +18,8 @@ class TalkBossBar(val player: Player) {
         initTalkBossBar()
     }
 
-    private fun initTalkBossBar() {
+    fun initTalkBossBar() {
+        if (!Storage.isEnableBossBar) return
         val serverMute = Storage.bossbarConfigs["server-mute"] ?: return
         bossBar = BossBar.bossBar(
             if (melodyPlayer.isMute) serverMute.text.toComponent() else "".toComponent(),

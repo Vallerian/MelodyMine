@@ -119,6 +119,7 @@ class MelodyMineListener : Listener {
     @EventHandler
     fun onPlayerChangeWorld(event: PlayerChangedWorldEvent) {
         val melodyPlayer = Storage.onlinePlayers[event.player.uniqueId.toString()] ?: return
+        Utils.forceVoice(melodyPlayer)
         if (!melodyPlayer.isActiveVoice || melodyPlayer.adminMode) return
 
         if (melodyPlayer.isInCall && Storage.disableWorld.contains(event.player.world.name)) {

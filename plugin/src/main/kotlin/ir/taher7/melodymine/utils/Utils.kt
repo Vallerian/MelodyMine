@@ -109,6 +109,7 @@ object Utils {
         if (player.isActiveVoice) return true
         if (!Storage.forceVoice) return true
         if (player.player?.hasPermission("melodymine.force") == true) return true
+        if (Storage.disableWorld.contains(player.player?.location?.world?.name)) return true
         return false
     }
 
