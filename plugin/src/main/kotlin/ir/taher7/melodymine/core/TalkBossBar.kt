@@ -73,6 +73,7 @@ class TalkBossBar(val player: Player) {
     }
 
     fun setBossBarSelfMute() {
+        if (!Storage.isEnableBossBar) return
         val selfMute = Storage.bossbarConfigs["self-mute"] ?: return
         val color = BossBar.Color.NAMES.value(selfMute.color.lowercase()) ?: BossBar.Color.WHITE
         if (selfMute.enable) {
