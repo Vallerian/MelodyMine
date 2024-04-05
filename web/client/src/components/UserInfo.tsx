@@ -96,14 +96,9 @@ const UserInfo = ({user, websocketKey}: UserInfoProps) => {
             })
             return
         }
-        if (!sound?.playing()) {
-            sound?.once("play", () => {
-                sound?.stop()
-            })
-        } else {
+        if (sound?.playing()) {
             sound?.stop()
         }
-
     }
 
     const onVolumeSoundReceive = (token: string) => {
