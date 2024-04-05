@@ -222,12 +222,15 @@ io.on("connection", async (socket: CustomSocket) => {
         socketID: string
         sendTOAll: boolean
         soundName: string
+        volume?: number
 
     }) => {
         socket.to(data.sendTOAll ? socket.melodyClient.server : data.socketID).emit("onPlaySoundReceive", encrypt({
             sound: data.soundName,
+            volume: data.volume
         }))
     })
+
 
     socket.on("onPauseSoundPlugin", (data: {
         socketID: string
@@ -248,6 +251,19 @@ io.on("connection", async (socket: CustomSocket) => {
     }) => {
         socket.to(data.sendTOAll ? socket.melodyClient.server : data.socketID).emit("onStopSoundReceive", encrypt({
             sound: data.soundName,
+        }))
+    })
+
+    socket.on("onVolumeSoundPlugin", (data: {
+        socketID: string
+        sendTOAll: boolean
+        soundName: string
+        volume: number
+
+    }) => {
+        socket.to(data.sendTOAll ? socket.melodyClient.server : data.socketID).emit("onVolumeSoundReceive", encrypt({
+            sound: data.soundName,
+            volume: data.volume,
         }))
     })
 

@@ -7,13 +7,19 @@ import org.bukkit.event.Cancellable
 import org.bukkit.event.Event
 import org.bukkit.event.HandlerList
 
-class PrePlaySoundEvent(val soundName: String, val sendToAll: Boolean, val socketID: String?) : Event(), Cancellable {
+class PrePlaySoundEvent(
+    val soundName: String,
+    val sendToAll: Boolean,
+    val socketID: String?,
+    val volume: Double?,
+) : Event(), Cancellable {
 
     private var cancelled = false
 
     fun getPlayer(): MelodyPlayer? {
         return Storage.onlinePlayers.values.find { online -> online.socketID == socketID }
     }
+
     override fun isCancelled(): Boolean {
         return cancelled
     }

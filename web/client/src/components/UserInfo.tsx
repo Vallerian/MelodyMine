@@ -7,7 +7,7 @@ import StartButton from "@/components/StartButton";
 import {signOut, useSession} from "next-auth/react";
 import {useUserStore} from "@/store/UserStore";
 import {useValidateStore} from "@/store/ValidateStore";
-import {ISoundSettings, IUser} from "@/interfaces";
+import {IOnlineUsers, ISoundSettings, IUser} from "@/interfaces";
 import {BsFillMicMuteFill, BsFillPeopleFill} from "react-icons/bs";
 import {useOnlineUsersStore} from "@/store/OnlineUsersStore";
 import {useEffect, useState} from "react";
@@ -52,9 +52,29 @@ const UserInfo = ({user, websocketKey}: UserInfoProps) => {
     const onPlaySoundReceive = (token: string) => {
         const data = decrypt(token) as {
             sound: string
+            volume?: number
         }
         const sound = soundList.find(item => item.name == data.sound)?.howl
+        if (sound?.state() != "loaded") {
+            sound?.once("load", () => {
+                if (data.volume) sound?.volume(data.volume)
+                sound?.play()
+            })
+            return
+        }
+        if (data.volume) sound?.volume(data.volume)
         sound?.play()
+
+        // if (sound?.playing()) {
+        //     sound?.once("stop", () => {
+        //         if (data.volume) sound?.volume(data.volume)
+        //         sound?.play()
+        //     })
+        // } else {
+        //     if (data.volume) sound?.volume(data.volume)
+        //     sound?.play()
+        // }
+
     }
 
     const onPauseSoundReceive = (token: string) => {
@@ -70,7 +90,29 @@ const UserInfo = ({user, websocketKey}: UserInfoProps) => {
             sound: string
         }
         const sound = soundList.find(item => item.name == data.sound)?.howl
-        sound?.stop()
+        if (sound?.state() != "loaded") {
+            sound?.once("load", () => {
+                sound?.stop()
+            })
+            return
+        }
+        if (!sound?.playing()) {
+            sound?.once("play", () => {
+                sound?.stop()
+            })
+        } else {
+            sound?.stop()
+        }
+
+    }
+
+    const onVolumeSoundReceive = (token: string) => {
+        const data = decrypt(token) as {
+            sound: string
+            volume: number
+        }
+        const sound = soundList.find(item => item.name == data.sound)?.howl
+        sound?.volume(data.volume)
     }
 
     const onSoundSettingReceive = (token: string) => {
@@ -78,6 +120,27 @@ const UserInfo = ({user, websocketKey}: UserInfoProps) => {
         setSoundSettings(data)
     }
 
+    const onPlayerLeaveReceivePlugin = (token: string) => {
+        const onlineUser = decrypt(token) as IOnlineUsers
+        if (onlineUser.uuid == user.uuid) {
+            soundList.forEach(sound => sound.howl.stop())
+        }
+    }
+
+    const onPluginDisabled = () => {
+        soundList.forEach(sound => sound.howl.stop())
+    }
+
+    const onPlayerChangeServer = (token: string) => {
+        const data = decrypt(token) as {
+            name: string,
+            uuid: string,
+            server: string
+        }
+        if (data.uuid == user.uuid) {
+            soundList.forEach(sound => sound.howl.stop())
+        }
+    }
 
     useEffect(() => {
         setSecretKey(websocketKey!!)
@@ -85,6 +148,10 @@ const UserInfo = ({user, websocketKey}: UserInfoProps) => {
     }, [])
 
     useEffect(() => {
+        socket?.on("onVolumeSoundReceive", onVolumeSoundReceive)
+        socket?.on("onPlayerLeaveReceivePlugin", onPlayerLeaveReceivePlugin)
+        socket?.on("onPluginDisabled", onPluginDisabled)
+        socket?.on("onPlayerChangeServer", onPlayerChangeServer)
         socket?.on("onAdminModeEnableReceive", onAdminModeEnableReceive)
         socket?.on("onAdminModeDisableReceive", onAdminModeDisableReceive)
         socket?.on("onPlaySoundReceive", onPlaySoundReceive)
@@ -93,6 +160,10 @@ const UserInfo = ({user, websocketKey}: UserInfoProps) => {
         socket?.on("onSoundSettingReceive", onSoundSettingReceive)
 
         return () => {
+            socket?.off("onVolumeSoundReceive", onVolumeSoundReceive)
+            socket?.off("onPlayerLeaveReceivePlugin", onPlayerLeaveReceivePlugin)
+            socket?.off("onPluginDisabled", onPluginDisabled)
+            socket?.off("onPlayerChangeServer", onPlayerChangeServer)
             socket?.off("onAdminModeEnableReceive", onAdminModeEnableReceive)
             socket?.off("onAdminModeDisableReceive", onAdminModeDisableReceive)
             socket?.off("onPlaySoundReceive", onPlaySoundReceive)
