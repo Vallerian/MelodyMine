@@ -23,4 +23,10 @@ export default [
         loop: false,
         volume: 0.5
     },
+    {
+        name: "radio",
+        url: "http://stream.laut.fm/pop-musik",
+        loop: false,
+        volume: 0.1
+    },
 ]

@@ -1,5 +1,5 @@
 name: MelodyMine
-version: '1.5.4'
+version: '1.5.5'
 main: ir.taher7.melodymine.MelodyMine
 api-version: '1.13'
 author: taher7
@@ -13,7 +13,7 @@ commands:
     usage: /<command>
 permissions:
   melodymine.*:
-    description: permission that you can use all Melodymine commands
+    description: permission that you can use all MelodyMine commands
     children:
       melodymine.admin: true
   melodymine.admin:
@@ -82,4 +82,7 @@ permissions:
     default: true
   melodymine.status.others:
     description: check other player voice status
+    default: op
+  melodymine.reset:
+    description: reset player storage data
     default: op

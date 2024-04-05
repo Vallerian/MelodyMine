@@ -214,15 +214,15 @@ object Database {
                         uuidList.add(player.uniqueId.toString())
                     }
                     if (uuidList.isNotEmpty()) {
-                          val placeholders = uuidList.joinToString(separator = ",", prefix = "(", postfix = ")") { "?" }
-                          val sql = "UPDATE melodymine SET serverIsOnline = ? WHERE uuid IN $placeholders"
-                          val statement = connection.prepareStatement(sql)
-                          statement.setBoolean(1, true)
-                          uuidList.forEachIndexed { index, uuid ->
-                              statement.setString(index + 2, uuid)
-                          }
-                          statement.executeUpdate()
-                      }
+                        val placeholders = uuidList.joinToString(separator = ",", prefix = "(", postfix = ")") { "?" }
+                        val sql = "UPDATE melodymine SET serverIsOnline = ? WHERE uuid IN $placeholders"
+                        val statement = connection.prepareStatement(sql)
+                        statement.setBoolean(1, true)
+                        uuidList.forEachIndexed { index, uuid ->
+                            statement.setString(index + 2, uuid)
+                        }
+                        statement.executeUpdate()
+                    }
                     closeConnection(connection)
                 } catch (ex: Exception) {
                     ex.printStackTrace()
@@ -231,6 +231,34 @@ object Database {
         }.runTaskAsynchronously(MelodyMine.instance)
     }
 
+
+    fun resetPlayerData(name: String, consumer: Consumer<Boolean>) {
+        object : BukkitRunnable() {
+            override fun run() {
+                try {
+                    createConnection()?.use { connection ->
+                        val query = "SELECT webIsOnline FROM melodymine WHERE LOWER(name) = ?"
+                        connection.prepareStatement(query).use { statement ->
+                            statement.setString(1, name)
+                            val result = statement.executeQuery()
+                            if (result.next()) {
+                                val updateQuery = "UPDATE melodymine SET webIsOnline = false WHERE LOWER(name) = ?"
+                                connection.prepareStatement(updateQuery).use { updateStatement ->
+                                    updateStatement.setString(1, name)
+                                    updateStatement.executeUpdate()
+                                    consumer.accept(true)
+                                }
+                            } else {
+                                consumer.accept(false)
+                            }
+                        }
+                    }
+                } catch (ex: Exception) {
+                    ex.printStackTrace()
+                }
+            }
+        }.runTaskAsynchronously(MelodyMine.instance)
+    }
 
     fun getVerifyCode(player: Player, consumer: Consumer<String>) {
         object : BukkitRunnable() {
@@ -249,7 +277,8 @@ object Database {
                         val statement = connection.prepareStatement(
                             "UPDATE melodymine SET verifyCode = ? WHERE uuid = ? "
                         )
-                        statement.setString(1, player.uniqueId.toString())
+                        statement.setString(1, verifyCode)
+                        statement.setString(2, player.uniqueId.toString())
                         statement.executeUpdate()
                         consumer.accept(verifyCode)
                     }
@@ -260,5 +289,6 @@ object Database {
             }
         }.runTaskAsynchronously(MelodyMine.instance)
     }
+
 
 }
