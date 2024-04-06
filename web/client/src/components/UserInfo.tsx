@@ -14,7 +14,7 @@ import {useEffect, useState} from "react";
 import {ImUserTie} from "react-icons/im";
 import {useSocketStore} from "@/store/SocketStore";
 import {decrypt} from "@/utils";
-import {useSoundStore} from "@/store/SoundStore";
+import {ISound, useSoundStore} from "@/store/SoundStore";
 
 
 interface UserInfoProps {
@@ -31,7 +31,7 @@ const UserInfo = ({user, websocketKey}: UserInfoProps) => {
     const {users} = useOnlineUsersStore(state => state)
     const {status} = useSession()
     const [userIsAdminMode, setUserIsAdminMode] = useState<boolean>(false)
-
+    const [playingSounds, setPlayingSounds] = useState<ISound[]>([])
     const onAdminModeEnableReceive = (token: string) => {
         const data = decrypt(token) as {
             uuid: string,
@@ -54,27 +54,30 @@ const UserInfo = ({user, websocketKey}: UserInfoProps) => {
             sound: string
             volume?: number
         }
-        const sound = soundList.find(item => item.name == data.sound)?.howl
-        if (sound?.state() != "loaded") {
-            sound?.once("load", () => {
-                if (data.volume) sound?.volume(data.volume)
-                sound?.play()
+        const sound = soundList.find(item => item.name == data.sound)
+        if (!sound) return
+        const howl = sound?.howl
+        if (!playingSounds.find(sound => sound.name == data.sound)) {
+            howl?.play()
+            setPlayingSounds(prevState => [...prevState, sound])
+            howl?.once("end", () => {
+                setPlayingSounds(prevState => [...prevState.filter(s => s.name != sound.name)])
             })
-            return
         }
-        if (data.volume) sound?.volume(data.volume)
-        sound?.play()
+    }
 
-        // if (sound?.playing()) {
-        //     sound?.once("stop", () => {
-        //         if (data.volume) sound?.volume(data.volume)
-        //         sound?.play()
-        //     })
-        // } else {
-        //     if (data.volume) sound?.volume(data.volume)
-        //     sound?.play()
-        // }
-
+    const onStopSoundReceive = (token: string) => {
+        const data = decrypt(token) as {
+            sound: string
+        }
+        const sound = soundList.find(item => item.name == data.sound)
+        if (!sound) return
+        const howl = sound?.howl
+        if (howl?.state() == "loading") {
+            howl.unload()
+        }
+        howl?.stop()
+        setPlayingSounds(prevState => [...prevState.filter(s => s.name != sound.name)])
     }
 
     const onPauseSoundReceive = (token: string) => {
@@ -85,21 +88,6 @@ const UserInfo = ({user, websocketKey}: UserInfoProps) => {
         sound?.pause()
     }
 
-    const onStopSoundReceive = (token: string) => {
-        const data = decrypt(token) as {
-            sound: string
-        }
-        const sound = soundList.find(item => item.name == data.sound)?.howl
-        if (sound?.state() != "loaded") {
-            sound?.once("load", () => {
-                sound?.stop()
-            })
-            return
-        }
-        if (sound?.playing()) {
-            sound?.stop()
-        }
-    }
 
     const onVolumeSoundReceive = (token: string) => {
         const data = decrypt(token) as {
@@ -167,7 +155,7 @@ const UserInfo = ({user, websocketKey}: UserInfoProps) => {
             socket?.off("onSoundSettingReceive", onSoundSettingReceive)
         }
 
-    }, [socket, soundList])
+    }, [socket, soundList, playingSounds])
 
     useEffect(() => {
         if (isValidate) return
