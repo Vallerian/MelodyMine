@@ -4,19 +4,17 @@ import io.socket.client.SocketIOException
 import ir.taher7.melodymine.MelodyMine
 import ir.taher7.melodymine.core.MelodyManager
 import ir.taher7.melodymine.core.TalkBossBar
+import ir.taher7.melodymine.core.TalkNameTag
 import ir.taher7.melodymine.database.Database
 import ir.taher7.melodymine.services.Websocket
 import ir.taher7.melodymine.storage.Storage
-import ir.taher7.melodymine.core.TalkNameTag
 import ir.taher7.melodymine.utils.Utils
 import org.bukkit.Bukkit
+import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
-import org.bukkit.event.player.AsyncPlayerChatEvent
-import org.bukkit.event.player.PlayerChangedWorldEvent
-import org.bukkit.event.player.PlayerJoinEvent
-import org.bukkit.event.player.PlayerMoveEvent
-import org.bukkit.event.player.PlayerQuitEvent
+import org.bukkit.event.entity.EntityDamageEvent
+import org.bukkit.event.player.*
 import org.bukkit.scheduler.BukkitRunnable
 
 
@@ -105,6 +103,13 @@ class MelodyMineListener : Listener {
                 event.isCancelled = true
             }
         }
+    }
+
+    @EventHandler
+    fun onEntityDamage(event: EntityDamageEvent) {
+        if (event.entity !is Player) return
+        val melodyPlayer = Storage.onlinePlayers[event.entity.uniqueId.toString()] ?: return
+        if (!melodyPlayer.isActiveVoice) event.isCancelled = true
     }
 
     @EventHandler

@@ -1,6 +1,5 @@
 package ir.taher7.melodymine.api.events
 
-import ir.taher7.melodymine.models.MelodyPlayer
 import org.bukkit.event.Cancellable
 import org.bukkit.event.Event
 import org.bukkit.event.HandlerList
