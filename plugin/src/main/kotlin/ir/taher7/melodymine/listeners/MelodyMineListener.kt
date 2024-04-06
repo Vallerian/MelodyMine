@@ -107,9 +107,13 @@ class MelodyMineListener : Listener {
 
     @EventHandler
     fun onEntityDamage(event: EntityDamageEvent) {
+        if (!Storage.forceVoice) return
         if (event.entity !is Player) return
+        if (event.entity.hasPermission("melodymine.force")) return
+        if (Storage.disableWorld.contains(event.entity.location.world?.name)) return
         val melodyPlayer = Storage.onlinePlayers[event.entity.uniqueId.toString()] ?: return
-        if (!melodyPlayer.isActiveVoice) event.isCancelled = true
+        if (melodyPlayer.isActiveVoice) return
+        event.isCancelled = true
     }
 
     @EventHandler
