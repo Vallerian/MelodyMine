@@ -5,7 +5,7 @@ import ir.taher7.melodymine.storage.Storage
 import org.bukkit.event.Event
 import org.bukkit.event.HandlerList
 
-class PostPlaySoundEvent(
+class PostChangeSoundVolumeEvent (
     val soundName: String,
     val sendToAll: Boolean,
     val socketID: String?,

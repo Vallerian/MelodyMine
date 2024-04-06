@@ -637,8 +637,8 @@ object MelodyManager {
         Bukkit.getServer().pluginManager.callEvent(PostToggleCallEvent(melodyPlayer))
     }
 
-    fun playSound(soundName: String, sendToAll: Boolean = false, socketID: String?) {
-        val prePlaySoundEvent = PrePlaySoundEvent(soundName, sendToAll, socketID)
+    fun playSound(soundName: String, sendToAll: Boolean = false, socketID: String?, volume: Double? = null) {
+        val prePlaySoundEvent = PrePlaySoundEvent(soundName, sendToAll, socketID, volume)
         Bukkit.getServer().pluginManager.callEvent(prePlaySoundEvent)
         if (prePlaySoundEvent.isCancelled) return
 
@@ -649,12 +649,13 @@ object MelodyManager {
                     mapOf(
                         "socketID" to socketID!!,
                         "soundName" to soundName,
-                        "sendToAll" to sendToAll
+                        "sendToAll" to sendToAll,
+                        "volume" to volume,
                     )
                 )
             }
         }.runTaskAsynchronously(MelodyMine.instance)
-        Bukkit.getServer().pluginManager.callEvent(PostPlaySoundEvent(soundName, sendToAll, socketID))
+        Bukkit.getServer().pluginManager.callEvent(PostPlaySoundEvent(soundName, sendToAll, socketID, volume))
     }
 
     fun pauseSound(soundName: String, sendToAll: Boolean = false, socketID: String?) {
@@ -694,6 +695,27 @@ object MelodyManager {
         }.runTaskAsynchronously(MelodyMine.instance)
 
         Bukkit.getServer().pluginManager.callEvent(PostStopSoundEvent(soundName, sendToAll, socketID))
+    }
+
+    fun changeSoundVolume(soundName: String, sendToAll: Boolean = false, socketID: String?, volume: Double) {
+        val preChangeSoundVolumeEvent = PreChangeSoundVolumeEvent(soundName, sendToAll, socketID, volume)
+        Bukkit.getServer().pluginManager.callEvent(preChangeSoundVolumeEvent)
+        if (preChangeSoundVolumeEvent.isCancelled) return
+
+        object : BukkitRunnable() {
+            override fun run() {
+                Websocket.socket.emit(
+                    "onVolumeSoundPlugin",
+                    mapOf(
+                        "socketID" to socketID!!,
+                        "soundName" to soundName,
+                        "sendTOAll" to sendToAll,
+                        "volume" to volume,
+                    )
+                )
+            }
+        }.runTaskAsynchronously(MelodyMine.instance)
+        Bukkit.getServer().pluginManager.callEvent(PostChangeSoundVolumeEvent(soundName, sendToAll, socketID, volume))
     }
 
 

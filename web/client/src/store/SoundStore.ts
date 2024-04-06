@@ -4,7 +4,7 @@ import {Howl} from "howler";
 import sounds from "@/sounds";
 import {ISoundSettings} from "@/interfaces";
 
-export interface sound {
+export interface ISound {
     name: string
     howl: Howl
     loop?: boolean
@@ -12,7 +12,7 @@ export interface sound {
 }
 
 interface State {
-    soundList: sound[]
+    soundList: ISound[]
     soundSettings: ISoundSettings
 }
 
@@ -34,13 +34,14 @@ export const useSoundStore = createWithEqualityFn<State & Actions>((setState) =>
     },
     soundList: [],
     initSounds: () => {
-        const tempSounds: sound[] = []
+        const tempSounds: ISound[] = []
         sounds.forEach(sound => {
             tempSounds.push({
                 name: sound.name,
                 howl: new Howl({src: sound.url, volume: sound.volume, loop: sound.loop, html5: true, format: ["mp3"]})
             })
         })
+        tempSounds.forEach(sound => sound.howl.load())
         setState(() => ({soundList: tempSounds}))
     },
     setSoundSettings: (soundSettings) => setState(() => ({soundSettings}))
