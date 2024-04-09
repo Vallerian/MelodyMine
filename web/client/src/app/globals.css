@@ -2,6 +2,24 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face { 
+    font-family: vazirmatn;
+    font-weight: normal;
+    src: url('/fonts/vazirmatn-regular.ttf');
+}
+
+@font-face { 
+    font-family: vazirmatn;
+    font-weight: bold;
+    src: url('/fonts/vazirmatn-bold.ttf');
+}
+
+@font-face { 
+    font-family: vazirmatn;
+    font-weight: light;
+    src: url('/fonts/vazirmatn-light.ttf');
+}
+
 :root {
     --color1: #F04FE7;
     --color2: #000000;
@@ -10,11 +28,18 @@
     --color5: rgba(0, 0, 0, 0.2);
 }
 
+body {
+    direction: rtl;
+}
+
 * {
     padding: 0;
     margin: 0;
+    
+    /* Vazir Font */
+    font-family: "vazirmatn";
+    font-weight: normal;
 }
-
 
 .disScroll {
     scrollbar-width: none;
@@ -27,7 +52,7 @@
 }
 
 .bg-custom {
-    background: radial-gradient(circle at 24.1% 68.8%, rgb(50, 50, 50) 0%, rgb(0, 0, 0) 99.4%)
+    background: radial-gradient(circle at 24.1% 68.8%, #1a1c24 0%, #1a1c24 99.4%)
 }
 
 .bg-error {
@@ -156,4 +181,3 @@
 .bg-status {
     background-image: linear-gradient(270.3deg, rgba(24, 24, 24, 0) 0.2%, rgb(16, 16, 16) 50%);
 }
-

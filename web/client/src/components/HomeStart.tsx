@@ -22,8 +22,8 @@ const HomeStart = () => {
     return (
         <>
             <Link href={status == "loading" ? "" : status == "authenticated" ? "/hub" : "/login"}
-                  className="bg-[#406272] text-white font-[500] w-fit p-[10px] border-0 rounded-[5px]">
-                Start Now
+                  className="bg-[#e20a3e] text-white font-[500] w-fit p-[12px] border-0 rounded-[10px] hover:bg-[#9b0d2e] duration-500 animate-pulse">
+                شروع وویس چت
             </Link>
         </>
     )

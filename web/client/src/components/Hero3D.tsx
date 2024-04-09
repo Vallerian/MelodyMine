@@ -12,14 +12,14 @@ const Hero3D = () => {
                 overflow: "hidden"
             }}>
             <OrbitControls enableZoom={false}/>
-            <ambientLight intensity={1}/>
+            <ambientLight intensity={2.5}/>
             <directionalLight position={[3, 2, 1]}/>
             <Sphere args={[1, 100, 200]} scale={2.2}>
                 <MeshDistortMaterial
-                    color="#D3D3D3FF"
+                    color="#e20a3e"
                     attach="material"
-                    distort={0.5}
-                    speed={2}
+                    distort={0.4}
+                    speed={3}
                 />
             </Sphere>
         </Canvas>

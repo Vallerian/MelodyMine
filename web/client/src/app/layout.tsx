@@ -9,7 +9,7 @@ import ErrorBox from "@/components/Porgress/ErrorBox";
 const inter = Inter({subsets: ['latin']})
 
 export const metadata: Metadata = {
-    metadataBase: new URL("https://melodymine.taher7.ir"),
+    metadataBase: new URL("https://mc-voice.gameup.ir"),
     robots: {
         index: true,
         follow: true,
@@ -21,32 +21,16 @@ export const metadata: Metadata = {
         },
     },
     title: {
-        default: 'MelodyMine',
-        template: 'MelodyMine | %s'
+        default: 'GameUP Voice Chat',
+        template: 'GameUP | %s'
     },
+    themeColor: "#e20a3e",
     authors: [{name: "TAHER7", url: "https://discord.com/users/403446004193558531"}],
-    description: 'MelodyMine is a tools for connect minecraft server to web for talk together',
-    keywords: ["MelodyMine", "Minecraft voice", "Minecraft Voice Chat", "Minecraft Voice Chat Plugin", "Minecraft Voice Plugin", "Minecraft"],
+    description: 'با وویس چت گیم آپ میتونید یک تجربه جدید از ماینکرفت داشته باشید که قبلا هیچوقت نداشتید',
+    keywords: ["GameUP", "Minecraft voice", "Minecraft Voice Chat", "Minecraft Voice Chat Plugin", "Minecraft Voice Plugin", "Minecraft"],
     icons: {
-        icon: "/melody-logo.png",
-        shortcut: "/melody-logo.png",
-    },
-    themeColor: "#1F7265",
-    openGraph: {
-        type: "website",
-        title: "MelodyMine",
-        url: new URL("https://melodymine.taher7.ir"),
-        siteName: "MelodyMine (MineCraft Voice Plugin)",
-        description: "MelodyMine is a revolutionary system for Minecraft servers where players can simultaneously enter a web interface, communicate, voice chat, and make their in-game interactions richer.",
-        images: "/melody-logo.png",
-        locale: 'en_US',
-    },
-    twitter: {
-        title: "MelodyMine",
-        site: "MelodyMine (MineCraft Voice Plugin)",
-        description: "MelodyMine is a revolutionary system for Minecraft servers where players can simultaneously enter a web interface, communicate, voice chat, and make their in-game interactions richer.",
-        images: "/melody-logo.png",
-        creator: "TAHER7",
+        icon: "/logo.png",
+        shortcut: "/logo.png",
     }
 }
 
@@ -57,9 +41,11 @@ export default function RootLayout({children}: { children: React.ReactNode }) {
         <AuthProvider>
             <main
                 className="h-screen w-full bg-custom flex-row items-center justify-between overflow-y-auto md:flex-col overflow-x-hidden disScroll">
-                <ErrorBox/>
-                <Navbar/>
-                {children}
+                <div className="w-[95%] mx-auto py-4">
+                    <ErrorBox/>
+                    <Navbar/>
+                    {children}
+                </div>
             </main>
         </AuthProvider>
         </body>
