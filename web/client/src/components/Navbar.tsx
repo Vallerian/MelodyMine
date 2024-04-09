@@ -19,7 +19,7 @@ const Navbar = () => {
             {/* ------------------ <>_<> Don't touch this Lines <>_<> ------------------ */}
             <div className="pr-3">
                 <Link href="https://github.com/Vallerian/MelodyMine" target="_blank"
-                    className="text-white flex items-center px-3 py-3 bg-[#2c2f3a] rounded-lg cursor-pointer shadow-inner shadow-[#323232]">
+                    className="text-white flex items-center px-3 py-3 bg-[#2c2f3a] rounded-[10px] cursor-pointer shadow-inner shadow-[#323232]">
                     <Image src="/github.png" alt="github logo" width={20} height={20} className="ml-2" />
                     گیتهاب سازنده
                 </Link>

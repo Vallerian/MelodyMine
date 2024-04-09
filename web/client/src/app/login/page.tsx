@@ -12,13 +12,14 @@ export const metadata: Metadata = {
     title: 'Login',
 }
 const Page = async () => {
+    const showForm = false;
     const session = await getAuthSession()
 
     if (session?.user) redirect('/hub')
 
     return (
         <div className="text-white flex justify-center items-center w-full h-screen">
-            <div
+            {showForm ? (<div
                 className="h-screen w-full sm:h-2/3 sm:w-2/3 flex flex-col sm:flex-row bg-[#D3D3D3FF] rounded text-black shadow-inner shadow-[#323232]">
 
                 {/*LEFT SIDE*/}
@@ -41,7 +42,15 @@ const Page = async () => {
                     <ContactUs/>
                 </div>
 
-            </div>
+            </div>) : (<div className="text-center">
+                <h3 className='text-3xl font-bold pb-8 text-[#e20a3e]'>اول باید وارد شوید!</h3>
+                <p className='text-xl' style={{lineHeight: '2.5rem'}}>
+                    برای ورود به وویس چت در قدم اول وارد گیم مود مورد نظر بشید،
+                    <br />
+                    سپس دستور <span dir="ltr" className='text-left text-white mx-2 items-center p-1 bg-[#2c2f3a] rounded-[10px] shadow-inner shadow-[#323232]'>/voice</span>
+                    را وارد کنید و سپس روی لینکی که به شما ارسال میشود کلیک کنید.
+                </p>
+            </div>)}
         </div>
     )
 }
