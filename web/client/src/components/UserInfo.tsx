@@ -163,7 +163,7 @@ const UserInfo = ({user, websocketKey}: UserInfoProps) => {
     }, [isValidate])
 
     return (
-        <div className="flex flex-col rounded-[10px] px-3 py-1 bg-custom shadow-xl w-full">
+        <div className="flex flex-col rounded-[10px] px-3 py-1 bg-custom shadow-xl w-full p-4">
             <div className="flex justify-between">
                 <div className="flex justify-start items-center">
                     <Image
