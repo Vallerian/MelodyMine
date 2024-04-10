@@ -163,7 +163,7 @@ const UserInfo = ({user, websocketKey}: UserInfoProps) => {
     }, [isValidate])
 
     return (
-        <div className="flex flex-col rounded px-3 py-1 bg-custom shadow-xl w-full">
+        <div className="flex flex-col rounded-[10px] px-3 py-1 bg-custom shadow-xl w-full">
             <div className="flex justify-between">
                 <div className="flex justify-start items-center">
                     <Image
@@ -171,48 +171,48 @@ const UserInfo = ({user, websocketKey}: UserInfoProps) => {
                         alt="" width={70} height={70}
                         className="object-contain"
                     />
-                    <div className="ml-2">
+                    <div className="mr-2">
                         <h1 className="text-white flex items-center w-full">
                             <span className="mr-2 hidden sm:block">
                                 <FaUserAlt/>
                             </span>
-                            <span className="capitalize">
+                            <span className="capitalize" style={{paddingTop: '0.3rem', paddingRight: '0.5rem'}}>
                                 {user.name}
                             </span>
                             <div className="flex items-center">
                                 {isMute ? (
                                     <div className="ms-2 self-center">
                                         <span
-                                            className="whitespace-nowrap ring-1 ring-red-900 text-xs font-medium mr-2 px-1.5 py-0.5 rounded dark:bg-red-500 dark:text-white flex">
+                                            className="whitespace-nowrap ring-1 ring-red-900 text-xs font-medium mr-2 px-1.5 py-0.5 rounded-[10px] dark:bg-red-500 dark:text-white flex">
                                             <span className="me-1 self-center hidden sm:block">
                                                 <BsFillMicMuteFill/>
                                             </span>
-                                            Server Mute
+                                            میوت کردن
                                         </span>
                                     </div>
                                 ) : ""}
                                 {userIsAdminMode ? (
                                     <div className="ms-2 self-center">
                                     <span
-                                        className="ring-1 ring-cyan-900 text-xs font-medium mr-2 px-1.5 py-0.5 rounded dark:bg-cyan-500 dark:text-white flex">
+                                        className="ring-1 ring-cyan-900 text-xs font-medium mr-2 px-1.5 py-0.5 rounded-[10px] dark:bg-cyan-500 dark:text-white flex">
                                         <span className="me-1 self-center hidden sm:block">
                                             <ImUserTie/>
                                         </span>
-                                        Admin
+                                        مدیر
                                     </span>
                                     </div>
                                 ) : ""}
                             </div>
                         </h1>
 
-                        <div className="my-1 btn-gradient w-full h-[1px] rounded-xl"/>
+                        <div className="my-1 btn-gradient w-full h-[1px] rounded-[10px]"/>
 
-                        <h3 className={`text-sm text-white ${isValidate ? "bg-emerald-500" : "bg-red-500"}  px-3 py-1 rounded flex items-center w-fit`}>
-                            <span className="text-xl mr-2 hidden sm:block">
+                        <h3 className={`text-sm text-white ${isValidate ? "bg-emerald-500" : "bg-red-500"}  px-3 py-1 rounded-[10px] flex items-center w-fit`}>
+                            <span className="text-xl ml-1 hidden sm:block">
                                 {isValidate ? <TbPlugConnected/> : <TbPlugConnectedX/>}
                             </span>
                             <span className="capitalize">
-                                {isValidate ? "Connected" : "Disconnect"}
+                                {isValidate ? "متصل" : "قطع"}
                             </span>
                         </h3>
                     </div>
@@ -230,13 +230,13 @@ const UserInfo = ({user, websocketKey}: UserInfoProps) => {
                     <StartButton/>
                 </div>
             </div>
-            <div className="my-1 btn-gradient w-full h-[1px] rounded-xl flex justify-between"/>
+            <div className="my-1 btn-gradient w-full h-[1px] rounded-[10px] flex justify-between"/>
             <div className="w-full flex justify-between items-center">
                 <h3 className="flex items-center text-white">
                     <span className="px-1">
                         <TbArrowBigRightLineFilled/>
                     </span>
-                    Connected to:
+                    متصل به:
                     {isValidate ? (<>
                         <span className="ml-1 font-bold text-green-500">
                             {isValidate ? server : ""}
@@ -250,12 +250,12 @@ const UserInfo = ({user, websocketKey}: UserInfoProps) => {
                     </>) : ""}
                 </h3>
                 <div
-                    className="text-transparent bg-clip-text bg-gradient-to-r from-[#221854] to-[#F04FE7] flex items-center">
-                    All
+                    className="text-transparent bg-clip-text bg-gradient-to-r from-[#e20a3e] to-[#9b0d2e] flex items-center">
+                    بازیکن
                     <span className="ms-1">
                         {users.length}
                     </span>
-                    <span className="ms-1 text-[#F04FE7]">
+                    <span className="ms-1 text-[#e20a3e]">
                         <BsFillPeopleFill/>
                     </span>
                 </div>

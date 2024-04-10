@@ -5,7 +5,7 @@ import {useStreamStore} from "@/store/StreamStore";
 import {BsFillMicFill, BsFillMicMuteFill} from "react-icons/bs";
 import {useUserStore} from "@/store/UserStore";
 import {useControlStore} from "@/store/ControlStore";
-import {BiPhoneCall, BiSolidRightArrow, BiSolidUserVoice, BiSolidVolumeMute} from "react-icons/bi";
+import {BiPhoneCall, BiSolidLeftArrow, BiSolidUserVoice, BiSolidVolumeMute} from "react-icons/bi";
 import {RiVoiceprintFill} from "react-icons/ri";
 import {ImUserTie} from "react-icons/im";
 import {useSocketStore} from "@/store/SocketStore";
@@ -582,7 +582,7 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
                     connectionType={RTCPeer ? userIsAdminMode ? "Admin Mode" : isInCall ? "Call" : "Normal" : ""}
                 /> : ""}
                 <div
-                    className="flex items-center bg-neutral-800 px-1 py-1 rounded-xl shadow-xl">
+                    className="flex items-center bg-[#1a1c24] p-4 rounded-xl shadow-xl">
                     <div className="flex justify-center items-center w-2/12">
                         <UserHead
                             key={user.name}
@@ -598,7 +598,7 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
                             enableVoice={enableVoice}
                         />
                     </div>
-                    <div className="flex flex-col ml-3 w-10/12">
+                    <div className="flex flex-col w-10/12" style={{marginRight: '1rem', marginLeft: '0.5rem'}}>
                         <h3 className="text-white text-xl flex">
                         <span className="flex items-center gap-1">
                             <span className="text-2xl">
@@ -614,7 +614,7 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
                                     <span className="me-1 self-center hidden sm:block">
                                         <BsFillMicMuteFill/>
                                     </span>
-                                    Server Mute
+                                    میوت کردن
                                 </span>
                                     </div>
                                 ) : ""}
@@ -625,7 +625,7 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
                                         <span className="me-1 self-center hidden sm:block">
                                             <ImUserTie/>
                                         </span>
-                                        Admin
+                                        مدیر
                                     </span>
                                     </div>
                                 ) : ""}
@@ -668,8 +668,8 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
                         />
                         <div className="flex items-center justify-between w-full">
                         <span
-                            className={`${user.server == server && serverIsOnline && isActiveVoice ? "text-green-500" : "text-neutral-400"} font-bold flex items-center gap-1`}>
-                            <BiSolidRightArrow/>
+                            className={`${user.server == server && serverIsOnline && isActiveVoice ? "text-green-500" : "text-neutral-400"} font-bold flex items-center gap-1`} style={{alignItems: 'start'}}>
+                            <BiSolidLeftArrow/>
                             {user.server}
                         </span>
                             <div className="flex items-center gap-1">
@@ -718,7 +718,7 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
                                         onClick={() => setVoiceBack(!voiceBack)}
                                     >
                             <RiVoiceprintFill/>
-                            Voice Back
+                            شنیدن صدا
                         </span>
                                 ) : ""}
                             </div>

@@ -5,10 +5,10 @@ import Settings from "@/config";
 const ContactUs = () => {
     return (
         <p className="text-sm pb-2">
-            Have a problem ?
+            مشکلی دارید؟
             <Link className="underline" target="_blank"
                   href={Settings.contactUsLink}>
-                Contact us
+                با ما در ارتباط باشید
             </Link>
         </p>
     )

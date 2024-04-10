@@ -167,11 +167,11 @@ const StartButton = () => {
                 onClick={handleStart}
                 disabled={isLoading || status == "loading" || startButton || !socketConnected}
             >
-                Start
+                اتصال به
                 <span className="px-1 hidden sm:block text-2xl">
                     <GiSoundWaves/>
                     </span>
-                Melody
+                وویس چت
             </button>
         </div>
     )

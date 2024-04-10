@@ -117,7 +117,7 @@ const SoundControl = () => {
                 <span className="text-xl hidden sm:block">
                     <MdOutlineNoiseAware/>
                 </span>
-                Noise Suppression
+                کاهش نویز میکروفون
             </button>
         </div>
     )

@@ -19,7 +19,7 @@ const Page = async () => {
         <>
             <div className="h-screen w-full flex flex-col text-white justify-center items-center">
                 <div
-                    className="h-screen w-full sm:h-5/6 sm:w-5/6 flex flex-col p-3 items-center bg-[#D3D3D3FF] rounded text-black shadow-inner shadow-[#323232]">
+                    className="h-screen w-full sm:h-5/6 sm:w-5/6 flex flex-col p-3 items-center bg-[#2c2f3a] rounded-[10px] text-black shadow-inner shadow-[#323232]">
                     {/*HEADER*/}
                     <div className="flex items-center justify-between w-full">
                         <UserInfo

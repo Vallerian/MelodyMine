@@ -1,26 +1,26 @@
 export default [
     {
         "errorType": "serverIsOnline",
-        "errorMessage": "To establish a voice connection, you should first join the Minecraft server (%serverIp%) and after entering, click on the \"Start Melody\" button.",
+        "errorMessage": "برای اتصال به سرور باید ابتدا به سرور متصل شوید (%serverIp%) سپس بعد از ورود, روی \"اتصال به وویس چت\" کلیک کنید.",
     },
     {
         "errorType": "micPermission",
-        "errorMessage": "To establish a voice connection, you must first enable your browser's microphone permission."
+        "errorMessage": "برای اتصال به وویس چت, باید اول به صفحه مرورگر دسترسی میکروفون بدهید.."
     },
     {
         "errorType": "multiUser",
-        "errorMessage": "Currently, you are connected with this account on the website. To to connect this account, you must first disconnect from your current account on the website."
+        "errorMessage": "شما درحال حاضر با حساب دیگری در سایت هستید. برای اتصال با همین حساب باید فقط با ۱ حساب آنلاین باشید."
     },
     {
         "errorType": "playerLeaveServer",
-        "errorMessage": "You have disconnected from the server. To establish a new connection, join the server (%serverIp%) and click on the \"Start Melody\" button again."
+        "errorMessage": "شما از سرور بیرون آمدید. برای اتصال به سرور باید ابتدا به سرور متصل شوید (%serverIp%) سپس بعد از ورود روی \"اتصال به وویس چت\" دوباره کلیک کنید."
     },
     {
         "errorType": "pluginDisabled",
-        "errorMessage": "The server you were online on has gone offline. Please try again, and if you encounter any issues, contact us for assistance."
+        "errorMessage": "سروری که شما در آن بودید آفلاین شد. لطفا دوباره تلاش کنید, و اگر همچنان مشکل داشتید به مدیریت سرور پیام دهید.."
     },
     {
         "errorType": "invalidVerifyCode",
-        "errorMessage": "Authentication failed because your verification code is missing. Please enter the server (%serverIp%) and obtain a new link using the /melodymine start command, or you can enter your username and password on this page."
+        "errorMessage": "ورود به دلیل وجود نداشتن کد تایید ناموفق بود. لطفا مجدد وارد سرور شوید (%serverIp%) و لینک جدیدی با دستور /voice بگیرید"
     }
 ]

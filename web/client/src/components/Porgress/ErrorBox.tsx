@@ -40,18 +40,18 @@ const ErrorBox = () => {
                 <div className="h-full flex flex-col">
                     <div className="flex items-center w-full h-auto bg-custom text-white text-2xl py-1">
                         <h3 className="w-full text-white flex items-center justify-center ">
-                            <span className="mr-1 text-red-600">
+                            <span className="ml-1 text-red-600">
                             <BiError/>
                             </span>
-                            Error
+                            ارور
                         </h3>
-                        <button className="mr-1 text-amber-300" onClick={() => setErrorBox(false)}>
+                        <button className="ml-1 text-amber-300" onClick={() => setErrorBox(false)}>
                             <AiOutlineCloseCircle/>
                         </button>
                     </div>
                     <div className="flex flex-col bg-error h-full">
                         <div className="flex flex-col gap-5 justify-center items-center h-full">
-                            <p className="ring-1 sm:w-4/5 md:w-5/6 lg:w-5/6 ring-neutral-600 mx-2 rounded-xl p-3 shadow-inner shadow-neutral-400 bg-[#00000020]">
+                            <p className="sm:w-4/5 md:w-5/6 lg:w-5/6 mx-2 rounded-xl p-3 shadow-inner bg-[#00000020]">
                                 {errorMessage}
                             </p>
                         </div>
