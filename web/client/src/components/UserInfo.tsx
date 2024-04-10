@@ -238,7 +238,7 @@ const UserInfo = ({user, websocketKey}: UserInfoProps) => {
                     </span>
                     متصل به:
                     {isValidate ? (<>
-                        <span className="ml-1 font-bold text-green-500">
+                        <span className="ml-1 mr-2 font-bold text-green-500">
                             {isValidate ? server : ""}
                         </span>
                         <span className="ms-1">
