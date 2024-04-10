@@ -109,7 +109,7 @@ object Storage {
     val onlinePlayers = hashMapOf<String, MelodyPlayer>()
     val subCommands = ArrayList<SubCommand>()
     val muteCoolDown = hashMapOf<UUID, Long>()
-    val playerMuteShortcut = ArrayList<UUID>()
+    val playerMuteShortcut = HashSet<UUID>()
 
     // talk view data
     var isEnableBossBar: Boolean = true
