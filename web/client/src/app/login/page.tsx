@@ -19,8 +19,10 @@ const Page = async () => {
 
     return (
         <div className="text-white flex justify-center items-center w-full h-screen">
-            {showForm ? (<div
-                className="h-screen w-full sm:h-2/3 sm:w-2/3 flex flex-col sm:flex-row bg-[#D3D3D3FF] rounded text-black shadow-inner shadow-[#323232]">
+            <div
+                className="h-screen w-full sm:h-2/3 sm:w-2/3 flex flex-col sm:flex-row bg-[#D3D3D3FF] rounded text-black shadow-inner shadow-[#323232]"
+                style={{display: showForm ? 'block' : 'none'}}
+            >
 
                 {/*LEFT SIDE*/}
                 <div className="flex-[1] flex sm:flex-[3] md:flex-[2] lg:flex-[3] relative">
@@ -42,7 +44,8 @@ const Page = async () => {
                     <ContactUs/>
                 </div>
 
-            </div>) : (<div className="text-center">
+            </div>
+            <div className="text-center" style={{display: showForm ? 'none' : 'block'}}>
                 <h3 className='text-3xl font-bold pb-8 text-[#e20a3e]'>اول باید وارد شوید!</h3>
                 <p className='text-xl' style={{lineHeight: '2.5rem'}}>
                     برای ورود به وویس چت در قدم اول وارد گیم مود مورد نظر بشید،
@@ -50,7 +53,7 @@ const Page = async () => {
                     سپس دستور <span dir="ltr" className='text-left text-white mx-2 items-center p-1 bg-[#2c2f3a] rounded-[10px] shadow-inner shadow-[#323232]'>/voice</span>
                     را وارد کنید و سپس روی لینکی که به شما ارسال میشود کلیک کنید.
                 </p>
-            </div>)}
+            </div>
         </div>
     )
 }

@@ -41,8 +41,8 @@ export default function RootLayout({children}: { children: React.ReactNode }) {
         <AuthProvider>
             <main
                 className="h-screen w-full bg-custom flex-row items-center justify-between overflow-y-auto md:flex-col overflow-x-hidden disScroll">
+                <ErrorBox/>
                 <div className="w-[95%] mx-auto py-4">
-                    <ErrorBox/>
                     <Navbar/>
                     {children}
                 </div>

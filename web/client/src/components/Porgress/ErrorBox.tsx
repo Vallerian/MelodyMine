@@ -38,14 +38,14 @@ const ErrorBox = () => {
             <div ref={box}
                  className="mx-2 w-full h-1/3 sm:w-3/4 md:w-3/5 lg:w-3/6 rounded-xl shadow ring-1 ring-neutral-950 overflow-hidden">
                 <div className="h-full flex flex-col">
-                    <div className="flex items-center w-full h-auto bg-custom text-white text-2xl py-1">
+                    <div className="flex items-center w-full h-auto bg-custom text-white text-lg py-1">
                         <h3 className="w-full text-white flex items-center justify-center ">
-                            <span className="ml-1 text-red-600">
-                            <BiError/>
+                            <span className="ml-1 text-red-600 text-2xl">
+                                <BiError/>
                             </span>
                             ارور
                         </h3>
-                        <button className="ml-1 text-amber-300" onClick={() => setErrorBox(false)}>
+                        <button className="ml-3 text-amber-300" onClick={() => setErrorBox(false)}>
                             <AiOutlineCloseCircle/>
                         </button>
                     </div>
