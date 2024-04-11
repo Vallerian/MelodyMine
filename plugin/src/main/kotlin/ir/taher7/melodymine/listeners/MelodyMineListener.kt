@@ -39,7 +39,7 @@ class MelodyMineListener : Listener {
                 Storage.onlinePlayers[result.uuid] = result
                 Storage.onlinePlayers[result.uuid]?.talkBossBar = TalkBossBar(event.player)
                 Storage.onlinePlayers[result.uuid]?.talkNameTag = TalkNameTag(event.player)
-
+                MelodyManager.checkPlayerWebConnection(result)
                 if (result.webIsOnline && result.isActiveVoice) {
                     Storage.onlinePlayers.values.forEach { player ->
                         if (player.uuid != result.uuid && player.adminMode && player.socketID != null) {
