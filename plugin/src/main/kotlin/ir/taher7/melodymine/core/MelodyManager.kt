@@ -811,4 +811,16 @@ object MelodyManager {
             }
         }.runTask(MelodyMine.instance)
     }
+
+    fun checkPlayerWebConnection(player: MelodyPlayer) {
+        if (!player.webIsOnline) return
+        Websocket.socket.emit(
+            "onCheckPlayer",
+            mapOf(
+                "socketID" to player.socketID,
+                "uuid" to player.uuid
+            )
+        )
+
+    }
 }

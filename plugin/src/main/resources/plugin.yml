@@ -1,5 +1,5 @@
 name: MelodyMine
-version: '1.5.5'
+version: '1.5.6'
 main: ir.taher7.melodymine.MelodyMine
 api-version: '1.13'
 author: taher7
