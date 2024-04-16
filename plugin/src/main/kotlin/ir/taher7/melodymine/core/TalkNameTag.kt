@@ -109,7 +109,7 @@ class TalkNameTag(val player: Player) {
         packet.integers.writeSafely(0, id)
 
 
-        if (ReflectionUtils.supports(19,3)) {
+        if (ReflectionUtils.supports(19, 3)) {
             packet.dataValueCollectionModifier.writeSafely(
                 0, listOf(
                     WrappedDataValue(
@@ -271,7 +271,7 @@ class TalkNameTag(val player: Player) {
 
     }
 
-    fun getConfig(): NameTagConfig? {
+    private fun getConfig(): NameTagConfig? {
         return Storage.nameTagConfigs[nameTagType]
     }
 

@@ -247,7 +247,6 @@ io.on("connection", async (socket: CustomSocket) => {
         socketID: string
         sendTOAll: boolean
         soundName: string
-
     }) => {
         socket.to(data.sendTOAll ? socket.melodyClient.server : data.socketID).emit("onStopSoundReceive", encrypt({
             sound: data.soundName,
@@ -321,6 +320,25 @@ io.on("connection", async (socket: CustomSocket) => {
             })
         })
 
+    })
+
+
+    socket.on("onCheckPlayer", async (data) => {
+        const socket = io.sockets.sockets.get(data.socketID)
+        if (socket && socket.connected) return
+        try {
+            await prisma.melodymine.update({
+                where: {uuid: data.uuid},
+                data: {
+                    socketID: null,
+                    webIsOnline: false,
+                    isActiveVoice: false,
+                },
+            })
+
+        } catch (e) {
+            console.log(e)
+        }
     })
 
 
@@ -502,7 +520,6 @@ io.on("connection", async (socket: CustomSocket) => {
                     serverIsOnline: false
                 },
             })
-
 
             socket.broadcast.except("plugin").emit("onPluginDisabled", encrypt({
                 server: socket.melodyClient.server
