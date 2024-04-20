@@ -1,28 +1,14 @@
 import express from 'express';
 import http from "http"
-import https from "https";
 import {Server} from "socket.io"
 import {prisma} from "./utils/connect";
-import {callData, CustomSocket, IClient, RenewData, SoundSettings} from "./interfaces";
+import {callData, CustomSocket, IClient, RenewData} from "./interfaces";
 import {decrypt, encrypt, getLocation} from "./utils";
-import fs from "fs"
 
-const privateKeyPath = "./ssl/privkey.pem"
-const certPath = "./ssl/cert.pem"
-const chainPath = "./ssl/chain.pem"
 
 const app = express()
-let server
-if (process.env.SSL) {
-    server = https.createServer({
-        key: fs.readFileSync(privateKeyPath),
-        cert: fs.readFileSync(certPath),
-        ca: fs.readFileSync(chainPath),
-    }, app)
-} else {
-    server = http.createServer(app)
-}
-const PORT = process.env.PORT || 4000
+const server = http.createServer(app)
+const PORT = 4000
 
 const io = new Server(server, {
     cors: {

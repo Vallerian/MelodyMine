@@ -58,6 +58,7 @@ const UserInfo = ({user, websocketKey}: UserInfoProps) => {
         if (!sound) return
         const howl = sound?.howl
         if (!playingSounds.find(sound => sound.name == data.sound)) {
+            if (data.volume) howl?.volume(data.volume)
             howl?.play()
             setPlayingSounds(prevState => [...prevState, sound])
             howl?.once("end", () => {
