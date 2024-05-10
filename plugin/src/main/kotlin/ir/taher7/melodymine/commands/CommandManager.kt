@@ -1,9 +1,9 @@
 package ir.taher7.melodymine.commands
 
 import ir.taher7.melodymine.commands.subcommands.*
+import ir.taher7.melodymine.storage.Messages
 import ir.taher7.melodymine.storage.Storage
 import ir.taher7.melodymine.utils.Adventure.sendMessage
-import ir.taher7.melodymine.utils.Adventure.toComponent
 import ir.taher7.melodymine.utils.Utils
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
@@ -28,7 +28,7 @@ class CommandManager : CommandExecutor {
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
 
         if (sender !is Player) {
-            sender.sendMessage("<red>Console can not use this command.".toComponent())
+            sender.sendMessage(Messages.getMessage("errors.only_players"))
             return true
         }
 
@@ -42,7 +42,7 @@ class CommandManager : CommandExecutor {
                 if (sender.hasPermission(subCommand.permission)) {
                     subCommand.handler(sender, args)
                 } else {
-                    sender.sendMessage("<prefix>You don't have permission to use this command.".toComponent())
+                    sender.sendMessage(Messages.getMessage("errors.no_permission"))
                 }
             }
         }

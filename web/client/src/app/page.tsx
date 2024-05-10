@@ -12,7 +12,7 @@ export default async function Home() {
                 <h1 className="text-[55px] sm:text-[74px] text-white">Melody Mine</h1>
                 <div className="flex items-center">
                     <Image src="/line.png" alt="line" width={40} height={5} className="hidden sm:block mr-3"/>
-                    <h2 className="text-2xl text-[#DDB216] ">Talk to Together in Minecraft Server</h2>
+                    <h2 className="text-2xl text-[#DDB216] ">Talk Together in Minecraft Server</h2>
                 </div>
                 <p className="text-[24px] text-[#D3D3D3FF]">
                     Experience a new dimension of Minecraft camaraderie with MelodyMine.

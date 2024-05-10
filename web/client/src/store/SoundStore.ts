@@ -2,7 +2,7 @@ import {createWithEqualityFn} from "zustand/traditional";
 import {shallow} from "zustand/shallow";
 import {Howl} from "howler";
 import sounds from "@/sounds";
-import {ISoundSettings} from "@/interfaces";
+import {IPlayerStatus, ISoundSettings} from "@/interfaces";
 
 export interface ISound {
     name: string
@@ -14,24 +14,26 @@ export interface ISound {
 interface State {
     soundList: ISound[]
     soundSettings: ISoundSettings
+    playerStatus: IPlayerStatus[]
 }
 
 interface Actions {
     initSounds: () => void
     setSoundSettings: (soundSettings: ISoundSettings) => void
+    setPlayerStatus: (playerStatus: IPlayerStatus[]) => void
 }
 
 export const useSoundStore = createWithEqualityFn<State & Actions>((setState) => ({
     soundSettings: {
-        sound3D: true,
         lazyHear: true,
-        maxDistance: 30,
+        maxDistance: 15,
         refDistance: 5,
+        rolloffFactor: 1,
         innerAngle: 120,
         outerAngle: 180,
         outerVolume: 0.3
-
     },
+    playerStatus: [],
     soundList: [],
     initSounds: () => {
         const tempSounds: ISound[] = []
@@ -44,7 +46,8 @@ export const useSoundStore = createWithEqualityFn<State & Actions>((setState) =>
         tempSounds.forEach(sound => sound.howl.load())
         setState(() => ({soundList: tempSounds}))
     },
-    setSoundSettings: (soundSettings) => setState(() => ({soundSettings}))
+    setSoundSettings: (soundSettings) => setState(() => ({soundSettings})),
+    setPlayerStatus: (playerStatus) => setState(() => ({playerStatus}))
 
 
 }), shallow)

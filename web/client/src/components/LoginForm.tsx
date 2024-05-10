@@ -1,5 +1,5 @@
 "use client"
-import {TbArrowBigRightLineFilled} from "react-icons/tb";
+
 import {signIn, useSession} from 'next-auth/react';
 import * as Yup from 'yup';
 import {FormikHelpers, useFormik} from "formik";
@@ -8,6 +8,7 @@ import {useLayoutEffect, useState} from "react";
 import {AiOutlineEye, AiOutlineEyeInvisible} from "react-icons/ai";
 import Progress from "@/components/Porgress/Progress";
 import {useValidateStore} from "@/store/ValidateStore";
+import {PiArrowFatLineRightFill} from "react-icons/pi";
 
 interface submitValues {
     username: string,
@@ -20,7 +21,7 @@ const LoginForm = () => {
     const {data: session, status} = useSession()
     const [showPassword, setShowPassword] = useState<boolean>(false)
     const params = useSearchParams()
-    const {setError} = useValidateStore(status => status)
+    const {setError, setAutoStart} = useValidateStore(status => status)
     const formik = useFormik({
         initialValues: {username: '', password: ''},
         onSubmit: (values, formikHelpers) => handleSubmit({values: values, helpers: formikHelpers}),
@@ -39,6 +40,10 @@ const LoginForm = () => {
     useLayoutEffect(() => {
         const doAsync = async () => {
             if (params.has("verifyCode")) {
+                if (params.has("start")) {
+                    setAutoStart(true)
+                }
+
                 const verifyCode = params.get("verifyCode")
                 route.replace("/login")
                 if (!Number(verifyCode)) setError("invalidVerifyCode")
@@ -90,7 +95,7 @@ const LoginForm = () => {
             <div className="flex flex-col items-center w-full">
                 <div className="flex items-center w-full btn-gradient rounded">
                     <label className="px-3 text-white">
-                        <TbArrowBigRightLineFilled/>
+                        <PiArrowFatLineRightFill/>
                     </label>
                     <input
                         type="text"
@@ -114,7 +119,7 @@ const LoginForm = () => {
             <div className="flex flex-col items-center w-full">
                 <div className="flex items-center w-full btn-gradient rounded">
                     <label className="px-3 text-white">
-                        <TbArrowBigRightLineFilled/>
+                        <PiArrowFatLineRightFill/>
                     </label>
                     <input
                         type={showPassword ? "text" : "password"}

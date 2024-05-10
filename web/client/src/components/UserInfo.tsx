@@ -1,13 +1,13 @@
 "use client"
-import Image from "next/image";
+import {Image} from "@nextui-org/image";
 import {FaUserAlt} from "react-icons/fa";
-import {TbArrowBigRightLineFilled, TbPlugConnected, TbPlugConnectedX} from "react-icons/tb";
+import {TbPlugConnected, TbPlugConnectedX} from "react-icons/tb";
 import {RxExit} from "react-icons/rx";
 import StartButton from "@/components/StartButton";
 import {signOut, useSession} from "next-auth/react";
 import {useUserStore} from "@/store/UserStore";
 import {useValidateStore} from "@/store/ValidateStore";
-import {IOnlineUsers, ISoundSettings, IUser} from "@/interfaces";
+import {IOnlineUsers, IPlayerStatus, ISoundSettings, IUser} from "@/interfaces";
 import {BsFillMicMuteFill, BsFillPeopleFill} from "react-icons/bs";
 import {useOnlineUsersStore} from "@/store/OnlineUsersStore";
 import {useEffect, useState} from "react";
@@ -15,6 +15,8 @@ import {ImUserTie} from "react-icons/im";
 import {useSocketStore} from "@/store/SocketStore";
 import {decrypt} from "@/utils";
 import {ISound, useSoundStore} from "@/store/SoundStore";
+import Settings from "@/components/Settings";
+import {PiArrowFatLineRightFill} from "react-icons/pi";
 
 
 interface UserInfoProps {
@@ -26,7 +28,7 @@ const UserInfo = ({user, websocketKey}: UserInfoProps) => {
     const {server, setSecretKey, isMute} = useUserStore(state => state)
 
     const {isValidate} = useValidateStore(state => state)
-    const {initSounds, soundList, setSoundSettings} = useSoundStore(state => state)
+    const {initSounds, soundList, setSoundSettings, setPlayerStatus} = useSoundStore(state => state)
     const {socket} = useSocketStore(state => state)
     const {users} = useOnlineUsersStore(state => state)
     const {status} = useSession()
@@ -100,8 +102,12 @@ const UserInfo = ({user, websocketKey}: UserInfoProps) => {
     }
 
     const onSoundSettingReceive = (token: string) => {
-        const data = decrypt(token) as ISoundSettings
-        setSoundSettings(data)
+        const data = decrypt(token) as {
+            soundSettings: ISoundSettings
+            playerStatus: IPlayerStatus[]
+        }
+        setPlayerStatus(data.playerStatus)
+        setSoundSettings(data.soundSettings)
     }
 
     const onPlayerLeaveReceivePlugin = (token: string) => {
@@ -219,7 +225,8 @@ const UserInfo = ({user, websocketKey}: UserInfoProps) => {
                     </div>
                 </div>
                 <div className="flex flex-col justify-between my-1.5 text-white">
-                    <div className="flex justify-end">
+                    <div className="flex gap-2 justify-end items-center">
+                        <Settings/>
                         <button disabled={status == "loading"} className="text-red-500 cursor-pointer text-xl"
                                 onClick={() => signOut({
                                     redirect: true,
@@ -235,7 +242,7 @@ const UserInfo = ({user, websocketKey}: UserInfoProps) => {
             <div className="w-full flex justify-between items-center">
                 <h3 className="flex items-center text-white">
                     <span className="px-1">
-                        <TbArrowBigRightLineFilled/>
+                        <PiArrowFatLineRightFill/>
                     </span>
                     Connected to:
                     {isValidate ? (<>

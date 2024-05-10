@@ -8,10 +8,13 @@ import ir.taher7.melodymine.database.Database
 import ir.taher7.melodymine.services.Websocket
 import ir.taher7.melodymine.storage.Storage
 import ir.taher7.melodymine.core.TalkNameTag
+import ir.taher7.melodymine.storage.Settings
 import ir.taher7.melodymine.utils.Utils
 import org.bukkit.Bukkit
+import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
+import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.player.AsyncPlayerChatEvent
 import org.bukkit.event.player.PlayerChangedWorldEvent
 import org.bukkit.event.player.PlayerJoinEvent
@@ -33,7 +36,7 @@ class MelodyMineListener : Listener {
                 if (!result.serverIsOnline) Utils.forceVoice(result)
                 result.player = event.player
                 result.serverIsOnline = true
-                result.server = Storage.server
+                result.server = Settings.server
                 result.verifyCode = Utils.getVerifyCode()
                 Database.updatePlayer(result, false)
                 Storage.onlinePlayers[result.uuid] = result
@@ -60,6 +63,8 @@ class MelodyMineListener : Listener {
 
     @EventHandler
     fun onPlayerLeave(event: PlayerQuitEvent) {
+        Utils.removePlayerCoolDown(event.player)
+        Storage.shortcutCoolDown.remove(event.player.uniqueId)
         object : BukkitRunnable() {
             override fun run() {
                 Database.findPlayer(event.player.uniqueId.toString()) { result ->
@@ -122,7 +127,7 @@ class MelodyMineListener : Listener {
         Utils.forceVoice(melodyPlayer)
         if (!melodyPlayer.isActiveVoice || melodyPlayer.adminMode) return
 
-        if (melodyPlayer.isInCall && Storage.disableWorld.contains(event.player.world.name)) {
+        if (melodyPlayer.isInCall && Settings.disableWorlds.contains(event.player.world.name)) {
             melodyPlayer.callTarget?.let { MelodyManager.endCall(melodyPlayer, it) }
         }
 
@@ -148,6 +153,18 @@ class MelodyMineListener : Listener {
                 }
             }
         }
+    }
+
+    @EventHandler
+    fun onEntityDamage(event: EntityDamageEvent) {
+        if (!Settings.forceVoice) return
+        if (!Settings.forceVoiceDamage) return
+        if (event.entity !is Player) return
+        if (event.entity.hasPermission("melodymine.force")) return
+        if (Settings.disableWorlds.contains(event.entity.location.world?.name)) return
+        val melodyPlayer = Storage.onlinePlayers[event.entity.uniqueId.toString()] ?: return
+        if (melodyPlayer.isActiveVoice) return
+        event.isCancelled = true
     }
 
 }

@@ -51,32 +51,6 @@ MelodyMine is a revolutionary system for Minecraft servers where players can sim
 
 - 🛠️ **Comprehensive API:** Developers have access to a comprehensive API, including events like `PlayerJoinWebEvent` and `PlayerLeaveWebEvent`, enabling the creation of custom plugins and expanding the possibilities of your server. 📚👩‍💻
 
-- 📝 **Simple Plugin config.yml:** Customize plugin settings and messages easily with the user-friendly config.yml.
-
-```yaml
-# ----- Database configs -----
-database:
-  host: "localhost"
-  port: "3306"
-  user: 'root'
-  password: ''
-  database_name: 'melody'
-
-# ----- Basic configs -----
-
-# game mode name.
-server: "Lobby" # must be unique!
-
-# website url
-website: "http://localhost:3000"
-
-# websocket url
-websocket-url: "ws://localhost:4000"
-
-# websocket auth security key !!! (important) change that after install plugin !!!
-websocket-auth-key: "" # must be the same in web server auth key
-```
-
 - 📞 **Call System:** You have the ability to make a call using the command `/melodymine call start <player>` to call other players.
 
 <img style="margin-bottom:10px;border-radius: 5px" src="https://i.ibb.co/pyjTX8N/callpng.png"/>

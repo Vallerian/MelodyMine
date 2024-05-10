@@ -1,0 +1,194 @@
+#
+# You can find all the messages used in the MelodyMine plugin in this file.
+#
+### https://github.com/Vallerian/MelodyMine/pulls
+#
+# If you have ideas for adding a new language to the MelodyMine plugin, feel free to fork the repository at the link below and submit a pull request.
+# If approved, your language will be added to the plugin.
+#
+
+messages:
+  general:
+    prefix: "<gradient:#f20ae5:#FFF4E4>MelodyMine</gradient> <#EAEAEA><bold>|</bold> <text_color>"
+    text_color: "<gradient:#EAEAEA:#E3ACF9>"
+    hover_color: "<gradient:#f20ae5:#FFF4E4>"
+    highlight_color: "<#FFD369>"
+    content_header: "<st><gradient:#121F31:#F04FE7>                     </gradient></st> <bold><gradient:#F04FE7:#FFF4E4:#F04FE7>MelodyMine</gradient></bold> <st><gradient:#F04FE7:#121F31>                      </st>"
+    content_footer: "<st><gradient:#121F31:#F04FE7:#121F31><st>                                                             "
+    cool_down: "<prefix>Shoma mitavanid bad az <highlight_color>{TIME} <text_color>sanie command ra ejra konid."
+    help_line: "<click:run_command:'{SYNTAX}'><hover:show_text:'<hover_color>Baraye ejra command click konid <i>{SYNTAX}</i>'><hover_color>{SYNTAX} <#FFF4E4><bold>|</bold> <text_color>{DESCRIPTION}</hover></click>"
+
+
+  success:
+    database: "Ba movafaghiat be Database vasl shod."
+    websocket: "Ba movafaghiat be Websocket vasl shod."
+
+
+  errors:
+    player_not_found: "<prefix>Bazikon yaft nashod."
+    no_permission: "<prefix>Shoma dastresi kafi baraye ejra in command ra nadarid."
+    only_players: "<red>Console nemitavanad az in command ejra konad."
+    active_voice: "<click:run_command:'/melodymine start link'><hover:show_text:'<hover_color>Baraye ejra command click konid <i>/melodymine start link</i>'><prefix>Shoma aval bayad vared voice chat shavid <hover_color>/melodymine start link <text_color>.</hover></click>"
+    active_voice_others: "<prefix><highlight_color>{PLAYER} <text_color>Dar voice chat online nist."
+    database: "Be Database vasl nashod..."
+    websocket: "Be Websocket vasl nashod connection haye khod ra check konid."
+    websocket_failed: "Be Websocket vasl nashod..."
+
+
+  website:
+    open: "<hover:show_text:'<hover_color>Baraye baz kardan click konid'><prefix>Baraye baz kardan website va shoro voice chat click konid..</hover>"
+    join: "<prefix>Shoma be website vasl shodid."
+    leave: "<prefix>Shoma az website kharej shodid."
+    start: "<prefix>Shoma voice chat ra shoro kardid."
+    end: "<prefix>Shoma voice chat ra ghat kardid."
+
+
+  force_voice:
+    title: "<hover_color>Voice Ejbari"
+    subtitle: "<text_color>command <u>/melodymine start link</u> ra ejra konid"
+
+
+  logger:
+    website_join: "<prefix><highlight_color>{PLAYER} <text_color>Be website vasl shod."
+    website_leave: "<prefix><highlight_color>{PLAYER} <text_color>Az website kharej shod."
+    start_voice: "<prefix><highlight_color>{PLAYER} <text_color>Voice chat ra shoro kard."
+    end_voice: "<prefix><highlight_color>{PLAYER} <text_color>Voice chat ra ghat kard."
+    active_voice: "<prefix><highlight_color>{PLAYER} <text_color>Voice chat active ast."
+
+
+  placeholder:
+    web_online_true: "Online"
+    web_online_false: "Offline"
+    voice_active_true: "Faal"
+    voice_active_false: "Gheyr Faal"
+    adminmode_true: "Roshan"
+    adminmode_false: "Khamosh"
+    server_mute_true: "Server Mute"
+    server_mute_false: "Server Unmute"
+    self_mute: "Mute"
+    self_unmute: "unMute"
+    self_deafen: "Deafen"
+    self_undeafen: "UnDeafen"
+
+
+  commands:
+    reload:
+      description: "Reload kardan config."
+      reload_success: "<prefix>Plugin ba movafaghiat reload shod."
+
+    adminmode:
+      description: "Sohbat kardan ba hameye bazikonan."
+      is_start_voice: "<prefix>Baraye estefade az Admin Mode shoma bayad dar voice chat bashid."
+      disable: "<prefix>Admin mode gheyr faal shod."
+      enable: "<prefix>Admin mode faal shod."
+
+    start:
+      description: "Gereftan link voice chat."
+      hot_bar: "<prefix>HotBar Por ast."
+      scan_qrcode: "<prefix>Scan the QRCode."
+      help_message:
+        - ""
+        - "<click:run_command:'{SYNTAX} link'><hover:show_text:'<hover_color>Baraye ejra command click konid <i>{SYNTAX} link</i>'><hover_color>{SYNTAX} link <#FFF4E4><bold>|</bold> <text_color>Baz kardan website ba link.</hover></click>"
+        - "<click:run_command:'{SYNTAX} qrcode'><hover:show_text:'<hover_color>Baraye ejra command click konid <i>{SYNTAX} qrcode</i>'><hover_color>{SYNTAX} qrcode <#FFF4E4><bold>|</bold> <text_color>Baz kardan website ba qrcode.</hover></click>"
+        - ""
+
+    reset:
+      description: "Reset kardan etelaat bazikon."
+      success: "<prefix><highlight_color>{PLAYER} <text_color>Datahaye storage bazikon hazf shod."
+      help_message:
+        - ""
+        - "<hover_color>{SYNTAX} <player> <#FFF4E4><bold>|</bold> <text_color>Reset kardan etelaat bazikon."
+        - ""
+
+    status:
+      description: "Check kardan vaziat voice player."
+      help_message:
+        - ""
+        - "<click:run_command:'{SYNTAX} <player>'><hover:show_text:'<highlight_color>Baraye ejra command click konid <i>{SYNTAX} player</i>'><highlight_color>{SYNTAX} <#FFF4E4><bold>|</bold> <text_color>Check kardan vaziat voice khod.</hover></click>"
+        - "<click:run_command:'{SYNTAX}'><hover:show_text:'<highlight_color>Baraye ejra command click konid <i>{SYNTAX}</i>'><highlight_color>{SYNTAX} <player> <#FFF4E4><bold>|</bold> <text_color>Check kardan vaziat voice baghie bazikonan.</hover></click>"
+        - ""
+
+    mute:
+      description: "Mute kardan bazikon dar voice chat."
+      already_mute: "<prefix><highlight_color>{PLAYER} <text_color>Darhale hazer mute ast."
+      success: "<prefix><highlight_color>{PLAYER} <text_color>Dar voice chat mute shod."
+      success_target: "<prefix>Shoma dar voice chat mute shodid."
+      help_message:
+        - ""
+        - "<click:run_command:'{SYNTAX} <player>'><hover:show_text:'<hover_color>Baraye ejra command click konid <i>{SYNTAX} <player></i>'><hover_color>{SYNTAX} <player> <#FFF4E4><bold>|</bold> <text_color>Mute kardan bazikon dar voice chat.</hover></click>"
+        - ""
+
+    unmute:
+      description: "Unmute kardan bazikon dar voice chat."
+      not_mute: "<prefix>{PLAYER} <text_color>Mute nist."
+      success: "<prefix><hover_color>{PLAYER} <text_color>Dar voice chat unmute shod."
+      success_target: "<prefix>Shoma dar voice chat unmute shodid."
+      help_message:
+        - ""
+        - "<click:run_command:'{SYNTAX} <player>'><hover:show_text:'<hover_color>Baraye ejra command click konid <i>{SYNTAX} <player></i>'><hover_color>{SYNTAX} <player> <#FFF4E4><bold>|</bold> <text_color>UnMute kardan bazikon dar voice chat.</hover></click>"
+        - ""
+
+    toggle:
+      description: "Didan message haye log plugin."
+      enable: "<prefix>Didan log message ha faal shod."
+      disable: "<prefix>Didan log message ha gheyr faal shod."
+
+    control:
+      description: "Mute / Deafen kardan khod dar website."
+      mute: "<prefix>Shoma khod ra dar website mute kardid."
+      unmute: "<prefix>Shoma khod ra dar website unmute kardid."
+      deafen: "<prefix>Shoma khod ra dar website deafen kardid."
+      undeafen: "<prefix>Shoma khod ra dar website undeafen kardid."
+      toggle_cool_down: "<prefix>Shoma mitavanid bad az <highlight_color>{TIME}<text_color> sanie toggle konid."
+      help_message:
+        - ""
+        - "<click:run_command:'{SYNTAX} mute'><hover:show_text:'<hover_color>Baraye ejra command click konid <i>{SYNTAX} mute</i>'><hover_color>{SYNTAX} mute <#FFF4E4><bold>|</bold> <text_color>Mute / Unmute kardan khod dar website.</hover></click>"
+        - "<click:run_command:'{SYNTAX} deafen'><hover:show_text:'<hover_color>Baraye ejra command click konid <i>{SYNTAX} deafen</i>'><hover_color>{SYNTAX} deafen <#FFF4E4><bold>|</bold> <text_color>Deafen / Undeafen kardan khod dar website.</hover></click>"
+        - ""
+
+    call:
+      description: "Tamas gereftan ba bazikon ha."
+      call_to_yourself: "<prefix>Shoma nemitavanid ba khodetan tamas begirid."
+      in_call_start: "<prefix>Shoma dar hale hazer dar tamas hastid ba<highlight_color> {PLAYER}<text_color>, Agar mikhahid tamas jadidi shoro konid az command <i>/melodymine call end</i> estefade konid."
+      in_pending: "<prefix>Shoma dar hale hazer dar entezar tamas hastid ba<highlight_color> {PLAYER}<text_color>, Lotfan ta tamam shodan zaman entezar sabr konid."
+      is_toggle: "<prefix>Darkhast tamas shoma gheyr faal ast baraye faal kardan az dastor <i>/melodymine call toggle</i> estefade konid."
+      disable_world: "<prefix>Tamas dar in world gheyr faal ast."
+      not_available: "<prefix><highlight_color>{PLAYER} <text_color>Dar hale hazer dastres nist lotfan badan tamas begirid."
+      not_in_call: "<prefix>Shoma dar hale hazer dar hich tamasi nistid."
+      disable_adminmode: "<prefix>Baraye tamas bayad aval admin mode khod ra gheyr faal konid."
+      in_call_accept: "<prefix>Shoma dar hale hazer ba <highlight_color> {PLAYER}<text_color> dar tamas hastid, agar mikhahd tamas ra ghabol konid az command <i>/melodymine call end</i> estefade konid."
+      call_request: "<prefix>Shoma hich darkhast tamasi nadarid."
+      call_request_enable: "<prefix>Darkhast tamas shoma faal shod, Hala bazikonan mitavanand be shoma darkhast tamas dahand."
+      call_request_disable: "<prefix>Darkhast tamas shoma gheyr faal shod, Hala bazikonan nemitavanand be shoma darkhast tamas dahand."
+      call_wait: "<text_color>Lotfan sabr konid ta <highlight_color>{PLAYER} <text_color>Darkhast shoma ra ghabol konad."
+      accept_button: "<click:run_command:'/melodymine call deny'><text_color>Click kardan baraye <gradient:#D80032:#F78CA2>Rad</gradient> <text_color>tamas.</click>"
+      call_receive: "<text_color>Shoma yek darkhast tamas az taraf <highlight_color>{PLAYER}<text_color> darid."
+      call_accept: "<click:run_command:'/melodymine call accept'><text_color>Click kardan baraye <gradient:#16FF00:#A2FF86>Ghabol</gradient> <text_color>tamas.</click>"
+      call_deny_button: "<click:run_command:'/melodymine call deny'><text_color>Click kardan baraye <gradient:#D80032:#F78CA2>Rad</gradient> <text_color>tamas.</click>"
+      call_end: "<prefix><highlight_color>{PLAYER} <text_color>Tamas beyn shoma ra ghat kard."
+      call_end_target: "<prefix>Shoma tamas beyn khod va <highlight_color>{PLAYER}<text_color> ra ghat kardid."
+      call_pending_end: "<prefix>Zaman darkhast entezar tamas be etmam resid."
+      call_start: "<prefix>Tamas beyn shoro shod <highlight_color>{PLAYER}<text_color>, shoma mitavanid ba estefade az command <i>/melodymine call end</i> tamas ra ghat konid."
+      call_deny: "<prefix>Darkhast tamas shoma rad shod."
+      call_deny_others: "<prefix><highlight_color>{PLAYER}<text_color>, Darkhast tamas ra rad kard."
+      help_message:
+        - ""
+        - "<click:run_command:'{SYNTAX} start'><hover:show_text:'<hover_color>Baraye ejra command click konid <i>{SYNTAX} start</i>'><hover_color>{SYNTAX} start <player> <#FFF4E4><bold>|</bold> <text_color>Shoro tamas ba yek shakhs.</hover></click>"
+        - "<click:run_command:'{SYNTAX} end'><hover:show_text:'<hover_color>Baraye ejra command click konid <i>{SYNTAX} end</i>'><hover_color>{SYNTAX} end <#FFF4E4><bold>|</bold> <text_color>Ghat kardan tamas.</hover></click>"
+        - "<click:run_command:'{SYNTAX} accept'><hover:show_text:'<hover_color>Baraye ejra command click konid <i>{SYNTAX} accept</i>'><hover_color>{SYNTAX} accept <#FFF4E4><bold>|</bold> <text_color>Ghabol kardan darkhast tamas.</hover></click>"
+        - "<click:run_command:'{SYNTAX} deny'><hover:show_text:'<hover_color>Baraye ejra command click konid <i>{SYNTAX} deny</i>'><hover_color>{SYNTAX} deny <#FFF4E4><bold>|</bold> <text_color>Rad kardan darkhast tamas.</hover></click>"
+        - "<click:run_command:'{SYNTAX} toggle'><hover:show_text:'<hover_color>Baraye ejra command click konid <i>{SYNTAX} toggle</i>'><hover_color>{SYNTAX} toggle <#FFF4E4><bold>|</bold> <text_color>Toggle kardan darkhast tamas.</hover></click>"
+        - ""
+
+
+qrcode:
+  display_name: "&b&oMelodyMine QRCode"
+  lore:
+    - "&7&m                                 "
+    - "&fStep 1 &7- &3QRCode ra scan konid."
+    - "&fStep 2 &7- &3bar roye gozineye 'StartMelody' click konid."
+    - ""
+    - "&4!!! &c&lIn item ra be shakhs digari nadahid &4!!!"
+    - ""
+    - "&eBaraye pak kardan QRCode click konid"
+    - "&7&m                                 "

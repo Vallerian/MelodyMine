@@ -12,6 +12,7 @@ import com.cryptomorin.xseries.ReflectionUtils
 import ir.taher7.melodymine.MelodyMine
 import ir.taher7.melodymine.models.NameTagConfig
 import ir.taher7.melodymine.storage.Storage
+import ir.taher7.melodymine.storage.Talk
 import ir.taher7.melodymine.utils.Adventure.toComponent
 import ir.taher7.melodymine.utils.Utils
 import net.kyori.adventure.platform.bukkit.MinecraftComponentSerializer
@@ -42,7 +43,7 @@ class TalkNameTag(val player: Player) {
     private fun initNameTags() {
         nameTagId = Utils.getVerifyCode(9).toInt()
         nameTagUUID = UUID.randomUUID()
-        nameTagType = if (melodyPlayer.isMute) "serverMute" else "inactive"
+        nameTagType = if (melodyPlayer.isMute) "server_mute" else "inactive"
         refreshNameTag()
 
         try {
@@ -176,14 +177,14 @@ class TalkNameTag(val player: Player) {
     }
 
     fun setNameTagSelfMute() {
-        if (nameTagType == "self-mute") return
-        nameTagType = "self-mute"
+        if (nameTagType == "self_mute") return
+        nameTagType = "self_mute"
         refreshNameTag()
     }
 
     fun setNameTagServerMute() {
-        if (nameTagType == "server-mute") return
-        nameTagType = "server-mute"
+        if (nameTagType == "server_mute") return
+        nameTagType = "server_mute"
         refreshNameTag()
     }
 
@@ -272,7 +273,7 @@ class TalkNameTag(val player: Player) {
     }
 
     private fun getConfig(): NameTagConfig? {
-        return Storage.nameTagConfigs[nameTagType]
+        return Talk.nameTagConfigs[nameTagType]
     }
 
 

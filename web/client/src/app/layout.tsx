@@ -1,10 +1,13 @@
 import './globals.css'
-import type {Metadata} from 'next'
+import type {Metadata, Viewport} from 'next'
 import {Inter} from 'next/font/google'
 import Navbar from "@/components/Navbar";
 import AuthProvider from "@/components/AuthProvider";
 import ErrorBox from "@/components/Porgress/ErrorBox";
 
+export const viewport: Viewport = {
+    themeColor: '#1F7265',
+}
 
 const inter = Inter({subsets: ['latin']})
 
@@ -24,14 +27,13 @@ export const metadata: Metadata = {
         default: 'MelodyMine',
         template: 'MelodyMine | %s'
     },
-    authors: [{name: "TAHER7", url: "https://discord.com/users/403446004193558531"}],
+    authors: [{name: "TAHER7", url: "https://taher7.ir"}],
     description: 'MelodyMine is a tools for connect minecraft server to web for talk together',
     keywords: ["MelodyMine", "Minecraft voice", "Minecraft Voice Chat", "Minecraft Voice Chat Plugin", "Minecraft Voice Plugin", "Minecraft"],
     icons: {
         icon: "/melody-logo.png",
         shortcut: "/melody-logo.png",
     },
-    themeColor: "#1F7265",
     openGraph: {
         type: "website",
         title: "MelodyMine",

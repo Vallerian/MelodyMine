@@ -5,6 +5,8 @@ import ir.taher7.melodymine.MelodyMine
 import ir.taher7.melodymine.commands.SubCommand
 import ir.taher7.melodymine.core.MelodyManager
 import ir.taher7.melodymine.models.MelodyPlayer
+import ir.taher7.melodymine.storage.Messages
+import ir.taher7.melodymine.storage.Settings
 import ir.taher7.melodymine.storage.Storage
 import ir.taher7.melodymine.utils.Adventure.sendMessage
 import ir.taher7.melodymine.utils.Adventure.showTitle
@@ -12,12 +14,14 @@ import ir.taher7.melodymine.utils.Adventure.toComponent
 import net.kyori.adventure.title.Title
 import org.bukkit.ChatColor
 import org.bukkit.Material
+import org.bukkit.NamespacedKey
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.MapMeta
 import org.bukkit.map.MapView
+import org.bukkit.persistence.PersistentDataType
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import org.bukkit.scheduler.BukkitRunnable
@@ -25,32 +29,26 @@ import java.io.IOException
 import java.time.Duration
 import kotlin.random.Random
 
-
 object Utils {
 
-    private val qrCoreLore = listOf(
-        "${ChatColor.GRAY}${ChatColor.STRIKETHROUGH}                                 ",
-        "${ChatColor.WHITE}Step 1 ${ChatColor.DARK_GRAY}- ${ChatColor.DARK_AQUA}Scan the QRCode",
-        "${ChatColor.WHITE}Step 2 ${ChatColor.DARK_GRAY}- ${ChatColor.DARK_AQUA}Click on the StartMelody Button.",
-        "",
-        "${ChatColor.DARK_RED}!!! ${ChatColor.RED}${ChatColor.BOLD}Don't Give this Item to another Player ${ChatColor.DARK_RED}!!!",
-        "",
-        "${ChatColor.YELLOW}Click to remove QRCode",
-        "${ChatColor.GRAY}${ChatColor.STRIKETHROUGH}                                 ",
-    )
-
-    private val qrCodeDisplayName = "${ChatColor.AQUA}${ChatColor.ITALIC}MelodyMine QRCode"
 
     fun sendHelpMessage(player: Player) {
-        player.sendMessage(Storage.contentHeader.toComponent())
+        player.sendMessage(Messages.getMessage("general.content_header"))
         player.sendMessage("")
         Storage.subCommands.forEach { subCommand: SubCommand ->
             if (player.hasPermission(subCommand.permission)) {
-                player.sendMessage("<click:run_command:'${subCommand.syntax}'><hover:show_text:'<text_hover>Click to run <i>${subCommand.syntax}</i>'><text_hover>${subCommand.syntax} <#FFF4E4><bold>|</bold> <text>${subCommand.description}</hover></click>".toComponent())
+                player.sendMessage(
+                    Messages.getMessage(
+                        "general.help_line", hashMapOf(
+                            "{SYNTAX}" to subCommand.syntax,
+                            "{DESCRIPTION}" to subCommand.description,
+                        )
+                    )
+                )
             }
         }
         player.sendMessage("")
-        player.sendMessage(Storage.contentFooter.toComponent())
+        player.sendMessage(Messages.getMessage("general.content_footer"))
     }
 
     fun getVerifyCode(length: Int = 20): String {
@@ -75,11 +73,11 @@ object Utils {
                     clearForceVoice(player)
                     cancel()
                 } else {
-                    if (Storage.forceVoiceTitle) {
+                    if (Settings.forceVoiceTitle) {
                         player.player?.showTitle(
                             Title.title(
-                                Storage.forceVoiceTitleMessage.toComponent(),
-                                Storage.forceVoiceSubtitleMessage.toComponent(),
+                                Messages.getMessage("force_voice.title"),
+                                Messages.getMessage("force_voice.subtitle"),
                                 Title.Times.times(
                                     Duration.ofMillis(100),
                                     Duration.ofDays(365),
@@ -92,7 +90,7 @@ object Utils {
                     MelodyManager.sendStartLink(player.player!!)
                 }
             }
-        }.runTaskTimer(MelodyMine.instance, 0L, 300L)
+        }.runTaskTimer(MelodyMine.instance, 0L, Settings.forceVoiceInterval)
     }
 
     fun clearForceVoice(player: MelodyPlayer) {
@@ -107,9 +105,9 @@ object Utils {
 
     fun checkPlayerForce(player: MelodyPlayer): Boolean {
         if (player.isActiveVoice) return true
-        if (!Storage.forceVoice) return true
+        if (!Settings.forceVoice) return true
         if (player.player?.hasPermission("melodymine.force") == true) return true
-        if (Storage.disableWorld.contains(player.player?.location?.world?.name)) return true
+        if (Settings.disableWorlds.contains(player.player?.location?.world?.name)) return true
         return false
     }
 
@@ -134,27 +132,49 @@ object Utils {
             mapMeta.mapId = view.id
         }
 
-        mapMeta.setDisplayName(qrCodeDisplayName)
+        mapMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', Messages.qrcodeDisplayName))
         mapMeta.addEnchant(Enchantment.DAMAGE_ALL, 1, false)
-        mapMeta.lore = qrCoreLore
+        mapMeta.lore = Messages.qrcodeLore.map { lore -> ChatColor.translateAlternateColorCodes('&', lore) }
 
         mapMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS)
         mapMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS)
+
+        if (ReflectionUtils.supports(14)) {
+            mapMeta.persistentDataContainer.set(
+                NamespacedKey(MelodyMine.instance, "qrcode"),
+                PersistentDataType.INTEGER,
+                1
+            )
+        }
 
         map.itemMeta = mapMeta
         return map
     }
 
     fun isMap(item: ItemStack): Boolean {
-        if (ReflectionUtils.supports(13)) {
-            if (item.type != Material.FILLED_MAP) return false
+        if (ReflectionUtils.supports(14)) {
+            val mapMeta = item.itemMeta ?: return false
+            mapMeta.persistentDataContainer.get(
+                NamespacedKey(MelodyMine.instance, "qrcode"),
+                PersistentDataType.INTEGER,
+            ) ?: return false
+            return true
         } else {
-            if (item.type != Material.MAP) return false
+
+            if (ReflectionUtils.supports(13)) {
+                if (item.type != Material.FILLED_MAP) return false
+            } else {
+                if (item.type != Material.MAP) return false
+            }
+            val itemMeta = item.itemMeta ?: return false
+            if (itemMeta.displayName != ChatColor.translateAlternateColorCodes(
+                    '&',
+                    Messages.qrcodeDisplayName
+                )
+            ) return false
+            if (itemMeta.lore != Messages.qrcodeLore) return false
+            return true
         }
-        val itemMeta = item.itemMeta ?: return false
-        if (itemMeta.displayName != qrCodeDisplayName) return false
-        if (itemMeta.lore != qrCoreLore) return false
-        return true
     }
 
     fun removeMap(player: Player) {
@@ -195,7 +215,7 @@ object Utils {
                     targetPlayer.pendingTask = null
 
                     if (isQuit) MelodyManager.endPendingCall(melodyPlayer, targetPlayer)
-                    targetPlayer.player?.sendMessage("<prefix>Pending Call Ended.".toComponent())
+                    targetPlayer.player?.sendMessage(Messages.getMessage("commands.call.call_pending_end"))
                 }
 
                 if (melodyPlayer.isInCall) {
@@ -205,12 +225,56 @@ object Utils {
                     targetPlayer.isInCall = false
                     targetPlayer.callTarget = null
                     if (isQuit) MelodyManager.endCall(melodyPlayer, targetPlayer)
-                    targetPlayer.player?.sendMessage("<prefix>Call Ended.".toComponent())
+                    targetPlayer.player?.sendMessage(
+                        Messages.getMessage(
+                            "commands.call.call_end",
+                            hashMapOf("{PLAYER}" to melodyPlayer.name)
+                        )
+                    )
                 }
 
             }
         }.runTask(MelodyMine.instance)
     }
+
+    fun checkPlayerCoolDown(player: Player): Boolean {
+        if (Storage.commandCoolDown.containsKey(player.uniqueId) && (System.currentTimeMillis() - Storage.commandCoolDown[player.uniqueId]!!) <= Settings.commandsCoolDown) {
+            player.sendMessage(
+                Messages.getMessage(
+                    "general.cool_down",
+                    hashMapOf("{TIME}" to ((Settings.commandsCoolDown - (System.currentTimeMillis() - Storage.commandCoolDown[player.uniqueId]!!)) / 1000))
+                )
+            )
+            return true
+        }
+        return false
+    }
+
+    fun resetPlayerCoolDown(player: Player) {
+        Storage.commandCoolDown[player.uniqueId] = System.currentTimeMillis()
+    }
+
+
+    fun removePlayerCoolDown(player: Player) {
+        Storage.commandCoolDown.remove(player.uniqueId)
+    }
+
+    fun clientURL(): String {
+        val locals = listOf("localhost", "0.0.0.0", "127.1.1.0")
+        if (locals.contains(Settings.domain)) {
+            return "http://${locals[locals.indexOf(Settings.domain)]}:${Settings.clientPort}"
+        }
+        return "https://${Settings.domain}:${Settings.clientPort}"
+    }
+
+    fun serverURL(): String {
+        val locals = listOf("localhost", "0.0.0.0", "127.1.1.0")
+        if (locals.contains(Settings.domain)) {
+            return "http://${locals[locals.indexOf(Settings.domain)]}:${Settings.serverPort}"
+        }
+        return "https://${Settings.domain}:${Settings.serverPort}"
+    }
+
 
 
     fun sendMelodyFiglet() {

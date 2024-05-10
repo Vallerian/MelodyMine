@@ -6,6 +6,7 @@ import ir.taher7.melodymine.core.MelodyManager
 import ir.taher7.melodymine.models.MelodyPlayer
 import ir.taher7.melodymine.models.RenewData
 import ir.taher7.melodymine.models.RenewPlayer
+import ir.taher7.melodymine.storage.Settings
 import ir.taher7.melodymine.storage.Storage
 import org.bukkit.scheduler.BukkitRunnable
 import java.text.DecimalFormat
@@ -45,8 +46,8 @@ class WebsocketRenewData {
                                         val playerLocation = melodyPlayer.player?.location
                                         val targetLocation = targetPlayer.player?.location
 
-                                        if (Storage.disableWorld.contains(playerLocation?.world?.name) ||
-                                            Storage.disableWorld.contains(targetLocation?.world?.name)
+                                        if (Settings.disableWorlds.contains(playerLocation?.world?.name) ||
+                                            Settings.disableWorlds.contains(targetLocation?.world?.name)
                                         ) return@forEach
 
                                         if (playerLocation != null &&
@@ -55,7 +56,7 @@ class WebsocketRenewData {
                                         ) {
                                             val distance = playerLocation.distance(targetLocation)
 
-                                            if (distance < (Storage.updateConnectionDistance)) {
+                                            if (distance < (Settings.renewConnection)) {
                                                 if (!melodyPlayer.isSendOffer.contains(targetPlayer.uuid)) {
                                                     melodyPlayer.isSendOffer.add(targetPlayer.uuid)
 
@@ -78,7 +79,7 @@ class WebsocketRenewData {
                                             }
 
 
-                                            if (distance < (Storage.updateVolumeDistance)) {
+                                            if (distance < (Settings.renewVolume)) {
 
                                                 val renewPlayer = createRenewPlayer(melodyPlayer)
                                                 if (!players.contains(renewPlayer)) players.add(renewPlayer)
@@ -95,7 +96,7 @@ class WebsocketRenewData {
                                             }
 
 
-                                            if (distance > (Storage.updateDisconnectDistance)) {
+                                            if (distance > (Settings.renewDisconnect)) {
                                                 if (melodyPlayer.isSendOffer.contains(targetPlayer.uuid)) {
                                                     val renewPlayer = createRenewPlayer(melodyPlayer)
                                                     if (!players.contains(renewPlayer)) players.add(renewPlayer)
@@ -128,7 +129,7 @@ class WebsocketRenewData {
                     }
                 }
             }
-        }.runTaskTimer(MelodyMine.instance, 0L, Storage.updateDistanceInterval)
+        }.runTaskTimer(MelodyMine.instance, 0L, Settings.renewInterval)
     }
 
     private fun createRenewPlayer(melodyPlayer: MelodyPlayer): RenewPlayer {

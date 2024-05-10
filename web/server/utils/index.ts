@@ -1,5 +1,6 @@
 import CryptoJS from 'crypto-js';
 import {Location} from "../interfaces";
+import {prisma} from "./connect";
 
 export const encrypt = (data: any) => {
     try {
@@ -26,4 +27,21 @@ export const getLocation = (location: [number, number, number]): Location => {
         y: location[1],
         z: location[2]
     }
+}
+
+export const initializeDatabase = async () => {
+     await prisma.$executeRawUnsafe(`
+    CREATE TABLE IF NOT EXISTS melodymine (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      uuid VARCHAR(36) UNIQUE,
+      name VARCHAR(36),
+      socketID VARCHAR(36) UNIQUE,
+      verifyCode VARCHAR(36) UNIQUE,
+      server VARCHAR(36),
+      isActiveVoice BOOLEAN DEFAULT false,
+      isMute BOOLEAN DEFAULT false,
+      serverIsOnline BOOLEAN DEFAULT false,
+      webIsOnline BOOLEAN DEFAULT false
+    );
+  `)
 }

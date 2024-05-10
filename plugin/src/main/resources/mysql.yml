@@ -1,0 +1,22 @@
+# Your MySQL database configuration must strictly correspond with the database configuration in your
+# '.env' file located in the 'web/docker/.env' directory.
+#
+# Similar values in the '.env' file:
+# DATABASE_HOST => 'host'
+# DATABASE_PORT => 'port'
+# DATABASE_USERNAME => 'username'
+# DATABASE_PASSWORD => 'password'
+# DATABASE_NAME => 'database'
+#
+# Note: If you intend to utilize the 'authme' feature of 'melodymine',
+# it is imperative that the 'authme' table and the 'melodymine' table reside in the same database.
+#
+# For more detailed information and instructions regarding the wiki installation, please visit the following link:
+# https://github.com/Vallerian/MelodyMine/wiki/installation
+
+mysql_configs:
+  host: localhost
+  port: 3306
+  username: root
+  password: ""
+  database: melodymine

@@ -29,13 +29,19 @@ export interface IPeer {
 }
 
 export interface ISoundSettings {
-    sound3D: boolean
     lazyHear: boolean
     maxDistance: number
     refDistance: number
+    rolloffFactor: number
     innerAngle: number
     outerAngle: number
     outerVolume: number
+}
+
+export interface IPlayerStatus {
+    uuid: string
+    isMute: boolean
+    isDeafen: boolean
 }
 
 export interface ILocation {

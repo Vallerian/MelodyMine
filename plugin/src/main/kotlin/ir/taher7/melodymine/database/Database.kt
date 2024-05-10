@@ -5,7 +5,8 @@ import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import ir.taher7.melodymine.MelodyMine
 import ir.taher7.melodymine.models.MelodyPlayer
-import ir.taher7.melodymine.storage.Storage
+import ir.taher7.melodymine.storage.Messages
+import ir.taher7.melodymine.storage.Settings
 import ir.taher7.melodymine.utils.Utils
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
@@ -21,53 +22,38 @@ object Database {
     lateinit var hikari: HikariDataSource
 
     init {
-        connect()
-        initialize()
+        try {
+             connect()
+             initialize()
+         } catch (ex: Exception) {
+             ex.printStackTrace()
+         }
     }
 
     private fun connect() {
 
         try {
             val config = HikariConfig()
-            config.setJdbcUrl("jdbc:mysql://${Storage.host}:${Storage.port}/${Storage.dbName}")
+            config.setJdbcUrl("jdbc:mysql://${Settings.host}:${Settings.port}/${Settings.database}")
             if (ReflectionUtils.supports(13)) {
                 config.driverClassName = "com.mysql.cj.jdbc.Driver"
             } else {
                 config.driverClassName = "com.mysql.jdbc.Driver"
             }
-            config.username = Storage.user
-            config.password = Storage.password
-            config.addDataSourceProperty("cachePrepStmts", "true")
-            config.addDataSourceProperty("prepStmtCacheSize", "250")
-            config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048")
-
+            config.username = Settings.username
+            config.password = Settings.password
+            config.maximumPoolSize = 10
 
             hikari = HikariDataSource(config)
-            MelodyMine.instance.logger.info("Successfully connected to database.")
+            MelodyMine.instance.logger.info(Messages.getMessageString("success.database"))
         } catch (ex: Exception) {
-            MelodyMine.instance.logger.severe("Database connection failed")
+            MelodyMine.instance.logger.severe(Messages.getMessageString("errors.database"))
             ex.printStackTrace()
         }
     }
 
-    private fun createConnection(): Connection? {
-        return try {
-            hikari.getConnection()
-        } catch (e: Exception) {
-            e.printStackTrace()
-            null
-        }
-    }
-
-    private fun closeConnection(connection: Connection) {
-        try {
-            connection.close()
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
-
     private fun initialize() {
+        if (!::hikari.isInitialized) return
         try {
             val connection = createConnection() ?: return
             val statement = connection.createStatement()
@@ -78,7 +64,27 @@ object Database {
         }
     }
 
+    private fun createConnection(): Connection? {
+        if (!::hikari.isInitialized) return null
+        return try {
+            hikari.getConnection()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+    }
+
+    private fun closeConnection(connection: Connection) {
+        if (!::hikari.isInitialized) return
+        try {
+            connection.close()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
     fun initPlayer(player: Player, consumer: Consumer<MelodyPlayer>) {
+        if (!::hikari.isInitialized) return
         object : BukkitRunnable() {
             override fun run() {
                 try {
@@ -94,7 +100,7 @@ object Database {
                     statement.setString(1, player.player?.uniqueId.toString())
                     statement.setString(2, player.name)
                     statement.setString(3, verifyCode)
-                    statement.setString(4, Storage.server)
+                    statement.setString(4, Settings.server)
                     statement.setBoolean(5, true)
                     statement.executeUpdate()
 
@@ -107,7 +113,7 @@ object Database {
                             uuid = player.player?.uniqueId.toString(),
                             name = player.name,
                             verifyCode = verifyCode,
-                            server = Storage.server,
+                            server = Settings.server,
                             serverIsOnline = true,
                         )
                         consumer.accept(melodyPlayer)
@@ -122,6 +128,7 @@ object Database {
     }
 
     fun findPlayer(uuid: String, consumer: Consumer<MelodyPlayer?>) {
+        if (!::hikari.isInitialized) return
         object : BukkitRunnable() {
             override fun run() {
                 try {
@@ -157,6 +164,7 @@ object Database {
     }
 
     fun updatePlayer(player: MelodyPlayer, leave: Boolean) {
+        if (!::hikari.isInitialized) return
         object : BukkitRunnable() {
             override fun run() {
                 try {
@@ -180,7 +188,7 @@ object Database {
                         statement.setBoolean(3, player.serverIsOnline)
                         statement.setBoolean(4, player.isMute)
                         statement.setString(5, player.uuid)
-                        statement.setString(6, Storage.server)
+                        statement.setString(6, Settings.server)
                         statement.executeUpdate()
                     }
                     closeConnection(connection)
@@ -192,13 +200,14 @@ object Database {
     }
 
     fun resetDate() {
+        if (!::hikari.isInitialized) return
         val connection = createConnection() ?: return
         val statement = connection.prepareStatement(
             "UPDATE melodymine SET serverIsOnline = ? WHERE serverIsOnline = ? AND server = ?"
         )
         statement.setBoolean(1, false)
         statement.setBoolean(2, true)
-        statement.setString(3, Storage.server)
+        statement.setString(3, Settings.server)
         statement.executeUpdate()
         closeConnection(connection)
     }

@@ -15,7 +15,11 @@ const Navbar = () => {
 
 
             {/* ------------------ <>_<> Don't touch this Lines <>_<> ------------------ */}
-            <div className="pr-3">
+            <div className="pr-3 flex items-center gap-2">
+                <iframe
+                    src="https://img.shields.io/github/v/release/Vallerian/MelodyMine?color=84329A&link=https%3A%2F%2Fgithub.com%2FVallerian%2FMelodyMine/releases"
+                    width={100} height={20}
+                />
                 <Link href="https://github.com/Vallerian/MelodyMine" target="_blank"
                       className="text-[#000000] flex items-center px-2 py-2 bg-[#D3D3D3FF] rounded-lg cursor-pointer shadow-inner shadow-[#323232]">
                     <Image src="/github.png" alt="github logo" width={20} height={20} className="mr-2"/>
