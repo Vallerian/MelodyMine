@@ -5,6 +5,13 @@ if [ "$EUID" -ne 0 ]
   exit
 fi
 
+if lsof -Pi :3477 -sTCP:LISTEN -t ; then
+    echo "port 3477 is in use. Stopping service using port 3477..."
+    PID=$(lsof -t -i:3477)
+    kill -9 $PID
+  fi
+
+
 if ! command -v docker
 then
     echo "Docker is not installed. Installing Docker..."
