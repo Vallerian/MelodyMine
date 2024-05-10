@@ -1,0 +1,248 @@
+#
+# For more information about installing MelodyMine, please visit the following link:
+### https://github.com/Vallerian/MelodyMine/wiki/installation
+#
+
+#
+# The current version of the plugin configuration.
+#
+config_version: 1.0
+
+#
+# The default language plugin allows you to view and use all available languages by referring to the 'languages' directory.
+# In case of interest in adding new languages to the plugin, you can submit a pull request via the following link:
+### https://github.com/Vallerian/MelodyMine/pulls
+#
+# Upon approval, your language will be fully integrated into the plugin.
+#
+language: en_US
+
+#
+# The initial plugin configurations must always be set up correctly and completely to ensure proper functioning.
+# Be sure to pay close attention to detail when configuring them.
+#
+initial_configs:
+  #
+  # The 'server' configuration pertains to the associated game mode where you have installed the plugin.
+  # It indicates the plugin ID within the website, it displays which server the player is connected to.
+  #
+  ### IMPORTANT NOTE: This entry must be unique. If you have another server installed and wish to install MelodyMine on it,
+  ### you must specify a separate name for it to select.
+  #
+  server: Lobby
+
+  #
+  # The 'domain' configuration is related to your server's domain and must necessarily match the value set for 'DOMAIN' in the '.env' file located at 'web/docker/.env'.
+  # If you are running MelodyMine in a development environment on your localhost, use 'localhost' instead of a domain.
+  #
+  ### Similar value in the '.env' file in the directory 'web/docker/.env':
+  ### DOMAIN= 'domain'
+  #
+  domain: localhost
+
+  #
+  # The 'client_port' configuration is related to the port of the website used by players to connect to the voice feature.
+  # This value must match the value set for CLIENT_PORT in the .env file located at web/docker/.env.
+  #
+  ### Similar value in the '.env' file in the directory 'web/docker/.env':
+  ### CLIENT_PORT= 'client_port'
+  #
+  client_port: 3000
+
+  #
+  # The 'server_port' configuration is related to the websocket server used by the plugin to establish communication with online players on the website client.
+  # This value must match the value set for SERVER_PORT in the '.env' file located at 'web/docker/.env'.
+  #
+  ### Similar value in the '.env' file in the directory 'web/docker/.env':
+  ### SERVER_PORT= 'server_port'
+  #
+  server_port: 4000
+
+  #
+  # The 'plugin_key' configuration is related to the MelodyMine authentication system.
+  # It is used to authenticate clients connecting to your websocket server.
+  # Please do not share this key with anyone else.
+  # This value must match the value set for 'PLUGIN_KEY' in the '.env' file located at 'web/docker/.env'.
+  #
+  ### Similar value in the '.env' file in the directory 'web/docker/.env':
+  ### PLUGIN_KEY= 'plugin_key'
+  #
+  plugin_key: ""
+
+
+#
+# When the auto_start config is set to true, upon clicking a link to connect to the voice or scanning a QR code to enter the site,
+# the voice starts automatically without the need to click the "Start Melody" button manually.
+# If it's set to false, the player must manually click the "Start Melody" button.
+#
+auto_start: true
+
+
+#
+# Using the 'force_voice' configuration, you can force players on the server to always
+# enable online voice chat when playing.
+#
+force_voice:
+  enable: false
+
+  #
+  # By setting the 'send_title' configuration to 'true', the title related to force voice will be sent to players.
+  # To modify the title text, you can edit the corresponding values in the language file based on the selected language (e.g., en_US.yml).
+  # The values you can modify are 'force_voice_title_message' and 'force_voice_subtitle_message'.
+  #
+  send_title: true
+
+  #
+  # You can specify how often forced voice messages such as title, subtitle, and open website link are sent to players using the send_interval config.
+  # By default, this value is set to 300, meaning these messages are sent every 15 seconds (10L = 0.5s, 20L = 1s, ...).
+  #
+  send_interval: 300
+
+  #
+  # If the damage config is set to true, players are in a forced voice state and haven't entered the voice chat yet,
+  # they won't take any damage. However, if it's set to false, they're in the default state and will take damage.
+  #
+  damage: false
+
+
+
+#
+# By setting the 'enable' configuration to 'true',
+# players who are online in voice chat can mute or unmute themselves on the website using the shortcut ('Shift' + 'F').
+#
+mute_toggle_shortcut:
+  enable: true
+
+  #
+  # Using the cool_down config, you can define the cool down between toggling mute and unmute, which is set to 1000ms (1s) by default.
+  #
+  cool_down: 1000
+
+
+#
+# The 'call_pending_time' configuration determines the time duration for which players remain in a pending call state, awaiting responses.
+# By default, this option is set to '600', which equals '30s'.
+# You can adjust this time as per your preference using (10L = 0.5s, 20L = 1s, ...).
+#
+call_pending_time: 600
+
+
+#
+# All configurations related to sounds,which allow you to adjust the sounds players hear,
+# are activated when a player enables 3D Sound on the website.
+#
+sound_configs:
+
+  #
+  # The 'hear_lazy' configuration determines the behavior when a player disables the 3D Sound mode.
+  # When set to 'true', sounds are played in a lazy manner, meaning they are less intense and clear as the player moves away.
+  # Conversely, when set to 'false', sounds are played at full volume within the 'max_distance' set, regardless of the player's position.
+  #
+  hear_lazy: true
+
+  #
+  # The 'max_distance' configuration sets the maximum distance within which players can interact and communicate with each other.
+  # By default, it is set to '15', meaning that when two players are within a distance of 15 units, they can hear each other's voices simultaneously.
+  #
+  max_distance: 15
+
+  #
+  # The 'ref_distance' configuration is applied when a player enables 3D Sound on the website.
+  # This distance determines that if two players are within this range of each other, they will hear each other's voices at maximum volume and clarity.
+  # As the distance increases, the sound gradually decreases.
+  #
+  ### Note: It is essential to ensure that the 'ref_distance' configuration is always less than the 'max_distance'.
+  #
+  ref_distance: 5
+
+  #
+  # You can adjust the speed of sound attenuation between players using the rolloff_factor config, meaning the higher the rolloff_factor,
+  # the faster the sound reaches the player, and the lower the rolloff_factor, the slower the sound reaches them.
+  #
+  rolloff_factor: 1
+
+  #
+  # Using the 'inner_angle' configuration, you can specify the inner angle (face-to-face) of the player, ranging from 0 to 360 degrees.
+  # In this scenario, when a player is within this angle of another player, they will hear the other player's voice as if they are facing them directly.
+  # As the angle decreases, the player must be closer to facing the other player's front to hear their voice clearly, and vice versa.
+  #
+  inner_angle: 120
+
+  #
+  # Using the 'outer_angle' configuration, you can determine the outer angle (back-to-back) of the player, ranging from 0 to 360 degrees.
+  # In this setup, when a player is within this angle of another player, they will hear the other player's voice as if they are facing away from them.
+  # As the angle decreases, the volume of the voice coming from behind the player increases, and vice versa.
+  #
+  outer_angle: 180
+
+  #
+  # With the 'outer_volume' configuration, you can adjust the volume of the sound that a player hears when another player is within the 'outer_angle'.
+  # The higher the volume value, the louder the sound players will hear when someone is behind them, and vice versa when the value is lower.
+  #
+  outer_volume: 0.3
+
+
+#
+# The 'renew_configs' configurations are related to updating the locations of players from the Minecraft server to the website, where the players are online.
+# One of the most crucial aspects is ensuring attention to detail when configuring this setting.
+#
+### IMPORTANT NOTE: (max-distance < connect-distance < volume-distance < disconnect-distance)
+#
+renew_configs:
+
+  #
+  # The 'renew_interval' configures how often player data is sent towards the website, measured in seconds. By default, it is set to '30', which equals '1.5s'.
+  # You can adjust this interval using the algorithm (10L = 0.5s, 20L = 1s, ...) according to your preferences.
+  #
+  interval: 30
+
+  #
+  # The 'connect_distance' configuration facilitates the connection between players for hearing each other's voices.
+  # When players are within this distance from each other, they establish a connection on the website and can hear each other.
+  # If the value of 'connect_distance' is equal to the value of 'max_distance', they will hear each other's voices. However, if 'max_distance' is shorter,
+  # they will only hear each other's voices when they are within the distance set by 'max_distance'.
+  #
+  ### IMPORTANT NOTE: 'connect_distance' value must always be equal to or greater than 'max_distance',
+  # and either smaller or equal to the value of 'volume_distance'. Also, 'disconnect_distance' should be set to a greater than 'connect_distance'.
+  #
+  connect_distance: 15
+
+  #
+  # The 'volume_distance' configuration is used to update the volume of players relative to their location in the Minecraft server.
+  # This configuration must always be equal to or greater than the 'connect_distance' and smaller than the 'disconnect_distance'.
+  #
+  volume_distance: 30
+
+  #
+  # The 'disconnect_distance' configuration is for disconnecting players on the website when they move away from each other beyond a certain distance after being connected.
+  # If players move outside this distance from each other, they will be disconnected on the website.
+  # This value must always be greater than 'disconnect_distance', 'connect_distance', and 'max_distance'.
+  #
+  disconnect_distance: 80
+
+
+#
+# You can specify the worlds where you want to disable voice chat using the 'disable_worlds' configuration.
+# Simply enter the names of the worlds you wish to disable voice chat in the list below.
+#
+disable_worlds:
+  - world_nether
+#  - "world_the_nether"
+
+
+#
+# Using the 'show_status_type' configuration, you can specify how one of these statuses is displayed to players,
+# either as a message in the chat or as an action bar message.
+# You can populate each part of the configuration accordingly with 'message' or 'actionbar'.
+#
+show_status_type:
+  join_website: message
+  leave_website: message
+  start_voice: message
+  end_voice: message
+
+
+#
+# You can define the cool down between plugin commands using the commands_cool_down config, which is set to 3000ms (3s) by default.
+#
+commands_cool_down: 3000

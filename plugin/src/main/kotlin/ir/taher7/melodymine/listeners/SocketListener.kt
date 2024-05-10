@@ -8,10 +8,11 @@ import ir.taher7.melodymine.core.MelodyManager
 import ir.taher7.melodymine.models.MelodyControl
 import ir.taher7.melodymine.models.MelodyPlayer
 import ir.taher7.melodymine.models.MelodyTalk
+import ir.taher7.melodymine.storage.Messages
+import ir.taher7.melodymine.storage.Settings
 import ir.taher7.melodymine.storage.Storage
 import ir.taher7.melodymine.utils.Adventure.sendActionbar
 import ir.taher7.melodymine.utils.Adventure.sendMessage
-import ir.taher7.melodymine.utils.Adventure.toComponent
 import ir.taher7.melodymine.utils.Utils
 import org.bukkit.Bukkit
 import org.bukkit.scheduler.BukkitRunnable
@@ -30,7 +31,7 @@ class SocketListener(private val socket: Socket) {
 
         socket.on("onPlayerJoinToWeb") { args ->
             val melodyPlayer = gson.fromJson(args[0].toString(), MelodyPlayer::class.java)
-            if (melodyPlayer.server != Storage.server) return@on
+            if (melodyPlayer.server != Settings.server) return@on
             updateMelodyPlayer(melodyPlayer)
             Storage.onlinePlayers[melodyPlayer.uuid]?.socketID?.let { MelodyManager.sendSoundSetting(it) }
             Storage.onlinePlayers[melodyPlayer.uuid]?.isSendOffer = arrayListOf()
@@ -40,16 +41,16 @@ class SocketListener(private val socket: Socket) {
                 }
             }
 
-            Utils.sendMessageLog("<prefix>${Storage.websiteJoinLogger}", melodyPlayer)
+            Utils.sendMessageLog(Messages.getMessageString("logger.website_join"), melodyPlayer)
             val player = Storage.onlinePlayers[melodyPlayer.uuid]?.player
             if (player != null) {
-                when (Storage.joinWebsiteType) {
+                when (Settings.statusJoinWeb) {
                     "message" -> {
-                        player.sendMessage("<prefix>${Storage.joinWebsiteMessage}".toComponent())
+                        player.sendMessage(Messages.getMessage("website.join"))
                     }
 
                     "actionbar" -> {
-                        player.sendActionbar("<text>${Storage.joinWebsiteMessage}".toComponent())
+                        player.sendActionbar(Messages.getMessage("website.join"))
                     }
 
                     else -> {}
@@ -73,7 +74,7 @@ class SocketListener(private val socket: Socket) {
 
         socket.on("onNewPlayerLeaveWeb") { args ->
             val melodyPlayer = gson.fromJson(args[0].toString(), MelodyPlayer::class.java)
-            if (melodyPlayer.server != Storage.server) return@on
+            if (melodyPlayer.server != Settings.server) return@on
             updateMelodyPlayer(melodyPlayer)
 
             Utils.clearUpCall(Storage.onlinePlayers[melodyPlayer.uuid])
@@ -90,16 +91,16 @@ class SocketListener(private val socket: Socket) {
                 }
             }
 
-            Utils.sendMessageLog("<prefix>${Storage.websiteLeaveLogger}", melodyPlayer)
+            Utils.sendMessageLog(Messages.getMessageString("logger.website_leave"), melodyPlayer)
             val player = Storage.onlinePlayers[melodyPlayer.uuid]?.player
             if (player != null) {
-                when (Storage.leaveWebsiteType) {
+                when (Settings.statusLeaveWeb) {
                     "message" -> {
-                        player.sendMessage("<prefix>${Storage.leaveWebsiteMessage}".toComponent())
+                        player.sendMessage(Messages.getMessage("website.leave"))
                     }
 
                     "actionbar" -> {
-                        player.sendActionbar("<text>${Storage.leaveWebsiteMessage}".toComponent())
+                        player.sendActionbar(Messages.getMessage("website.leave"))
                     }
 
                     else -> {}
@@ -117,7 +118,7 @@ class SocketListener(private val socket: Socket) {
 
         socket.on("onPlayerStartVoiceWeb") { args ->
             val melodyPlayer = gson.fromJson(args[0].toString(), MelodyPlayer::class.java)
-            if (melodyPlayer.server != Storage.server) return@on
+            if (melodyPlayer.server != Settings.server) return@on
 
             updateMelodyPlayer(melodyPlayer)
             Storage.onlinePlayers[melodyPlayer.uuid]?.isSendOffer = arrayListOf()
@@ -146,21 +147,21 @@ class SocketListener(private val socket: Socket) {
                     )
                 }
             }
-            Utils.sendMessageLog("<prefix>${Storage.websiteStartVoiceLogger}", melodyPlayer)
+            Utils.sendMessageLog(Messages.getMessageString("logger.start_voice"), melodyPlayer)
             val player = Storage.onlinePlayers[melodyPlayer.uuid]?.player
             if (player != null) {
-                when (Storage.startVoiceType) {
+                when (Settings.statusStartVoice) {
                     "message" -> {
-                        player.sendMessage("<prefix>${Storage.startVoiceMessage}".toComponent())
+                        player.sendMessage(Messages.getMessage("website.start"))
                     }
 
                     "actionbar" -> {
-                        player.sendActionbar("<text>${Storage.startVoiceMessage}".toComponent())
+                        player.sendActionbar(Messages.getMessage("website.start"))
                     }
 
                     else -> {}
                 }
-                if (Storage.forceVoice && !player.hasPermission("melodymine.force")) {
+                if (Settings.forceVoice && !player.hasPermission("melodymine.force")) {
                     Storage.onlinePlayers[melodyPlayer.uuid]?.let { Utils.clearForceVoice(it) }
                 }
             }
@@ -176,7 +177,7 @@ class SocketListener(private val socket: Socket) {
 
         socket.on("onPlayerEndVoiceWeb") { args ->
             val melodyPlayer = gson.fromJson(args[0].toString(), MelodyPlayer::class.java)
-            if (melodyPlayer.server != Storage.server) return@on
+            if (melodyPlayer.server != Settings.server) return@on
 
             Utils.clearUpCall(Storage.onlinePlayers[melodyPlayer.uuid])
             Storage.onlinePlayers[melodyPlayer.uuid]?.talkBossBar?.hideTalkBossBar()
@@ -190,18 +191,18 @@ class SocketListener(private val socket: Socket) {
             }
             updateMelodyPlayer(melodyPlayer)
             Storage.onlinePlayers[melodyPlayer.uuid]?.adminMode = false
-            Utils.sendMessageLog("<prefix>${Storage.websiteEndVoiceLogger}", melodyPlayer)
+            Utils.sendMessageLog(Messages.getMessageString("logger.end_voice"), melodyPlayer)
             val targetForce = Storage.onlinePlayers[melodyPlayer.uuid]
             if (targetForce != null) Utils.forceVoice(targetForce)
             val player = Storage.onlinePlayers[melodyPlayer.uuid]?.player
             if (player != null) {
-                when (Storage.leaveEndType) {
+                when (Settings.statusEndVoice) {
                     "message" -> {
-                        player.sendMessage("<prefix>${Storage.endVoiceMessage}".toComponent())
+                        player.sendMessage(Messages.getMessage("website.end"))
                     }
 
                     "actionbar" -> {
-                        player.sendActionbar("<text>${Storage.endVoiceMessage}".toComponent())
+                        player.sendActionbar(Messages.getMessage("website.end"))
                     }
 
                     else -> {}
@@ -219,7 +220,7 @@ class SocketListener(private val socket: Socket) {
 
         socket.on("onPlayerChangeServerToWeb") { args ->
             val melodyPlayer = gson.fromJson(args[0].toString(), MelodyPlayer::class.java)
-            if (melodyPlayer.server == Storage.server) {
+            if (melodyPlayer.server == Settings.server) {
                 updateMelodyPlayer(melodyPlayer)
                 Storage.onlinePlayers[melodyPlayer.uuid]?.isSendOffer = arrayListOf()
                 Storage.onlinePlayers.values.forEach { player ->
@@ -227,7 +228,7 @@ class SocketListener(private val socket: Socket) {
                         player.isSendOffer.remove(melodyPlayer.uuid)
                     }
                 }
-                Utils.sendMessageLog("<prefix>${melodyPlayer.name} is active voice.", melodyPlayer)
+                Utils.sendMessageLog(Messages.getMessageString("logger.active_voice"), melodyPlayer)
 
             } else {
                 if (Storage.onlinePlayers.containsKey(melodyPlayer.uuid)) {
@@ -243,7 +244,7 @@ class SocketListener(private val socket: Socket) {
 
         socket.on("onPlayerChangeControlReceive") { args ->
             val melodyControl = gson.fromJson(args[0].toString(), MelodyControl::class.java)
-            if (melodyControl.server != Storage.server) return@on
+            if (melodyControl.server != Settings.server) return@on
             val melodyPlayer = Storage.onlinePlayers[melodyControl.uuid] ?: return@on
             melodyPlayer.updateControl(melodyControl)
 
@@ -256,7 +257,7 @@ class SocketListener(private val socket: Socket) {
 
         socket.on("onPlayerTalkReceive") { args ->
             val melodyTalk = gson.fromJson(args[0].toString(), MelodyTalk::class.java)
-            if (melodyTalk.server != Storage.server) return@on
+            if (melodyTalk.server != Settings.server) return@on
             val playerTalk = Storage.onlinePlayers[melodyTalk.uuid] ?: return@on
             Storage.onlinePlayers[melodyTalk.uuid]?.isTalk = melodyTalk.isTalk
 
@@ -271,7 +272,7 @@ class SocketListener(private val socket: Socket) {
     }
 
     private fun updateMelodyPlayer(melodyPlayer: MelodyPlayer) {
-        if (melodyPlayer.server == Storage.server) {
+        if (melodyPlayer.server == Settings.server) {
             Storage.onlinePlayers[melodyPlayer.uuid]?.updateWebData(melodyPlayer)
         }
     }

@@ -1,10 +1,9 @@
-import Image from "next/image";
 import {useEffect, useState} from "react";
 import {SoundMeter} from "@/utils/SoundMeter";
 import {IOnlineUsers} from "@/interfaces";
 import {useSocketStore} from "@/store/SocketStore";
 import {encrypt} from "@/utils";
-
+import {Image} from "@nextui-org/image";
 interface props {
     stream?: MediaStream
     audioContext?: AudioContext
@@ -86,7 +85,7 @@ const UserHead = ({
             <Image
                 src={`https://mc-heads.net/avatar/${name}`}
                 alt={`${name} avatar`} width={50} height={50}
-                className={` opacity-30 rounded ${instant > 0.00 && volume != 0 && soundIsActive && !isMute && !isSelfMute && enableVoice ? "soundAnimationSingle" : ""}`}
+                className={`!z-0 !opacity-30 rounded ${instant > 0.00 && volume != 0 && soundIsActive && !isMute && !isSelfMute && enableVoice ? "!opacity-100" : ""}`}
             />
         </>
     )

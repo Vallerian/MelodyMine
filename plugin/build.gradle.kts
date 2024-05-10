@@ -45,6 +45,7 @@ repositories {
 }
 
 dependencies {
+
     compileOnly("org.spigotmc:spigot-api:1.19.4-R0.1-SNAPSHOT")
     compileOnly("me.clip:placeholderapi:2.11.3")
 
@@ -59,9 +60,6 @@ dependencies {
     implementation("net.kyori:adventure-text-minimessage:4.16.0")
 
 
-    implementation("cloud.commandframework:cloud-paper:1.9.0-SNAPSHOT")
-    implementation("cloud.commandframework:cloud-minecraft-extras:1.9.0-SNAPSHOT")
-
     implementation("com.jeff_media:SpigotUpdateChecker:3.0.3")
 
     // Socket Io
@@ -71,6 +69,11 @@ dependencies {
     implementation("com.zaxxer:HikariCP:4.0.3")
 
     compileOnly("com.comphenix.protocol:ProtocolLib:5.1.0")
+    implementation("org.slf4j:slf4j-api:1.7.25")
+    implementation("ch.qos.logback:logback-core:1.2.3")
+    implementation("ch.qos.logback:logback-classic:1.2.3")
+    implementation("xerces:xercesImpl:2.12.1")
+
 
 }
 

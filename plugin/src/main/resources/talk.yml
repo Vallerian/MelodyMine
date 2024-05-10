@@ -1,0 +1,119 @@
+#
+# The 'talk_configs' configuration relates to the duration during which players engage in voice chat.
+# During this period, a boss bar is displayed for the player in the Minecraft server,
+# along with a text message displayed above the player's head, indicating to other players that those who are in voice chat can see the message above the player's head.
+#
+talk_configs:
+
+  #
+  # By setting the 'boss bar' configuration to 'true', you can customize the boss bar for different states such as 'active', 'inactive', 'self_mute', and 'server_mute'.
+  # In each of these states, you can set the necessary configurations for your boss bar image.
+  #
+  bossbar:
+    enable: true
+
+    #
+    # The included image configurations are as follows:
+    #
+    # 'enable': Determines whether the state is active (when set to 'true') or inactive (when set to 'false').
+    #
+    # 'color': Specifies the color of the boss bar in the given state, which can include colors such as ('red', 'green', 'yellow', 'purple', 'white', 'blue', 'pink').
+    #
+    # 'text': The text displayed on the boss bar when it is shown.
+    #
+    images:
+      active:
+        enable: true
+        color: green
+        text: "<green>🎤"
+
+      inactive:
+        enable: false
+        color: white
+        text: ""
+
+      self_mute:
+        enable: true
+        color: yellow
+        text: "<yellow>🔇"
+
+      server_mute:
+        enable: true
+        color: red
+        text: "<red>🚫"
+
+  #
+  # When the 'nametag' configuration is set to 'true', you can observe different states of talk displayed above the heads of players.
+  # You can customize these states ('active', 'inactive', 'self_mute', 'server_mute') individually with specific 'text' or 'item' for each position you desire.
+  #
+  nametag:
+    enable: true
+
+    #
+    # The 'nametag' image configurations include the following settings:
+    #
+    # 'enable': Determines whether the state is active (when set to 'true') or inactive (when set to 'false').
+    #
+    # 'text_visible': If set to 'true', the text specified in the 'text' section is displayed. If set to 'false', even if text is provided, it will not be displayed.
+    # If a specific item is set in the 'item' configuration, only that item will be displayed.
+    # If both 'text' and 'item' are set and 'text_visible' is 'true', both the text and the item will be displayed.
+    #
+    # 'text': Specifies the text displayed above the heads of other players when the state is active.
+    # This configuration is effective when 'text_visible' is set to 'true'.
+    #
+    # 'position': Determines the position where the 'text' or 'item' is placed relative to the player.
+    # The positions are defined as 'x', 'y', and 'z', with '0' for each indicating alignment with the player's body.
+    #
+    # 'item': Specifies the item displayed above the heads of other players when the state is active.
+    # It can also utilize 'custom_data' to show a new item to other players.
+    # If no item should be displayed and only text is desired, setting the item value to 'AIR' is sufficient.
+    #
+    images:
+
+      active:
+        enable: true
+        text_visible: true
+        text: "<green>🎤"
+        position:
+          x: 0.0
+          y: 2.1
+          z: 0.0
+        item:
+          type: AIR
+          custom_data: 0
+
+      inactive:
+        enable: false
+        text_visible: true
+        text: ""
+        position:
+          x: 0.0
+          y: 2.1
+          z: 0.0
+        item:
+          type: AIR
+          custom_data: 0
+
+      self_mute:
+        enable: true
+        text_visible: true
+        text: "<yellow>🔇"
+        position:
+          x: 0.0
+          y: 2.1
+          z: 0.0
+        item:
+          type: AIR
+          custom_data: 0
+
+      server_mute:
+        enable: true
+        text_visible: true
+        text: "<red>🚫"
+        position:
+          x: 0.0
+          y: 2.1
+          z: 0.0
+        item:
+          type: AIR
+          custom_data: 0

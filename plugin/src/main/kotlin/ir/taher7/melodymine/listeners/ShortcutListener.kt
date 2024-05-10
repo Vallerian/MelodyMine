@@ -2,26 +2,25 @@ package ir.taher7.melodymine.listeners
 
 import ir.taher7.melodymine.MelodyMine
 import ir.taher7.melodymine.core.MelodyManager
+import ir.taher7.melodymine.storage.Messages
+import ir.taher7.melodymine.storage.Settings
 import ir.taher7.melodymine.storage.Storage
 import ir.taher7.melodymine.utils.Adventure.sendMessage
-import ir.taher7.melodymine.utils.Adventure.toComponent
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerSwapHandItemsEvent
 import org.bukkit.event.player.PlayerToggleSneakEvent
 import org.bukkit.scheduler.BukkitRunnable
-import java.util.*
 
 class ShortcutListener : Listener {
 
-    private val coolDown = hashMapOf<UUID, Long>()
 
     @EventHandler
     fun onPressShift(event: PlayerToggleSneakEvent) {
         object : BukkitRunnable() {
             override fun run() {
-                if (!Storage.muteToggleShortcut) return
-                val melodyPlayer = Storage.onlinePlayers[event.player.uniqueId.toString()] ?: return
+                if (!Settings.shortcut) return
+                val melodyPlayer = MelodyManager.getMelodyPlayer(event.player.uniqueId.toString()) ?: return
                 if (!melodyPlayer.webIsOnline || !melodyPlayer.isActiveVoice) return
 
                 if (event.isSneaking) {
@@ -39,24 +38,30 @@ class ShortcutListener : Listener {
     fun onSwapItem(event: PlayerSwapHandItemsEvent) {
         object : BukkitRunnable() {
             override fun run() {
-
-                if (!Storage.muteToggleShortcut) return
+                if (!Settings.shortcut) return
                 val player = event.player
                 if (!player.hasPermission("melodymine.control")) return
                 val melodyPlayer = Storage.onlinePlayers[event.player.uniqueId.toString()] ?: return
                 if (!melodyPlayer.webIsOnline || !melodyPlayer.isActiveVoice) return
                 if (!Storage.playerMuteShortcut.contains(event.player.uniqueId)) return
-                if (coolDown.containsKey(player.uniqueId) && (System.currentTimeMillis() - coolDown[player.uniqueId]!!) <= 1000) {
-                    player.sendMessage("<prefix>You can toggle after <count_color>${((1000 - (System.currentTimeMillis() - coolDown[player.uniqueId]!!)) / 1000)}<text> second.".toComponent())
+
+                if (Storage.shortcutCoolDown.containsKey(player.uniqueId) && (System.currentTimeMillis() - Storage.shortcutCoolDown[player.uniqueId]!!) <= Settings.shortcutCoolDown) {
+                    player.sendMessage(
+                        Messages.getMessage(
+                            "commands.control.toggle_cool_down",
+                            hashMapOf("{TIME}" to ((Settings.shortcutCoolDown - (System.currentTimeMillis() - Storage.shortcutCoolDown[player.uniqueId]!!)) / 1000))
+                        )
+                    )
                     return
                 }
+
                 MelodyManager.setPlayerSelfMute(melodyPlayer, !melodyPlayer.isSelfMute)
                 if (melodyPlayer.isSelfMute) {
-                    player.sendMessage(Storage.unMuteToggleMessage.toComponent())
+                    player.sendMessage(Messages.getMessage("commands.control.unmute"))
                 } else {
-                    player.sendMessage(Storage.muteToggleMessage.toComponent())
+                    player.sendMessage(Messages.getMessage("commands.control.mute"))
                 }
-                coolDown[player.uniqueId] = System.currentTimeMillis()
+                Storage.shortcutCoolDown[player.uniqueId] = System.currentTimeMillis()
             }
         }.runTask(MelodyMine.instance)
     }

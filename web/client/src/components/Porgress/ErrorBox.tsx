@@ -11,11 +11,17 @@ import errorMessages from "@/errorMessages";
 const ErrorBox = () => {
     const {error, errorBox, setErrorBox} = useValidateStore(state => state)
     const box = useRef<HTMLDivElement>(null)
+    const boxWrapper = useRef<HTMLDivElement>(null)
     const [errorMessage, setErrorMessage] = useState("Unknown Error!")
 
     useEffect(() => {
-        document.onclick = event => {
-            if (!box.current?.contains(event.target as HTMLElement)) setErrorBox(false)
+        const onClickEvent = (event: MouseEvent) => {
+            if (!box.current?.contains(event.target as HTMLElement) && boxWrapper.current?.contains(event.target as HTMLElement)) setErrorBox(false)
+        }
+
+        window.addEventListener("click", onClickEvent)
+        return ()=>{
+            window.removeEventListener("click", onClickEvent)
         }
     }, [])
 
@@ -23,8 +29,6 @@ const ErrorBox = () => {
     useEffect(() => {
         const message = errorMessages.find(msg => msg.errorType.toLowerCase() == error.toLowerCase())?.errorMessage
         if (message) {
-
-
             setErrorMessage(message.replace("%serverIp%", Settings.serverIp))
         }
     }, [error])
@@ -33,8 +37,8 @@ const ErrorBox = () => {
 
 
     return (
-        <div
-            className="w-full h-screen fixed z-20 bg-[#00000080] flex justify-center items-center text-center transition-all">
+        <div ref={boxWrapper}
+             className="w-full h-screen fixed z-20 backdrop-blur-sm backdrop-saturate-150 bg-black bg-opacity-30 flex justify-center items-center text-center transition-all">
             <div ref={box}
                  className="mx-2 w-full h-1/3 sm:w-3/4 md:w-3/5 lg:w-3/6 rounded-xl shadow ring-1 ring-neutral-950 overflow-hidden">
                 <div className="h-full flex flex-col">

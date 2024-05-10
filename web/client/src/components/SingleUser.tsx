@@ -21,9 +21,9 @@ import UserStatus from "@/components/UserStatus";
 const SingleUser = ({user}: { user: IOnlineUsers }) => {
     const {socket, iceServers} = useSocketStore(state => state)
     const {uuid, server, serverIsOnline, isActiveVoice} = useUserStore(state => state)
-    const {setUserMute, muteUsers} = useControlStore(state => state)
+    const {setUserMute, muteUsers, sound3D, sound3DModel} = useControlStore(state => state)
     const {isValidate} = useValidateStore(state => state)
-    const {soundList, soundSettings} = useSoundStore(state => state)
+    const {soundList, soundSettings, playerStatus} = useSoundStore(state => state)
     const {stream} = useStreamStore(state => state)
     const {soundIsActive} = useStreamStore(state => state)
     const [userStream, setUserStream] = useState<MediaStream>()
@@ -370,6 +370,13 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
         }
     }
 
+    useEffect(() => {
+        if (playerStatus.length == 0) return
+        const userStatus = playerStatus.find(value => value.uuid == user?.uuid)
+        if (!userStatus) return
+        setIsSelfMute(userStatus.isMute)
+        setIsDeafen(userStatus.isDeafen)
+    }, [playerStatus])
 
     useEffect(() => {
             if (!uuid || !stream) return
@@ -404,7 +411,6 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
 
             return () => {
 
-
                 socket?.off("onReceiveOffer", onReceiveOffer)
                 socket?.off("onReceiveAnswer", onReceiveAnswer)
                 socket?.off("onReceiveCandidate", onReceiveCandidate)
@@ -430,7 +436,7 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
                 socket?.off("onDenyCallTargetPluginReceive", onDenyCallTargetPluginReceive)
             }
 
-        }, [RTCPeer, socket, uuid, stream, isValidate, callingSound, callingSound2, endCallSound, pannerNode, soundIsActive, isUserMute, user, voiceBack, gain, soundSettings]
+        }, [RTCPeer, socket, uuid, stream, isValidate, callingSound, callingSound2, endCallSound, pannerNode, soundIsActive, isUserMute, user, voiceBack, gain, soundSettings, sound3D, sound3DModel]
     )
 
     useEffect(() => {
@@ -448,9 +454,9 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
                 socket?.off("onPlayerChangeControlReceive", onPlayerChangeControlReceive)
                 socket?.off("onSetControlPluginReceive", onSetControlPluginReceive)
             }
-
         }, [socket, uuid]
     )
+
 
     useEffect(() => {
         if (user.uuid == uuid) {
@@ -481,14 +487,14 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
             gain.gain.value = 1
             setEnableVoice(true)
         }
-        if (soundSettings.sound3D) {
+        if (sound3D) {
             const {x, y, z} = playerLocation
             const {x: Dx, y: Dy, z: Dz} = playerDirection
             pannerNode.panningModel = "HRTF"
-            pannerNode.distanceModel = "inverse"
+            pannerNode.distanceModel = sound3DModel.toLowerCase() as "inverse" | "linear" | "exponential"
             pannerNode.maxDistance = soundSettings.maxDistance
             pannerNode.refDistance = soundSettings.refDistance
-            pannerNode.rolloffFactor = 1
+            pannerNode.rolloffFactor = soundSettings.rolloffFactor
             pannerNode.coneInnerAngle = soundSettings.innerAngle
             pannerNode.coneOuterAngle = soundSettings.outerAngle
             pannerNode.coneOuterGain = soundSettings.outerVolume
@@ -498,6 +504,10 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
         } else {
             if (!soundSettings.lazyHear) return
             let volume = (soundSettings.maxDistance - distance) / soundSettings.maxDistance
+            const {x, y, z} = targetLocation
+            pannerNode.panningModel = "equalpower"
+            pannerNode.setPosition(x, y, z)
+            pannerNode.setOrientation(0, 1, 0)
             gain.gain.value = volume
             if (userIsAdminMode) gain.gain.value = 1
             if (checkPlayerCanTalk()) {
@@ -506,15 +516,13 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
                 gain.gain.value = volume
             }
         }
-
-
     }
 
     const updateListenerPosition = (data: IVolume) => {
         const listener = audioContext?.listener
         if (!audioContext || !listener) return
         const {targetLocation, targetDirection} = data
-        if (!soundSettings.sound3D) return
+        if (!sound3D) return
         const {x, y, z} = targetLocation
         const {x: Dx, y: Dy, z: Dz} = targetDirection
         listener.setPosition(x, y, z)
@@ -677,7 +685,7 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
                                     {!isSelfMute ? (
                                         <div className="self-center">
                                         <span
-                                            className="whitespace-nowrap text-sm font-medium mr-2 rounded dark:text-neutral-400 flex">
+                                            className="whitespace-nowrap text-sm font-medium mr-2 rounded text-neutral-400 flex">
                                             <span className="self-center hidden sm:block">
                                                 <BsFillMicMuteFill/>
                                             </span>
@@ -688,7 +696,7 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
                                     {!isDeafen ? (
                                         <div className="self-center">
                                         <span
-                                            className="whitespace-nowrap text-sm font-medium mr-2 rounded dark:text-neutral-400 flex">
+                                            className="whitespace-nowrap text-sm font-medium mr-2 rounded text-neutral-400 flex">
                                             <span className="self-center hidden sm:block">
                                                 <BiSolidVolumeMute/>
                                             </span>

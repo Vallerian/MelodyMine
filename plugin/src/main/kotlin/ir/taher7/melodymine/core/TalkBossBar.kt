@@ -2,6 +2,7 @@ package ir.taher7.melodymine.core
 
 
 import ir.taher7.melodymine.storage.Storage
+import ir.taher7.melodymine.storage.Talk
 import ir.taher7.melodymine.utils.Adventure.hideBossBar
 import ir.taher7.melodymine.utils.Adventure.showBossBar
 import ir.taher7.melodymine.utils.Adventure.toComponent
@@ -19,8 +20,8 @@ class TalkBossBar(val player: Player) {
     }
 
     fun initTalkBossBar() {
-        if (!Storage.isEnableBossBar) return
-        val serverMute = Storage.bossbarConfigs["server-mute"] ?: return
+        if (!Talk.isEnableBossBar) return
+        val serverMute = Talk.bossbarConfigs["server_mute"] ?: return
         bossBar = BossBar.bossBar(
             if (melodyPlayer.isMute) serverMute.text.toComponent() else "".toComponent(),
             1f,
@@ -28,7 +29,7 @@ class TalkBossBar(val player: Player) {
             BossBar.Overlay.PROGRESS
         )
 
-        if (serverMute.enable && melodyPlayer.isMute && !Storage.isEnableBossBar) {
+        if (serverMute.enable && melodyPlayer.isMute && !Talk.isEnableBossBar) {
             showTalkBossBar()
         } else {
             hideTalkBossBar()
@@ -37,18 +38,18 @@ class TalkBossBar(val player: Player) {
     }
 
     fun showTalkBossBar() {
-        if (!Storage.isEnableBossBar) return
+        if (!Talk.isEnableBossBar) return
         player.showBossBar(bossBar)
     }
 
     fun hideTalkBossBar() {
-        if (!Storage.isEnableBossBar) return
+        if (!Talk.isEnableBossBar) return
         player.hideBossBar(bossBar)
     }
 
     fun setBossBarActive() {
-        if (!Storage.isEnableBossBar) return
-        val active = Storage.bossbarConfigs["active"] ?: return
+        if (!Talk.isEnableBossBar) return
+        val active = Talk.bossbarConfigs["active"] ?: return
         val color = BossBar.Color.NAMES.value(active.color.lowercase()) ?: BossBar.Color.WHITE
         if (active.enable) {
             showTalkBossBar()
@@ -60,8 +61,8 @@ class TalkBossBar(val player: Player) {
     }
 
     fun setBossBarInactive() {
-        if (!Storage.isEnableBossBar) return
-        val inactive = Storage.bossbarConfigs["inactive"] ?: return
+        if (!Talk.isEnableBossBar) return
+        val inactive = Talk.bossbarConfigs["inactive"] ?: return
         val color = BossBar.Color.NAMES.value(inactive.color.lowercase()) ?: BossBar.Color.WHITE
         if (inactive.enable) {
             showTalkBossBar()
@@ -73,8 +74,8 @@ class TalkBossBar(val player: Player) {
     }
 
     fun setBossBarSelfMute() {
-        if (!Storage.isEnableBossBar) return
-        val selfMute = Storage.bossbarConfigs["self-mute"] ?: return
+        if (!Talk.isEnableBossBar) return
+        val selfMute = Talk.bossbarConfigs["self_mute"] ?: return
         val color = BossBar.Color.NAMES.value(selfMute.color.lowercase()) ?: BossBar.Color.WHITE
         if (selfMute.enable) {
             showTalkBossBar()
@@ -86,8 +87,8 @@ class TalkBossBar(val player: Player) {
     }
 
     fun setBossBarServerMute() {
-        if (!Storage.isEnableBossBar) return
-        val serverMute = Storage.bossbarConfigs["server-mute"] ?: return
+        if (!Talk.isEnableBossBar) return
+        val serverMute = Talk.bossbarConfigs["server_mute"] ?: return
         val color = BossBar.Color.NAMES.value(serverMute.color.lowercase()) ?: BossBar.Color.WHITE
         if (serverMute.enable) {
             showTalkBossBar()

@@ -33,10 +33,10 @@ export interface Location {
 }
 
 export interface SoundSettings {
-    sound3D: boolean,
     lazyHear: boolean,
     maxDistance: number,
     refDistance: number,
+    rolloffFactor: number,
     innerAngle: number,
     outerAngle: number,
     outerVolume: number,

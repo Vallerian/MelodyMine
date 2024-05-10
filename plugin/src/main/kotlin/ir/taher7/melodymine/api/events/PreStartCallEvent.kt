@@ -13,8 +13,6 @@ class PreStartCallEvent(
 
     var canSendMessage = true
 
-
-
     override fun isCancelled(): Boolean {
         return cancelled
     }

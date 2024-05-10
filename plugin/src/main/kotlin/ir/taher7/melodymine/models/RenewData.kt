@@ -17,11 +17,18 @@ data class RenewPlayer(
 
 
 data class SoundSettings(
-    @Expose val sound3D: Boolean,
     @Expose val lazyHear: Boolean,
     @Expose val maxDistance: Int,
     @Expose val refDistance: Int,
     @Expose val innerAngle: Int,
     @Expose val outerAngle: Int,
+    @Expose val rolloffFactor: Int,
     @Expose val outerVolume: Double,
+)
+
+
+data class PlayerStatus(
+    @Expose val uuid: String,
+    @Expose val isMute: Boolean,
+    @Expose val isDeafen: Boolean,
 )

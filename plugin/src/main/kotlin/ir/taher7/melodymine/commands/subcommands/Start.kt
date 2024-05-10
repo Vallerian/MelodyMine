@@ -3,32 +3,28 @@ package ir.taher7.melodymine.commands.subcommands
 import com.cryptomorin.xseries.ReflectionUtils
 import ir.taher7.melodymine.commands.SubCommand
 import ir.taher7.melodymine.core.MelodyManager
-import ir.taher7.melodymine.storage.Storage
+import ir.taher7.melodymine.storage.Messages
 import ir.taher7.melodymine.utils.Adventure.sendMessage
-import ir.taher7.melodymine.utils.Adventure.toComponent
+import ir.taher7.melodymine.utils.Utils
 import org.bukkit.entity.Player
-import java.util.*
 
 class Start : SubCommand() {
 
-    private val coolDown = hashMapOf<UUID, Long>()
+
 
     override var name = "start"
-    override var description = Storage.startDescription
+    override var description = Messages.getMessageString("commands.start.description")
     override var syntax = "/melodymine start"
     override var permission = "melodymine.start"
 
     override fun handler(player: Player, args: Array<out String>) {
 
-        if (coolDown.containsKey(player.uniqueId) && (System.currentTimeMillis() - coolDown[player.uniqueId]!!) <= 5000) {
-            player.sendMessage("<prefix>You can use this command after <count_color>${((5000 - (System.currentTimeMillis() - coolDown[player.uniqueId]!!)) / 1000)}<text> second.".toComponent())
-            return
-        }
+        if (Utils.checkPlayerCoolDown(player)) return
         when (args.size) {
             2 -> {
                 if (ReflectionUtils.supports(13) && args[1].equals("qrcode", true)) {
                     if (!player.hasPermission("melodymine.qrcode")) {
-                        player.sendMessage("<prefix>You dont have permission to use this command.".toComponent())
+                        player.sendMessage(Messages.getMessage("errors.no_permission"))
                         return
                     }
 //                    if (ReflectionUtils.supports(9) && player.inventory.itemInOffHand.type == Material.AIR) {
@@ -40,18 +36,18 @@ class Start : SubCommand() {
                         if (index in 0..8) {
                             if (itemStack == null) {
                                 MelodyManager.sendStartQRCode(player, index)
-                                coolDown[player.uniqueId] = System.currentTimeMillis()
+                                Utils.resetPlayerCoolDown(player)
                                 return
                             }
                         }
                     }
-                    player.sendMessage("<prefix>HotBar is full!".toComponent())
+                    player.sendMessage(Messages.getMessage("commands.start.hot_bar"))
 
                 }
 
                 if (args[1].equals("link", true)) {
                     MelodyManager.sendStartLink(player)
-                    coolDown[player.uniqueId] = System.currentTimeMillis()
+                    Utils.resetPlayerCoolDown(player)
                     return
                 }
 
@@ -65,11 +61,13 @@ class Start : SubCommand() {
     }
 
     private fun sendStartHelpMessage(player: Player) {
-        player.sendMessage(Storage.contentHeader.toComponent())
-        player.sendMessage("")
-        player.sendMessage("<click:run_command:'${syntax} link'><hover:show_text:'<text_hover>Click to run <i>${syntax} link</i>'><text_hover>${syntax} link <#FFF4E4><bold>|</bold> <text>Open Website with Link.</hover></click>".toComponent())
-        player.sendMessage("<click:run_command:'${syntax} qrcode'><hover:show_text:'<text_hover>Click to run <i>${syntax} qrcode</i>'><text_hover>${syntax} qrcode <#FFF4E4><bold>|</bold> <text>Open Website with Qrcode.</hover></click>".toComponent())
-        player.sendMessage("")
-        player.sendMessage(Storage.contentFooter.toComponent())
+        player.sendMessage(Messages.getMessage("general.content_header"))
+        Messages.getHelpMessage(
+            "commands.start.help_message",
+            hashMapOf("{SYNTAX}" to syntax)
+        ).forEach { message ->
+            player.sendMessage(message)
+        }
+        player.sendMessage(Messages.getMessage("general.content_footer"))
     }
 }

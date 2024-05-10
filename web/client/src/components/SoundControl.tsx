@@ -12,10 +12,7 @@ import {useOnlineUsersStore} from "@/store/OnlineUsersStore";
 import {useLoadingStore} from "@/store/LoadingStore";
 import Progress from "@/components/Porgress/Progress";
 import {decrypt, encrypt} from "@/utils";
-import {MdOutlineNoiseAware} from "react-icons/md";
-import {useControlStore} from "@/store/ControlStore";
-import {IReceiveControl, ISoundSettings} from "@/interfaces";
-import {useSoundStore} from "@/store/SoundStore";
+import {IReceiveControl} from "@/interfaces";
 
 const SoundControl = () => {
 
@@ -23,7 +20,7 @@ const SoundControl = () => {
     const {socket} = useSocketStore(state => state)
     const {removeUser, setAdminModeAll} = useOnlineUsersStore(state => state)
     const {setStartButton, disconnectButton} = useLoadingStore(state => state)
-    const {noiseSuppression, setNoiseSuppression} = useControlStore(state => state)
+
 
     const {
         micIsActive,
@@ -106,21 +103,7 @@ const SoundControl = () => {
         setStartButton()
     }
 
-
-    if (!isValidate) return (
-        <div
-            className="fixed md:fixed text-white bottom-5 bg-neutral-700 sm:bg-transparent sm:px-0 px-3 sm:py-0 py-2 rounded-xl sm:shadow-none shadow-xl z-10 bg-opacity-60">
-            <button
-                className={`cursor-pointer text-sm ${noiseSuppression ? "text-green-500" : "text-neutral-400"} flex gap-1 justify-center items-center p-1 rounded ring-1 ${noiseSuppression ? "ring-green-700" : "ring-neutral-700"} shadow ${noiseSuppression ? "shadow-green-600" : "shadow-neutral-600"}`}
-                onClick={() => setNoiseSuppression(!noiseSuppression)}
-            >
-                <span className="text-xl hidden sm:block">
-                    <MdOutlineNoiseAware/>
-                </span>
-                Noise Suppression
-            </button>
-        </div>
-    )
+    if (!isValidate) return
 
     return (
         <div

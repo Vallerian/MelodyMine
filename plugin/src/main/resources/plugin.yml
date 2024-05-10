@@ -1,5 +1,5 @@
 name: MelodyMine
-version: '1.5.6'
+version: '2.0.0'
 main: ir.taher7.melodymine.MelodyMine
 api-version: '1.13'
 author: taher7
@@ -26,6 +26,7 @@ permissions:
       melodymine.unmute: true
       melodymine.toggle: true
       melodymine.status.others: true
+      melodymine.updatechecker: true
   melodymine.start:
     description: Get website link to establish a voice connection.
     default: true
@@ -86,3 +87,7 @@ permissions:
   melodymine.reset:
     description: reset player storage data
     default: op
+  melodymine.updatechecker:
+    description: get update checker notify
+    default: op
+

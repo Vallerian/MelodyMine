@@ -1,0 +1,194 @@
+#
+# You can find all the messages used in the MelodyMine plugin in this file.
+#
+### https://github.com/Vallerian/MelodyMine/pulls
+#
+# If you have ideas for adding a new language to the MelodyMine plugin, feel free to fork the repository at the link below and submit a pull request.
+# If approved, your language will be added to the plugin.
+#
+
+messages:
+  general:
+    prefix: "<gradient:#f20ae5:#FFF4E4>MelodyMine</gradient> <#EAEAEA><bold>|</bold> <text_color>"
+    text_color: "<gradient:#EAEAEA:#E3ACF9>"
+    hover_color: "<gradient:#f20ae5:#FFF4E4>"
+    highlight_color: "<#FFD369>"
+    content_header: "<st><gradient:#121F31:#F04FE7>                     </gradient></st> <bold><gradient:#F04FE7:#FFF4E4:#F04FE7>MelodyMine</gradient></bold> <st><gradient:#F04FE7:#121F31>                      </st>"
+    content_footer: "<st><gradient:#121F31:#F04FE7:#121F31><st>                                                             "
+    cool_down: "<prefix>You can use this command after <highlight_color>{TIME} <text_color>second."
+    help_line: "<click:run_command:'{SYNTAX}'><hover:show_text:'<hover_color>Click to run <i>{SYNTAX}</i>'><hover_color>{SYNTAX} <#FFF4E4><bold>|</bold> <text_color>{DESCRIPTION}</hover></click>"
+
+
+  success:
+    database: "Successfully connected to database."
+    websocket: "Successfully connected to Websocket."
+
+
+  errors:
+    player_not_found: "<prefix>Player not found."
+    no_permission: "<prefix>You don't have permission to use this command."
+    only_players: "<red>Console can not use this command."
+    active_voice: "<click:run_command:'/melodymine start link'><hover:show_text:'<hover_color>Click to run <i>/melodymine start link</i>'><prefix>You Must First Connect to Voice Chat <hover_color>/melodymine start link <text_color>.</hover></click>"
+    active_voice_others: "<prefix><highlight_color>{PLAYER} <text_color>is not Active in Voice Chat."
+    database: "Database connection failed."
+    websocket: "Websocket connection failed check your connection."
+    websocket_failed: "Websocket Failed..."
+
+
+  website:
+    open: "<hover:show_text:'<hover_color>Click to open'><prefix>Click to open website and start voice chat.</hover>"
+    join: "<prefix>You have connected to the website."
+    leave: "<prefix>You have disconnected from the website."
+    start: "<prefix>You have start the voice chat."
+    end: "<prefix>You have end the voice chat."
+
+
+  force_voice:
+    title: "<hover_color>Force Voice"
+    subtitle: "<text_color>do <u>/melodymine start link</u> to start"
+
+
+  logger:
+    website_join: "<prefix><highlight_color>{PLAYER} <text_color>has join the website."
+    website_leave: "<prefix><highlight_color>{PLAYER} <text_color>has left the website."
+    start_voice: "<prefix><highlight_color>{PLAYER} <text_color>has start voice."
+    end_voice: "<prefix><highlight_color>{PLAYER} <text_color>has end voice."
+    active_voice: "<prefix><highlight_color>{PLAYER} <text_color>is active voice."
+
+
+  placeholder:
+    web_online_true: "Online"
+    web_online_false: "Offline"
+    voice_active_true: "Active"
+    voice_active_false: "Inactive"
+    adminmode_true: "On"
+    adminmode_false: "Off"
+    server_mute_true: "Server Mute"
+    server_mute_false: "Server Unmute"
+    self_mute: "Mute"
+    self_unmute: "unMute"
+    self_deafen: "Deafen"
+    self_undeafen: "UnDeafen"
+
+
+  commands:
+    reload:
+      description: "Reload all configuration file."
+      reload_success: "<prefix>Plugin has been successfully reload."
+
+    adminmode:
+      description: "Conversation with players in voice."
+      is_start_voice: "<prefix>To start Admin mode you need to click on the start melody in the website."
+      disable: "<prefix>Admin mode has been disabled."
+      enable: "<prefix>Admin mode has been enabled."
+
+    start:
+      description: "Get link to start voice chat."
+      hot_bar: "<prefix>HotBar is full."
+      scan_qrcode: "<prefix>Scan the QRCode."
+      help_message:
+        - ""
+        - "<click:run_command:'{SYNTAX} link'><hover:show_text:'<hover_color>Click to run <i>{SYNTAX} link</i>'><hover_color>{SYNTAX} link <#FFF4E4><bold>|</bold> <text_color>Open Website with Link.</hover></click>"
+        - "<click:run_command:'{SYNTAX} qrcode'><hover:show_text:'<hover_color>Click to run <i>{SYNTAX} qrcode</i>'><hover_color>{SYNTAX} qrcode <#FFF4E4><bold>|</bold> <text_color>Open Website with Qrcode.</hover></click>"
+        - ""
+
+    reset:
+      description: "Reset Player Storage Data."
+      success: "<prefix><highlight_color>{PLAYER} <text_color>Storage Data has been Reset."
+      help_message:
+        - ""
+        - "<hover_color>{SYNTAX} <player> <#FFF4E4><bold>|</bold> <text_color>Reset Player Storage Data."
+        - ""
+
+    status:
+      description: "Check Player Voice Status."
+      help_message:
+        - ""
+        - "<click:run_command:'{SYNTAX} <player>'><hover:show_text:'<highlight_color>Click to run <i>{SYNTAX} player</i>'><highlight_color>{SYNTAX} <#FFF4E4><bold>|</bold> <text_color>Check Your Status.</hover></click>"
+        - "<click:run_command:'{SYNTAX}'><hover:show_text:'<highlight_color>Click to run <i>{SYNTAX}</i>'><highlight_color>{SYNTAX} <player> <#FFF4E4><bold>|</bold> <text_color>Check Other Players Voice Status.</hover></click>"
+        - ""
+
+    mute:
+      description: "Mute player in voice chat."
+      already_mute: "<prefix><highlight_color>{PLAYER} <text_color>is already muted."
+      success: "<prefix><highlight_color>{PLAYER} <text_color>has mute in voice chat."
+      success_target: "<prefix>You have muted in voice chat."
+      help_message:
+        - ""
+        - "<click:run_command:'{SYNTAX} <player>'><hover:show_text:'<hover_color>Click to run <i>{SYNTAX} <player></i>'><hover_color>{SYNTAX} <player> <#FFF4E4><bold>|</bold> <text_color>Mute Player in Voice chat.</hover></click>"
+        - ""
+
+    unmute:
+      description: "Unmute player in voice chat."
+      not_mute: "<prefix>{PLAYER} <text_color>is not mute."
+      success: "<prefix><hover_color>{PLAYER} <text_color>has unmute from voice chat."
+      success_target: "<prefix>You have unmute from voice chat."
+      help_message:
+        - ""
+        - "<click:run_command:'{SYNTAX} <player>'><hover:show_text:'<hover_color>Click to run <i>{SYNTAX} <player></i>'><hover_color>{SYNTAX} <player> <#FFF4E4><bold>|</bold> <text_color>UnMute Player in Voice chat.</hover></click>"
+        - ""
+
+    toggle:
+      description: "toggle join & leave voice logs."
+      enable: "<prefix>Message log has been enabled."
+      disable: "<prefix>Message log has been disabled."
+
+    control:
+      description: "Mute / Deafen Yourself in website."
+      mute: "<prefix>You have Mute from website."
+      unmute: "<prefix>You have unMute from website."
+      deafen: "<prefix>You have Deafen from website."
+      undeafen: "<prefix>You have unDeafen from website."
+      toggle_cool_down: "<prefix>You can toggle after <highlight_color>{TIME}<text_color> second."
+      help_message:
+        - ""
+        - "<click:run_command:'{SYNTAX} mute'><hover:show_text:'<hover_color>Click to run <i>{SYNTAX} mute</i>'><hover_color>{SYNTAX} mute <#FFF4E4><bold>|</bold> <text_color>Mute / Unmute Yourself in Website.</hover></click>"
+        - "<click:run_command:'{SYNTAX} deafen'><hover:show_text:'<hover_color>Click to run <i>{SYNTAX} deafen</i>'><hover_color>{SYNTAX} deafen <#FFF4E4><bold>|</bold> <text_color>Deafen / Undeafen Yourself in Website.</hover></click>"
+        - ""
+
+    call:
+      description: "Call to Another Player."
+      call_to_yourself: "<prefix>You Can't Call Yourself."
+      in_call_start: "<prefix>You're Already in Call with<highlight_color> {PLAYER}<text_color>, if You want to Start new Call do <i>/melodymine call end</i>."
+      in_pending: "<prefix>You're is Already in Pending Call with<highlight_color> {PLAYER}<text_color>, Please wait to end the Pending Call."
+      is_toggle: "<prefix>Your Call Request is Disable do <i>/melodymine call toggle</i> to Enable Your Call Request."
+      disable_world: "<prefix>Call is Disable in this World."
+      not_available: "<prefix><highlight_color>{PLAYER} <text_color>is not Available Please try Again later."
+      not_in_call: "<prefix>You're Not to Any Call."
+      disable_adminmode: "<prefix>You Must First Disable Your AdminMode."
+      in_call_accept: "<prefix>You're Already in Call with<highlight_color> {PLAYER}<text_color>, if You want to Accept Call do <i>/melodymine call end</i>."
+      call_request: "<prefix>You don't have any Call Request."
+      call_request_enable: "<prefix>Your Call Requests has been Enabled, Now Players can Send Call Request."
+      call_request_disable: "<prefix>Your Call Requests has been Disabled, Now Players can not Send Call Request."
+      call_wait: "<text_color>Please wait to <highlight_color>{PLAYER} <text_color>Accept Call."
+      accept_button: "<click:run_command:'/melodymine call deny'><text_color>Click to <gradient:#D80032:#F78CA2>Deny</gradient> <text_color>Call.</click>"
+      call_receive: "<text_color>You have Received a Call from <highlight_color>{PLAYER}<text_color>."
+      call_accept: "<click:run_command:'/melodymine call accept'><text_color>Click to <gradient:#16FF00:#A2FF86>Accept</gradient> <text_color>Call.</click>"
+      call_deny_button: "<click:run_command:'/melodymine call deny'><text_color>Click to <gradient:#D80032:#F78CA2>Deny</gradient> <text_color>Call.</click>"
+      call_end: "<prefix><highlight_color>{PLAYER} <text_color>has End Call Between Themselves and You."
+      call_end_target: "<prefix>You have End Call Between Yourself and <highlight_color>{PLAYER}<text_color>."
+      call_pending_end: "<prefix>Pending Call has End."
+      call_start: "<prefix>Call has been Started with <highlight_color>{PLAYER}<text_color>, You can use <i>/melodymine call end</i> to end the Call."
+      call_deny: "<prefix>Call Request has been Deny."
+      call_deny_others: "<prefix><highlight_color>{PLAYER}<text_color>, Deny Call Request."
+      help_message:
+        - ""
+        - "<click:run_command:'{SYNTAX} start'><hover:show_text:'<hover_color>Click to run <i>{SYNTAX} start</i>'><hover_color>{SYNTAX} start <player> <#FFF4E4><bold>|</bold> <text_color>Start Call to Someone.</hover></click>"
+        - "<click:run_command:'{SYNTAX} end'><hover:show_text:'<hover_color>Click to run <i>{SYNTAX} end</i>'><hover_color>{SYNTAX} end <#FFF4E4><bold>|</bold> <text_color>End Call You're in.</hover></click>"
+        - "<click:run_command:'{SYNTAX} accept'><hover:show_text:'<hover_color>Click to run <i>{SYNTAX} accept</i>'><hover_color>{SYNTAX} accept <#FFF4E4><bold>|</bold> <text_color>Accept Call Request.</hover></click>"
+        - "<click:run_command:'{SYNTAX} deny'><hover:show_text:'<hover_color>Click to run <i>{SYNTAX} deny</i>'><hover_color>{SYNTAX} deny <#FFF4E4><bold>|</bold> <text_color>Deny Call Request.</hover></click>"
+        - "<click:run_command:'{SYNTAX} toggle'><hover:show_text:'<hover_color>Click to run <i>{SYNTAX} toggle</i>'><hover_color>{SYNTAX} toggle <#FFF4E4><bold>|</bold> <text_color>Toggle Call Requests.</hover></click>"
+        - ""
+
+
+qrcode:
+  display_name: "&b&oMelodyMine QRCode"
+  lore:
+    - "&7&m                                 "
+    - "&fStep 1 &7- &3Scan the QRCode"
+    - "&fStep 2 &7- &3Click on the 'StartMelody' Button."
+    - ""
+    - "&4!!! &c&lDon't Give this Item to another Player &4!!!"
+    - ""
+    - "&eClick to remove QRCode"
+    - "&7&m                                 "

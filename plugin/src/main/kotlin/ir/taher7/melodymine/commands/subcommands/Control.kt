@@ -2,24 +2,21 @@ package ir.taher7.melodymine.commands.subcommands
 
 import ir.taher7.melodymine.commands.SubCommand
 import ir.taher7.melodymine.core.MelodyManager
+import ir.taher7.melodymine.storage.Messages
 import ir.taher7.melodymine.storage.Storage
 import ir.taher7.melodymine.utils.Adventure.sendMessage
-import ir.taher7.melodymine.utils.Adventure.toComponent
+import ir.taher7.melodymine.utils.Utils
 import org.bukkit.entity.Player
-import java.util.*
 
 class Control : SubCommand() {
-    private val coolDown = hashMapOf<UUID, Long>()
+
 
     override var name = "control"
-    override var description = Storage.controlDescription
+    override var description = Messages.getMessageString("commands.control.description")
     override var syntax = "/melodymine control"
     override var permission = "melodymine.control"
     override fun handler(player: Player, args: Array<out String>) {
-        if (coolDown.containsKey(player.uniqueId) && (System.currentTimeMillis() - coolDown[player.uniqueId]!!) <= 5000) {
-            player.sendMessage("<prefix>You can use this command after <count_color>${((5000 - (System.currentTimeMillis() - coolDown[player.uniqueId]!!)) / 1000)}<text> second.".toComponent())
-            return
-        }
+        if (Utils.checkPlayerCoolDown(player)) return
 
         if (args.size != 2) {
             sendControlHelpMessage(player)
@@ -28,29 +25,29 @@ class Control : SubCommand() {
 
         val melodyPlayer = Storage.onlinePlayers[player.uniqueId.toString()] ?: return
         if (!melodyPlayer.isActiveVoice) {
-            player.sendMessage("<prefix>You Must Active Your Voice.".toComponent())
+            player.sendMessage(Messages.getMessage("errors.active_voice"))
             return
         }
 
         if (args[1].equals("mute", true)) {
             MelodyManager.setPlayerSelfMute(melodyPlayer, !melodyPlayer.isSelfMute)
             if (melodyPlayer.isSelfMute) {
-                player.sendMessage(Storage.unMuteToggleMessage.toComponent())
+                player.sendMessage(Messages.getMessage("commands.control.unmute"))
             } else {
-                player.sendMessage(Storage.muteToggleMessage.toComponent())
+                player.sendMessage(Messages.getMessage("commands.control.mute"))
             }
-            coolDown[player.uniqueId] = System.currentTimeMillis()
+            Utils.resetPlayerCoolDown(player)
             return
         }
 
         if (args[1].equals("deafen", true)) {
             MelodyManager.setPlayerDeafen(melodyPlayer, !melodyPlayer.isDeafen)
             if (melodyPlayer.isDeafen) {
-                player.sendMessage(Storage.unDeafenToggleMessage.toComponent())
+                player.sendMessage(Messages.getMessage("commands.control.undeafen"))
             } else {
-                player.sendMessage(Storage.deafenToggleMessage.toComponent())
+                player.sendMessage(Messages.getMessage("commands.control.deafen"))
             }
-            coolDown[player.uniqueId] = System.currentTimeMillis()
+            Utils.resetPlayerCoolDown(player)
             return
         }
 
@@ -58,11 +55,13 @@ class Control : SubCommand() {
     }
 
     private fun sendControlHelpMessage(player: Player) {
-        player.sendMessage(Storage.contentHeader.toComponent())
-        player.sendMessage("")
-        player.sendMessage("<click:run_command:'${syntax} mute'><hover:show_text:'<text_hover>Click to run <i>${syntax} mute</i>'><text_hover>${syntax} mute <#FFF4E4><bold>|</bold> <text>Mute Yourself in Website.</hover></click>".toComponent())
-        player.sendMessage("<click:run_command:'${syntax} deafen'><hover:show_text:'<text_hover>Click to run <i>${syntax} deafen</i>'><text_hover>${syntax} deafen <#FFF4E4><bold>|</bold> <text>Deafen Yourself in Website.</hover></click>".toComponent())
-        player.sendMessage("")
-        player.sendMessage(Storage.contentFooter.toComponent())
+        player.sendMessage(Messages.getMessage("general.content_header"))
+        Messages.getHelpMessage(
+            "commands.control.help_message",
+            hashMapOf("{SYNTAX}" to syntax)
+        ).forEach { message ->
+            player.sendMessage(message)
+        }
+        player.sendMessage(Messages.getMessage("general.content_footer"))
     }
 }

@@ -11,10 +11,9 @@ import Settings from "@/config";
 export const metadata: Metadata = {
     title: 'Login',
 }
-const Page = async () => {
+const Page = async ({searchParams}: { searchParams?: { start?: boolean } }) => {
     const session = await getAuthSession()
-
-    if (session?.user) redirect('/hub')
+    if (session?.user) redirect(`/hub${searchParams?.start ? "?start=true" : ""}`)
 
     return (
         <div className="text-white flex justify-center items-center w-full h-screen">

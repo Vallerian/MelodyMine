@@ -1,7 +1,7 @@
 package ir.taher7.melodymine.utils
 
 import ir.taher7.melodymine.MelodyMine
-import ir.taher7.melodymine.storage.Storage
+import ir.taher7.melodymine.storage.Messages
 import net.kyori.adventure.audience.Audience
 import net.kyori.adventure.bossbar.BossBar
 import net.kyori.adventure.platform.bukkit.BukkitAudiences
@@ -27,10 +27,10 @@ object Adventure {
         miniMessage = MiniMessage.builder().tags(
             TagResolver.resolver(
                 TagResolver.standard(),
-                Placeholder.parsed("prefix", Storage.prefix),
-                Placeholder.parsed("text", Storage.text),
-                Placeholder.parsed("text_hover", Storage.textHover),
-                Placeholder.parsed("count_color", Storage.count_color),
+                Placeholder.parsed("prefix", Messages.getMessageString("general.prefix")),
+                Placeholder.parsed("text_color", Messages.getMessageString("general.text_color")),
+                Placeholder.parsed("hover_color", Messages.getMessageString("general.hover_color")),
+                Placeholder.parsed("highlight_color", Messages.getMessageString("general.highlight_color")),
             ),
         ).build()
     }
@@ -65,7 +65,6 @@ object Adventure {
     fun Player.hideBossBar(bossBar: BossBar) {
         audience.sender(this).hideBossBar(bossBar)
     }
-
 
 
 }
