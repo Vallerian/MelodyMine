@@ -35,8 +35,6 @@ model melodymine {
   socketID       String?  @unique(map: "socketID") @db.VarChar(36)
   verifyCode     String?  @unique(map: "verifyCode") @db.VarChar(36)
   server         String?  @db.VarChar(36)
-  serverIp       String?  @db.VarChar(36)
-  webIp          String?  @db.VarChar(36)
   isActiveVoice  Boolean? @default(false)
   isMute         Boolean? @default(false)
   serverIsOnline Boolean? @default(false)

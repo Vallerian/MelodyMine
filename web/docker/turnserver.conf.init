@@ -6,8 +6,6 @@ fingerprint
 
 #listening-ip=0.0.0.0
 listening-port=3477
-min-port=10000
-max-port=20000
 
 external-ip=$SERVER_IP
 
