@@ -9,8 +9,7 @@ if lsof -Pi :3477 -sTCP:LISTEN -t ; then
     echo "port 3477 is in use. Stopping service using port 3477..."
     PID=$(lsof -t -i:3477)
     kill -9 $PID
-  fi
-
+fi
 
 if ! command -v docker
 then
@@ -50,6 +49,14 @@ cp turnserver.conf.init turnserver.conf
 sed -i "s/\$DOMAIN/$DOMAIN/g; s/\$SERVER_IP/$SERVER_IP/g" turnserver.conf
 
 sed -i "s/\$DOMAIN/$DOMAIN/g; s/\$SERVER_IP/$SERVER_IP/g" nginx.conf
+
+
+if [ "$(docker-compose ps -q)" ]; then
+    echo "Docker Compose is running. Stopping Docker Compose..."
+    docker-compose down
+else
+    echo "Docker Compose is not running. Start Docker Compose..."
+fi
 
 CERTBOT_DOMAIN_FILE="./certbot/conf/live/$DOMAIN/fullchain.pem"
 
