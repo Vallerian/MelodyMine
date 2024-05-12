@@ -1,7 +1,7 @@
 package ir.taher7.melodymine.api.events
 
+import ir.taher7.melodymine.core.MelodyManager
 import ir.taher7.melodymine.models.MelodyPlayer
-import ir.taher7.melodymine.storage.Storage
 import org.bukkit.event.Event
 import org.bukkit.event.HandlerList
 
@@ -13,7 +13,7 @@ class PostChangeSoundVolumeEvent (
 ) : Event() {
 
     fun getPlayer(): MelodyPlayer? {
-        return Storage.onlinePlayers.values.find { online -> online.socketID == socketID }
+        return socketID?.let { MelodyManager.getMelodyPlayerFromSocketID(it) }
     }
 
     override fun getHandlers(): HandlerList {

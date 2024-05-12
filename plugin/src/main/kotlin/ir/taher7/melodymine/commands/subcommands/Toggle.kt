@@ -22,10 +22,10 @@ class Toggle : SubCommand() {
         if (Utils.checkPlayerCoolDown(player)) return
 
         if (melodyPlayer.isToggle) {
-            MelodyManager.disableLogger(melodyPlayer.uuid)
+            MelodyManager.toggleLogger(melodyPlayer.uuid)
             player.sendMessage(Messages.getMessage("commands.toggle.disable"))
         } else {
-            MelodyManager.enableLogger(melodyPlayer.uuid)
+            MelodyManager.toggleLogger(melodyPlayer.uuid)
             player.sendMessage(Messages.getMessage("commands.toggle.enable"))
         }
         Utils.resetPlayerCoolDown(player)

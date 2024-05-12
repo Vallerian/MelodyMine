@@ -182,14 +182,9 @@ object MelodyManager {
         Bukkit.getServer().pluginManager.callEvent(PostDisableAdminMode(targetPlayer))
     }
 
-    fun enableLogger(uuid: String) {
+    fun toggleLogger(uuid: String) {
         val targetPlayer = Storage.onlinePlayers[uuid] ?: return
-        targetPlayer.isToggle = true
-    }
-
-    fun disableLogger(uuid: String) {
-        val targetPlayer = Storage.onlinePlayers[uuid] ?: return
-        targetPlayer.isToggle = false
+        targetPlayer.isToggle = !targetPlayer.isToggle
     }
 
     fun enableVoice(playerName: String, playerUuid: String, playerServer: String, targetSocketID: String) {
@@ -323,7 +318,7 @@ object MelodyManager {
                         "uuid" to melodyPlayer.uuid,
                         "type" to "mic",
                         "server" to melodyPlayer.server,
-                        "value" to value,
+                        "value" to prePlayerSetSelfMuteEvent.value,
                     )
                 )
             }
@@ -347,7 +342,7 @@ object MelodyManager {
                         "uuid" to melodyPlayer.uuid,
                         "type" to "sound",
                         "server" to melodyPlayer.server,
-                        "value" to value,
+                        "value" to prePlayerSetDeafenEvent.value,
                     )
                 )
             }
@@ -886,5 +881,9 @@ object MelodyManager {
 
     fun getMelodyPlayer(uuid: String): MelodyPlayer? {
         return Storage.onlinePlayers[uuid]
+    }
+
+    fun getMelodyPlayerFromSocketID(socketID: String): MelodyPlayer? {
+        return Storage.onlinePlayers.values.find { player -> player.socketID == socketID }
     }
 }

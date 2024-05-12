@@ -6,5 +6,4 @@ data class MelodyTalk(
     @Expose val uuid: String,
     @Expose val server: String,
     @Expose val isTalk: Boolean,
-    @Expose val instant: Double,
 )
