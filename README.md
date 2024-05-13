@@ -67,17 +67,17 @@ MelodyMine is a revolutionary system for Minecraft servers where players can sim
 
 ## Links 🔗
 
-- 📖 **Wiki**: To access detailed documentation, visit the [MelodyMine Wiki](https://github.com/vallerian/MelodyMine/wiki).
+- 📖 **Wiki**: To access detailed documentation, visit the [MelodyMine Wiki](https://docs.sayandev.org/melodymine).
 
-- 💾 **Plugin Installation**: Get started with the installation by following the [Plugin Installation Guide](https://github.com/Vallerian/MelodyMine/wiki/installation).
+- 💾 **Plugin Installation**: Get started with the installation by following the [Plugin Installation Guide](https://docs.sayandev.org/melodymine/guide/installation).
 
-- 📜 **Command List**: Explore the list of available commands in the [Command List](https://github.com/Vallerian/MelodyMine/wiki/commands).
+- 📜 **Command List**: Explore the list of available commands in the [Command List](https://docs.sayandev.org/melodymine/essentials/commands).
 
-- 🚦 **Permissions List**: Check out the permissions you need in the [Permissions List](https://github.com/Vallerian/MelodyMine/wiki/permissions).
+- 🚦 **Permissions List**: Check out the permissions you need in the [Permissions List](https://docs.sayandev.org/melodymine/essentials/permissions).
 
-- 📄 **Placeholder Information**: Discover placeholder details in the [Placeholder Information](https://github.com/Vallerian/MelodyMine/wiki/placeholders).
+- 📄 **Placeholder Information**: Discover placeholder details in the [Placeholder Information](https://docs.sayandev.org/melodymine/essentials/placeholders).
 
-- 📚 **API Documentation**: Dive into the API for advanced customization in the [API Documentation](https://github.com/Vallerian/MelodyMine/wiki/api).
+- 📚 **API Documentation**: Dive into the API for advanced customization in the [API Documentation](https://docs.sayandev.org/melodymine/api).
 
 - 🧩 **Spigot**: Discover MelodyMine on [Spigot](https://www.spigotmc.org/resources/melodymine-minecraft-voice-plugin.112938/)
 - 💼 **Modrinth**: Find MelodyMine on [Modrinth](https://modrinth.com/plugin/melodymine)
