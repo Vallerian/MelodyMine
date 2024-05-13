@@ -1,18 +1,18 @@
-import com.github.jengelman.gradle.plugins.shadow.tasks.ConfigureShadowRelocation
 import java.net.URL
 import java.util.concurrent.Executors
 
 plugins {
-    kotlin("jvm") version "1.9.0"
-    id("java")
-    id("com.github.johnrengelman.shadow") version "7.1.2"
+    kotlin("jvm") version "1.9.23"
+    id("java-library")
+    id("maven-publish")
+    id("io.github.goooler.shadow") version "8.1.7"
     id("org.jetbrains.gradle.plugin.idea-ext") version "1.1.7"
     id("xyz.jpenilla.run-paper") version "2.1.0"
 }
 
-group = "ir.taher7.melodymine"
+group = "ir.taher7"
 version = "${project.version}"
-
+description = "Minecraft server voice plugin"
 
 repositories {
     mavenLocal()
@@ -45,7 +45,6 @@ repositories {
 }
 
 dependencies {
-
     compileOnly("org.spigotmc:spigot-api:1.19.4-R0.1-SNAPSHOT")
     compileOnly("me.clip:placeholderapi:2.11.3")
 
@@ -73,30 +72,42 @@ dependencies {
     implementation("ch.qos.logback:logback-core:1.2.3")
     implementation("ch.qos.logback:logback-classic:1.2.3")
     implementation("xerces:xercesImpl:2.12.1")
-
-
 }
 
 
 val extraDependencies = emptyMap<String, String>()
+
+val relocations = mapOf(
+    "net.kyori" to "ir.taher7.melodymine.lib.kyori",
+    "kotlin" to "ir.taher7.melodymine.lib.kotlin",
+    "com.zaxxer" to "ir.taher7.melodymine.lib.zaxxer",
+    "com.google" to "ir.taher7.melodymine.lib.google",
+    "com.cryptomorin" to "ir.taher7.melodymine.lib.cryptomorin",
+    "okio" to "ir.taher7.melodymine.lib.okio",
+    "okhttp3" to "ir.taher7.melodymine.lib.okhttp3",
+    "net.glxn" to "ir.taher7.melodymine.lib.glxn",
+    "io.socket" to "ir.taher7.melodymine.lib.socket",
+    "ch.qos" to "ir.taher7.melodymine.lib.qos",
+)
+
+java {
+    withSourcesJar()
+    toolchain.languageVersion.set(JavaLanguageVersion.of(17))
+}
 
 tasks {
     runServer {
         minecraftVersion("1.20.4")
     }
 
-
-    val relocate = task<ConfigureShadowRelocation>("relocateShadowJar") {
-        target = shadowJar.get()
-        prefix = "ir.taher7.melodymine"
-    }
-
     shadowJar {
-        dependsOn(relocate)
         exclude("META-INF/**")
         archiveFileName.set("${project.name}-${version}.jar")
+        relocations.forEach { (from, to) ->
+            relocate(from, to)
+        }
+        from("LICENSE")
         minimize()
-
     }
 
     compileJava {
@@ -134,7 +145,96 @@ tasks {
     }
 }
 
-java {
-    toolchain.languageVersion.set(JavaLanguageVersion.of(17))
+tasks.named<Jar>("sourcesJar") {
+    relocations.forEach { (from, to) ->
+        val filePattern = Regex("(.*)${from.replace('.', '/')}((?:/|$).*)")
+        val textPattern = Regex.fromLiteral(from)
+        eachFile {
+            filter {
+                it.replaceFirst(textPattern, to)
+            }
+            path = path.replaceFirst(filePattern, "$1${to.replace('.', '/')}$2")
+        }
+    }
 }
 
+configurations {
+    "apiElements" {
+        attributes {
+            attribute(Usage.USAGE_ATTRIBUTE, project.objects.named(Usage.JAVA_API))
+            attribute(Category.CATEGORY_ATTRIBUTE, project.objects.named(Category.LIBRARY))
+            attribute(Bundling.BUNDLING_ATTRIBUTE, project.objects.named(Bundling.SHADOWED))
+            attribute(LibraryElements.LIBRARY_ELEMENTS_ATTRIBUTE, project.objects.named(LibraryElements.JAR))
+            attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 17)
+        }
+        outgoing.artifact(tasks["shadowJar"])
+    }
+    "runtimeElements" {
+        attributes {
+            attribute(Usage.USAGE_ATTRIBUTE, project.objects.named(Usage.JAVA_RUNTIME))
+            attribute(Category.CATEGORY_ATTRIBUTE, project.objects.named(Category.LIBRARY))
+            attribute(Bundling.BUNDLING_ATTRIBUTE, project.objects.named(Bundling.SHADOWED))
+            attribute(LibraryElements.LIBRARY_ELEMENTS_ATTRIBUTE, project.objects.named(LibraryElements.JAR))
+            attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 17)
+        }
+        outgoing.artifact(tasks["shadowJar"])
+    }
+    "mainSourceElements" {
+        attributes {
+            attribute(Usage.USAGE_ATTRIBUTE, project.objects.named(Usage.JAVA_RUNTIME))
+            attribute(Category.CATEGORY_ATTRIBUTE, project.objects.named(Category.DOCUMENTATION))
+            attribute(Bundling.BUNDLING_ATTRIBUTE, project.objects.named(Bundling.SHADOWED))
+            attribute(DocsType.DOCS_TYPE_ATTRIBUTE, project.objects.named(DocsType.SOURCES))
+        }
+        outgoing.artifact(tasks.named("sourcesJar"))
+    }
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            artifactId = "melodymine"
+            shadow.component(this)
+            artifact(tasks["sourcesJar"])
+            setPom(this)
+        }
+    }
+
+    repositories {
+        maven {
+            name = "sayandevelopment-repo"
+            url = uri("https://repo.sayandev.org/snapshots/")
+
+            credentials {
+                username = System.getenv("REPO_SAYAN_USER") ?: project.findProperty("repo.sayan.user") as String
+                password = System.getenv("REPO_SAYAN_TOKEN") ?: project.findProperty("repo.sayan.token") as String
+            }
+        }
+    }
+}
+
+fun setPom(publication: MavenPublication) {
+    publication.pom {
+        name.set("melodymine")
+        description.set(rootProject.description)
+        url.set("https://github.com/vallerian/melodymine")
+        licenses {
+            license {
+                name.set("Apache License 2.0")
+                url.set("https://github.com/Vallerian/MelodyMine/blob/master/LICENSE")
+            }
+        }
+        developers {
+            developer {
+                id.set("taher7")
+                name.set("taher moradi")
+                email.set("")
+            }
+        }
+        scm {
+            connection.set("scm:git:github.com/vallerian/melodymine.git")
+            developerConnection.set("scm:git:ssh://github.com/valleryan/melodymine.git")
+            url.set("https://github.com/vallerian/melodymine/tree/master")
+        }
+    }
+}
