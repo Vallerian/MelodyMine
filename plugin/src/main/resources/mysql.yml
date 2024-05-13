@@ -12,7 +12,7 @@
 # it is imperative that the 'authme' table and the 'melodymine' table reside in the same database.
 #
 # For more detailed information and instructions regarding the wiki installation, please visit the following link:
-# https://github.com/Vallerian/MelodyMine/wiki/installation
+# https://docs.sayandev.org/melodymine/guide/installation
 
 mysql_configs:
   host: localhost
