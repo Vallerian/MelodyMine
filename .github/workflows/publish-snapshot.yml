@@ -10,8 +10,6 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
-      - name: Change to plugin directory
-        run: cd plugin
       - name: Validate Gradle Wrapper
         uses: gradle/wrapper-validation-action@v1
       - name: Set up JDK 17
@@ -20,16 +18,13 @@ jobs:
           distribution: 'temurin'
           java-version: 17
       - name: Change wrapper permissions
-        run: chmod +x ./gradlew
-      - name: Cache Gradle dependencies
-        uses: actions/cache@v3
-        with:
-          path: ~/.gradle/caches
-          key: ${{ runner.OS }}-gradle-${{ hashFiles('**/*.gradle') }}
-          restore-keys: |
-            ${{ runner.OS }}-gradle-
+        run: |
+          cd plugin
+          chmod +x ./gradlew
       - name: Publish to SayanDevelopment snapshot repo
-        run: ./gradlew publish
+        run: |
+          cd plugin
+          ./gradlew publish
         env:
           REPO_SAYAN_USER: ${{ secrets.REPO_SAYAN_USER }}
           REPO_SAYAN_TOKEN: ${{ secrets.REPO_SAYAN_TOKEN }}
