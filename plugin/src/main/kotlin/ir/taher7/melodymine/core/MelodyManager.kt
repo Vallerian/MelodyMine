@@ -123,7 +123,7 @@ object MelodyManager {
                             player.inventory.heldItemSlot = slot
                         }
 
-                        player.sendMessage(Messages.getMessageString("commands.start.scan_qrcode"))
+                        player.sendMessage(Messages.getMessage("commands.start.scan_qrcode"))
                         Bukkit.getServer().pluginManager.callEvent(PostSendQRCodeEvent(player))
                     }
                 }
