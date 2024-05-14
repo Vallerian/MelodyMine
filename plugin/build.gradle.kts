@@ -198,7 +198,7 @@ publishing {
             artifactId = "melodymine"
             shadow.component(this)
             artifact(tasks["sourcesJar"])
-            version = "${project.version}-SNAPSHOT"
+            version = "${project.version}"
             setPom(this)
         }
     }
