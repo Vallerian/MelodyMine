@@ -1,6 +1,7 @@
 package ir.taher7.melodymine
 
 import ch.qos.logback.classic.Level
+import com.cryptomorin.xseries.ReflectionUtils
 import com.jeff_media.updatechecker.UpdateCheckSource
 import com.jeff_media.updatechecker.UpdateChecker
 import ir.taher7.melodymine.commands.CommandManager
@@ -37,8 +38,10 @@ class MelodyMine : JavaPlugin() {
         instance = this
         loadConfig()
         Utils.sendMelodyFiglet()
-        val logger = LoggerFactory.getLogger("com.zaxxer.hikari") as ch.qos.logback.classic.Logger
-        logger.setLevel(Level.ERROR)
+        if (!ReflectionUtils.supports(13)) {
+            val logger = LoggerFactory.getLogger("com.zaxxer.hikari") as ch.qos.logback.classic.Logger
+            logger.setLevel(Level.ERROR)
+        }
 
 
         Database.resetDate()
