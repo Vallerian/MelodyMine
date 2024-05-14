@@ -5,7 +5,7 @@ plugins {
     kotlin("jvm") version "1.9.23"
     id("java-library")
     id("maven-publish")
-    id("io.github.goooler.shadow") version "8.1.7"
+    id("com.github.johnrengelman.shadow") version "8.1.1"
     id("org.jetbrains.gradle.plugin.idea-ext") version "1.1.7"
     id("xyz.jpenilla.run-paper") version "2.1.0"
 }
@@ -81,13 +81,15 @@ val relocations = mapOf(
     "net.kyori" to "ir.taher7.melodymine.lib.kyori",
     "kotlin" to "ir.taher7.melodymine.lib.kotlin",
     "com.zaxxer" to "ir.taher7.melodymine.lib.zaxxer",
-    "com.google" to "ir.taher7.melodymine.lib.google",
+//    "com.google" to "ir.taher7.melodymine.lib.google",
     "com.cryptomorin" to "ir.taher7.melodymine.lib.cryptomorin",
     "okio" to "ir.taher7.melodymine.lib.okio",
     "okhttp3" to "ir.taher7.melodymine.lib.okhttp3",
     "net.glxn" to "ir.taher7.melodymine.lib.glxn",
     "io.socket" to "ir.taher7.melodymine.lib.socket",
     "ch.qos" to "ir.taher7.melodymine.lib.qos",
+    "org.bstats" to "ir.taher7.melodymine.lib.bstats",
+    "com.jeff_media" to "ir.taher7.melodymine.lib.jeff_media",
 )
 
 java {
@@ -196,6 +198,7 @@ publishing {
             artifactId = "melodymine"
             shadow.component(this)
             artifact(tasks["sourcesJar"])
+            version = "${project.version}-SNAPSHOT"
             setPom(this)
         }
     }
