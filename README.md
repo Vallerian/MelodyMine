@@ -2,7 +2,7 @@
   <img style="width:100px;" src="https://i.ibb.co/vdsLHcp/melody-logo.png" alt="MelodyMine Logo">
 </p>
 
-<h1 align="center" style="font-size: 36px; color: #7E3FAA; background: linear-gradient(to right, #8D5E8D, #7E3FAA); padding: 16px 0; border-radius: 8px;color:white">MelodyMine (Minecraft Voice Plugin) </h1>
+<h1 align="center" style="font-size: 36px; color: #7E3FAA; background: linear-gradient(to right, #8D5E8D, #7E3FAA); padding: 16px 0; border-radius: 8px;color:white">MelodyMine Voice Chat Plugin</h1>
 
 <p align="center">
   <a href="https://github.com/vallerian/MelodyMine/blob/main/LICENSE"><img src="https://img.shields.io/github/license/vallerian/MelodyMine?style=for-the-badge&color=blue" alt="License"></a>
@@ -21,7 +21,7 @@
 
 - 💾 **Plugin Installation**: Get started with the installation by following the [Plugin Installation Guide](https://docs.sayandev.org/melodymine/guide/installation).
 
-- 🌟 **key Features**: You can view the list of MelodyMine features here [Feature List](https://docs.sayandev.org/melodymine/guide/installation).
+- 🌟 **Key Features**: You can view the list of MelodyMine features here [Feature List](https://docs.sayandev.org/melodymine/guide/installation).
 
 - 📜 **Command List**: Explore the list of available commands in the [Command List](https://docs.sayandev.org/melodymine/essentials/commands).
 
