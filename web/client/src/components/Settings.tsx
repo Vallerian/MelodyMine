@@ -77,7 +77,7 @@ const Settings = () => {
     }
 
     return (
-        <div className="flex items-center">
+        <div className="items-center hidden sm:flex">
             <button onClick={() => setIsOpenBox(prevState => !prevState)}>
                 <IoMdSettings className="text-xl text-slate-500"/>
             </button>
