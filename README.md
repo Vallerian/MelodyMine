@@ -1,8 +1,6 @@
 <p align="center">
-  <img style="width:100px;" src="https://i.ibb.co/vdsLHcp/melody-logo.png" alt="MelodyMine Logo">
+  <img src="https://i.ibb.co/XYMxJJr/Melody-Mine-Title.png" alt="MelodyMine Logo">
 </p>
-
-<h1 align="center" style="font-size: 36px; color: #7E3FAA; background: linear-gradient(to right, #8D5E8D, #7E3FAA); padding: 16px 0; border-radius: 8px;color:white">MelodyMine Voice Chat Plugin</h1>
 
 <p align="center">
   <a href="https://github.com/vallerian/MelodyMine/blob/main/LICENSE"><img src="https://img.shields.io/github/license/vallerian/MelodyMine?style=for-the-badge&color=blue" alt="License"></a>
@@ -13,7 +11,6 @@
 <p align="center">
   🚀 Welcome to the MelodyMine Project! Explore the world of MelodyMine and enhance your Minecraft server experience. 
 </p>
-
 
 ## Links 🔗
 
@@ -37,5 +34,5 @@
 - 💼 **Modrinth**: Find MelodyMine on [Modrinth](https://modrinth.com/plugin/melodymine)
 - 🌐 **Polymart**: Check out MelodyMine on [Polymart](https://polymart.org/resource/melodymine.4875)
 - 💬 **Hangar**: Discover MelodyMine on [Hangar](https://hangar.papermc.io/TAHER7/MelodyMine)
-
+- 📂 **BuiltByBit**: Find MelodyMine on [BuiltByBit](https://builtbybit.com/resources/melodymine.45916/)
 
