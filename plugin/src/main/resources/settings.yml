@@ -8,7 +8,7 @@
 #
 # The current version of the plugin configuration.
 #
-config_version: 1.0
+config_version: 1.0.1
 
 #
 # The default language plugin allows you to view and use all available languages by referring to the 'languages' directory.
