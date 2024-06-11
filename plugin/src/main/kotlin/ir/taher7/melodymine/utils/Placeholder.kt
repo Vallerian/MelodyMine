@@ -7,6 +7,8 @@ import me.clip.placeholderapi.expansion.PlaceholderExpansion
 import org.bukkit.OfflinePlayer
 
 class Placeholder : PlaceholderExpansion() {
+
+
     override fun getIdentifier(): String {
         return "melodymine"
     }
@@ -90,6 +92,11 @@ class Placeholder : PlaceholderExpansion() {
             "pending_call" -> {
                 if (!melodyPlayer.isCallPending) return ""
                 return melodyPlayer.callPendingTarget?.name ?: ""
+            }
+
+            "talk" -> {
+                if (melodyPlayer.isTalk) return Messages.getMessageString("placeholder.talk_true")
+                return Messages.getMessageString("placeholder.talk_false")
             }
 
             else -> {}

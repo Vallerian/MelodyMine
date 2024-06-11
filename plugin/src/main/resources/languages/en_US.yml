@@ -69,6 +69,8 @@ messages:
     self_unmute: "unMute"
     self_deafen: "Deafen"
     self_undeafen: "UnDeafen"
+    talk_true: "Talking..."
+    talk_false: ""
 
 
   commands:
