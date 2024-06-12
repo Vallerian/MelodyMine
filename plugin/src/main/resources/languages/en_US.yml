@@ -123,7 +123,7 @@ messages:
     unmute:
       description: "Unmute player in voice chat."
       not_mute: "<prefix>{PLAYER} <text_color>is not mute."
-      success: "<prefix><hover_color>{PLAYER} <text_color>has unmute from voice chat."
+      success: "<prefix><highlight_color>{PLAYER} <text_color>has unmute from voice chat."
       success_target: "<prefix>You have unmute from voice chat."
       help_message:
         - ""
