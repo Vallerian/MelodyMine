@@ -76,12 +76,11 @@ class Placeholder : PlaceholderExpansion() {
             }
 
             "control" -> {
-                if (!melodyPlayer.isActiveVoice) return "${Messages.getMessageString("placeholder.self_deafen")}${Messages.getMessageString("placeholder.self_mute")}"
+                if (!melodyPlayer.isActiveVoice) return ""
                 if (!melodyPlayer.isSelfMute && !melodyPlayer.isDeafen) return "${Messages.getMessageString("placeholder.self_deafen")} ${Messages.getMessageString("placeholder.self_mute")}"
                 if (!melodyPlayer.isDeafen) return Messages.getMessageString("placeholder.self_deafen")
                 if (!melodyPlayer.isSelfMute) return Messages.getMessageString("placeholder.self_mute")
-                return "${Messages.getMessageString("placeholder.self_undeafen")}${Messages.getMessageString("placeholder.self_unmute")}"
-
+                return "${Messages.getMessageString("placeholder.self_undeafen")} ${Messages.getMessageString("placeholder.self_unmute")}"
             }
 
             "call" -> {
