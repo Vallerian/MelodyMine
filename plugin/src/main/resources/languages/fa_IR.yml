@@ -122,7 +122,7 @@ messages:
     unmute:
       description: "Unmute kardan bazikon dar voice chat."
       not_mute: "<prefix>{PLAYER} <text_color>Mute nist."
-      success: "<prefix><hover_color>{PLAYER} <text_color>Dar voice chat unmute shod."
+      success: "<prefix><highlight_color>{PLAYER} <text_color>Dar voice chat unmute shod."
       success_target: "<prefix>Shoma dar voice chat unmute shodid."
       help_message:
         - ""
