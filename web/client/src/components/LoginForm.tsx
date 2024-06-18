@@ -53,7 +53,7 @@ const LoginForm = () => {
                     verifyCode: verifyCode,
                 })
                 if (res?.error) {
-                    console.log("error=", res?.error)
+                    // console.log("error=", res?.error)
                     setError(res?.error)
                 } else {
                     route.push("/hub")
