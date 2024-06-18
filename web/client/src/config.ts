@@ -1,4 +1,4 @@
 export default {
-    "contactUsLink": "https://discord.com/users/403446004193558531",
+    "contactUsLink": "https://discord.com/invite/CBua8YectX",
     "serverIp": "Play.TAHER7.Ir",
 }

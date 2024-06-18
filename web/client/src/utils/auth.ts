@@ -78,7 +78,8 @@ export const authOptions: NextAuthOptions = {
                             } as any
                         }
                     } catch (err) {
-                        throw new Error(`${err}`)
+                        console.log(err)
+                        throw new Error(`Server Error.`)
                     }
                 }
             }
