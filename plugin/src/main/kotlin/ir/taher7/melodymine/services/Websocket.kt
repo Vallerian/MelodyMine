@@ -35,19 +35,19 @@ object Websocket {
 
 
             socket.on(Socket.EVENT_CONNECT) {
-                MelodyMine.instance.logger.info(Messages.getMessageString("success.websocket"))
+                MelodyMine.instance.logger.info(Messages.getMessage("success.websocket"))
                 Database.updateSocketPlayer()
             }
             
             socket.on(Socket.EVENT_DISCONNECT) {
-                MelodyMine.instance.logger.severe(Messages.getMessageString("errors.websocket"))
+                MelodyMine.instance.logger.severe(Messages.getMessage("errors.websocket"))
                 Database.updateSocketPlayer()
                 if (!socket.isActive) connect()
             }
 
 
         } catch (ex: SocketIOException) {
-            MelodyMine.instance.logger.info(Messages.getMessageString("errors.websocket_failed"))
+            MelodyMine.instance.logger.info(Messages.getMessage("errors.websocket_failed"))
             if (!socket.isActive) connect()
             ex.printStackTrace()
         }

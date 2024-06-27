@@ -3,7 +3,6 @@ package ir.taher7.melodymine.commands
 import ir.taher7.melodymine.commands.subcommands.*
 import ir.taher7.melodymine.storage.Messages
 import ir.taher7.melodymine.storage.Storage
-import ir.taher7.melodymine.utils.Adventure.sendMessage
 import ir.taher7.melodymine.utils.Utils
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor

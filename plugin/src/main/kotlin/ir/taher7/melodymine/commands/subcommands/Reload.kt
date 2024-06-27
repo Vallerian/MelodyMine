@@ -8,12 +8,12 @@ import ir.taher7.melodymine.storage.Settings
 import ir.taher7.melodymine.storage.Storage
 import ir.taher7.melodymine.storage.Talk
 import ir.taher7.melodymine.utils.Adventure
-import ir.taher7.melodymine.utils.Adventure.sendMessage
+import ir.taher7.melodymine.utils.Adventure.sendString
 import org.bukkit.entity.Player
 
 class Reload : SubCommand() {
     override var name = "reload"
-    override var description = Messages.getMessageString("commands.reload.description")
+    override var description = Messages.getMessage("commands.reload.description")
     override var syntax = "/melodymine reload"
     override var permission = "melodymine.reload"
 
@@ -34,7 +34,7 @@ class Reload : SubCommand() {
         Talk.load()
 
         Adventure.initMiniMessage()
-        player.sendMessage(Messages.getMessage("commands.reload.reload_success"))
+        player.sendString(Messages.getMessage("commands.reload.reload_success"))
         Storage.onlinePlayers.values.forEach { melodyPlayer ->
             if (melodyPlayer.webIsOnline) {
                 MelodyManager.sendSoundSetting(melodyPlayer.socketID!!)

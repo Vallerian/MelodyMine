@@ -4,7 +4,7 @@ import com.cryptomorin.xseries.ReflectionUtils
 import ir.taher7.melodymine.commands.SubCommand
 import ir.taher7.melodymine.core.MelodyManager
 import ir.taher7.melodymine.storage.Messages
-import ir.taher7.melodymine.utils.Adventure.sendMessage
+import ir.taher7.melodymine.utils.Adventure.sendString
 import ir.taher7.melodymine.utils.Utils
 import org.bukkit.entity.Player
 
@@ -13,7 +13,7 @@ class Start : SubCommand() {
 
 
     override var name = "start"
-    override var description = Messages.getMessageString("commands.start.description")
+    override var description = Messages.getMessage("commands.start.description")
     override var syntax = "/melodymine start"
     override var permission = "melodymine.start"
 
@@ -24,7 +24,7 @@ class Start : SubCommand() {
             2 -> {
                 if (ReflectionUtils.supports(13) && args[1].equals("qrcode", true)) {
                     if (!player.hasPermission("melodymine.qrcode")) {
-                        player.sendMessage(Messages.getMessage("errors.no_permission"))
+                        player.sendString(Messages.getMessage("errors.no_permission"))
                         return
                     }
 //                    if (ReflectionUtils.supports(9) && player.inventory.itemInOffHand.type == Material.AIR) {
@@ -41,7 +41,7 @@ class Start : SubCommand() {
                             }
                         }
                     }
-                    player.sendMessage(Messages.getMessage("commands.start.hot_bar"))
+                    player.sendString(Messages.getMessage("commands.start.hot_bar"))
 
                 }
 
@@ -61,13 +61,13 @@ class Start : SubCommand() {
     }
 
     private fun sendStartHelpMessage(player: Player) {
-        player.sendMessage(Messages.getMessage("general.content_header"))
+        player.sendString(Messages.getMessage("general.content_header"))
         Messages.getHelpMessage(
             "commands.start.help_message",
             hashMapOf("{SYNTAX}" to syntax)
         ).forEach { message ->
-            player.sendMessage(message)
+            player.sendString(message)
         }
-        player.sendMessage(Messages.getMessage("general.content_footer"))
+        player.sendString(Messages.getMessage("general.content_footer"))
     }
 }
