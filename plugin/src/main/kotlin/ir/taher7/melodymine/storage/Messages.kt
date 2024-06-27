@@ -64,16 +64,16 @@ object Messages {
         return defaultHelpMessage[path] ?: listOf("<red>Path Not Found.")
     }
 
-    fun getMessage(path: String, placeholder: HashMap<String, Any>? = null): Component {
-        var message = messages[path] ?: getDefaultMessage(path)
-        placeholder?.keys?.forEach { key ->
-            message = message.replace(key, placeholder[key].toString())
-        }
-        return message.toComponent()
+//    fun getMessage(path: String, placeholder: HashMap<String, Any>? = null): Component {
+//        var message = messages[path] ?: getDefaultMessage(path)
+//        placeholder?.keys?.forEach { key ->
+//            message = message.replace(key, placeholder[key].toString())
+//        }
+//        return message.toComponent()
+//
+//    }
 
-    }
-
-    fun getMessageString(path: String, placeholder: HashMap<String, Any>? = null): String {
+    fun getMessage(path: String, placeholder: HashMap<String, Any>? = null): String {
         var message = messages[path] ?: getDefaultMessage(path)
         placeholder?.keys?.forEach { key ->
             message = message.replace(key, placeholder[key].toString())
@@ -81,7 +81,7 @@ object Messages {
         return message
     }
 
-    fun getHelpMessage(path: String, placeholder: HashMap<String, Any>? = null): List<Component> {
+    fun getHelpMessage(path: String, placeholder: HashMap<String, Any>? = null): List<String> {
         var helpMessage = helpMessages[path] ?: getDefaultHelpMessage(path)
 
         placeholder?.keys?.forEach { key ->
@@ -90,7 +90,7 @@ object Messages {
             }
         }
 
-        return helpMessage.map { message -> message.toComponent() }
+        return helpMessage.map { message -> message }
     }
 
 

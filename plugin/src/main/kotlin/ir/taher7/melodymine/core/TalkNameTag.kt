@@ -15,6 +15,7 @@ import ir.taher7.melodymine.storage.Storage
 import ir.taher7.melodymine.storage.Talk
 import ir.taher7.melodymine.utils.Adventure.toComponent
 import ir.taher7.melodymine.utils.Utils
+import me.clip.placeholderapi.PlaceholderAPI
 import net.kyori.adventure.platform.bukkit.MinecraftComponentSerializer
 import org.bukkit.Bukkit
 import org.bukkit.Location
@@ -108,15 +109,18 @@ class TalkNameTag(val player: Player) {
         val packet = PacketContainer(PacketType.Play.Server.ENTITY_METADATA)
 
         packet.integers.writeSafely(0, id)
-
-
+        var text = config.text
+        if (Utils.hasPlaceholderAPI()) {
+            text = PlaceholderAPI.setPlaceholders(player, text)
+        }
         if (ReflectionUtils.supports(19, 3)) {
+
             packet.dataValueCollectionModifier.writeSafely(
                 0, listOf(
                     WrappedDataValue(
                         2,
                         Registry.getChatComponentSerializer(true),
-                        Optional.of(MinecraftComponentSerializer.get().serialize(config.text.toComponent()))
+                        Optional.of(MinecraftComponentSerializer.get().serialize(text.toComponent()))
                     ),
                     WrappedDataValue(3, Registry.get(Boolean::class.javaObjectType), config.textVisible),
                     WrappedDataValue(0, Registry.get(Byte::class.javaObjectType), 0x20.toByte()),
@@ -140,7 +144,7 @@ class TalkNameTag(val player: Player) {
             metadata.setObject(invisible, 0x20.toByte())
             metadata.setObject(
                 displayName,
-                Optional.of(MinecraftComponentSerializer.get().serialize(config.text.toComponent()))
+                Optional.of(MinecraftComponentSerializer.get().serialize(text.toComponent()))
             )
             metadata.setObject(displayNameVisible, config.textVisible)
             metadata.setObject(base, (0x01 or 0x08 or 0x10).toByte())

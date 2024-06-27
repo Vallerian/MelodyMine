@@ -12,7 +12,7 @@ import ir.taher7.melodymine.storage.Messages
 import ir.taher7.melodymine.storage.Settings
 import ir.taher7.melodymine.storage.Storage
 import ir.taher7.melodymine.utils.Adventure.sendActionbar
-import ir.taher7.melodymine.utils.Adventure.sendMessage
+import ir.taher7.melodymine.utils.Adventure.sendString
 import ir.taher7.melodymine.utils.Utils
 import org.bukkit.Bukkit
 import org.bukkit.scheduler.BukkitRunnable
@@ -41,12 +41,12 @@ class SocketListener(private val socket: Socket) {
                 }
             }
 
-            Utils.sendMessageLog(Messages.getMessageString("logger.website_join"), melodyPlayer)
+            Utils.sendMessageLog(Messages.getMessage("logger.website_join"), melodyPlayer)
             val player = Storage.onlinePlayers[melodyPlayer.uuid]?.player
             if (player != null) {
                 when (Settings.statusJoinWeb) {
                     "message" -> {
-                        player.sendMessage(Messages.getMessage("website.join"))
+                        player.sendString(Messages.getMessage("website.join"))
                     }
 
                     "actionbar" -> {
@@ -91,12 +91,12 @@ class SocketListener(private val socket: Socket) {
                 }
             }
 
-            Utils.sendMessageLog(Messages.getMessageString("logger.website_leave"), melodyPlayer)
+            Utils.sendMessageLog(Messages.getMessage("logger.website_leave"), melodyPlayer)
             val player = Storage.onlinePlayers[melodyPlayer.uuid]?.player
             if (player != null) {
                 when (Settings.statusLeaveWeb) {
                     "message" -> {
-                        player.sendMessage(Messages.getMessage("website.leave"))
+                        player.sendString(Messages.getMessage("website.leave"))
                     }
 
                     "actionbar" -> {
@@ -147,12 +147,12 @@ class SocketListener(private val socket: Socket) {
                     )
                 }
             }
-            Utils.sendMessageLog(Messages.getMessageString("logger.start_voice"), melodyPlayer)
+            Utils.sendMessageLog(Messages.getMessage("logger.start_voice"), melodyPlayer)
             val player = Storage.onlinePlayers[melodyPlayer.uuid]?.player
             if (player != null) {
                 when (Settings.statusStartVoice) {
                     "message" -> {
-                        player.sendMessage(Messages.getMessage("website.start"))
+                        player.sendString(Messages.getMessage("website.start"))
                     }
 
                     "actionbar" -> {
@@ -191,14 +191,14 @@ class SocketListener(private val socket: Socket) {
             }
             updateMelodyPlayer(melodyPlayer)
             Storage.onlinePlayers[melodyPlayer.uuid]?.adminMode = false
-            Utils.sendMessageLog(Messages.getMessageString("logger.end_voice"), melodyPlayer)
+            Utils.sendMessageLog(Messages.getMessage("logger.end_voice"), melodyPlayer)
             val targetForce = Storage.onlinePlayers[melodyPlayer.uuid]
             if (targetForce != null) Utils.forceVoice(targetForce)
             val player = Storage.onlinePlayers[melodyPlayer.uuid]?.player
             if (player != null) {
                 when (Settings.statusEndVoice) {
                     "message" -> {
-                        player.sendMessage(Messages.getMessage("website.end"))
+                        player.sendString(Messages.getMessage("website.end"))
                     }
 
                     "actionbar" -> {
@@ -228,7 +228,7 @@ class SocketListener(private val socket: Socket) {
                         player.isSendOffer.remove(melodyPlayer.uuid)
                     }
                 }
-                Utils.sendMessageLog(Messages.getMessageString("logger.active_voice"), melodyPlayer)
+                Utils.sendMessageLog(Messages.getMessage("logger.active_voice"), melodyPlayer)
 
             } else {
                 if (Storage.onlinePlayers.containsKey(melodyPlayer.uuid)) {

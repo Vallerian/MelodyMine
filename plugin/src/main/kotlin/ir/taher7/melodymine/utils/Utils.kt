@@ -8,9 +8,10 @@ import ir.taher7.melodymine.models.MelodyPlayer
 import ir.taher7.melodymine.storage.Messages
 import ir.taher7.melodymine.storage.Settings
 import ir.taher7.melodymine.storage.Storage
-import ir.taher7.melodymine.utils.Adventure.sendMessage
+import ir.taher7.melodymine.utils.Adventure.sendString
 import ir.taher7.melodymine.utils.Adventure.showTitle
 import ir.taher7.melodymine.utils.Adventure.toComponent
+import me.clip.placeholderapi.PlaceholderAPI
 import net.kyori.adventure.title.Title
 import org.bukkit.ChatColor
 import org.bukkit.Material
@@ -33,11 +34,13 @@ object Utils {
 
 
     fun sendHelpMessage(player: Player) {
-        player.sendMessage(Messages.getMessage("general.content_header"))
-        player.sendMessage("")
+
+        player.sendString(Messages.getMessage("general.content_header"))
+
+        player.sendString("")
         Storage.subCommands.forEach { subCommand: SubCommand ->
             if (player.hasPermission(subCommand.permission)) {
-                player.sendMessage(
+                player.sendString(
                     Messages.getMessage(
                         "general.help_line", hashMapOf(
                             "{SYNTAX}" to subCommand.syntax,
@@ -47,8 +50,8 @@ object Utils {
                 )
             }
         }
-        player.sendMessage("")
-        player.sendMessage(Messages.getMessage("general.content_footer"))
+        player.sendString("")
+        player.sendString(Messages.getMessage("general.content_footer"))
     }
 
     fun getVerifyCode(length: Int = 20): String {
@@ -74,10 +77,20 @@ object Utils {
                     cancel()
                 } else {
                     if (Settings.forceVoiceTitle) {
+                        var forceVoiceTitleText = Messages.getMessage("force_voice.title")
+                        var forceVoiceSubTitleText = Messages.getMessage("force_voice.subtitle")
+                        if (hasPlaceholderAPI()) {
+                            forceVoiceTitleText =
+                                PlaceholderAPI.setPlaceholders(player.player, forceVoiceTitleText)
+                            forceVoiceSubTitleText = PlaceholderAPI.setPlaceholders(
+                                player.player,
+                                forceVoiceSubTitleText
+                            )
+                        }
                         player.player?.showTitle(
                             Title.title(
-                                Messages.getMessage("force_voice.title"),
-                                Messages.getMessage("force_voice.subtitle"),
+                                forceVoiceTitleText.toComponent(),
+                                forceVoiceSubTitleText.toComponent(),
                                 Title.Times.times(
                                     Duration.ofMillis(100),
                                     Duration.ofDays(365),
@@ -116,7 +129,7 @@ object Utils {
             override fun run() {
                 Storage.onlinePlayers.values.forEach { melodyPlayer ->
                     if (melodyPlayer.player?.hasPermission("melodymine.toggle") == true && melodyPlayer.isToggle) {
-                        melodyPlayer.player?.sendMessage(message.replace("{PLAYER}", player.name).toComponent())
+                        melodyPlayer.player?.sendString(message.replace("{PLAYER}", player.name))
                     }
                 }
             }
@@ -239,7 +252,7 @@ object Utils {
 
     fun checkPlayerCoolDown(player: Player): Boolean {
         if (Storage.commandCoolDown.containsKey(player.uniqueId) && (System.currentTimeMillis() - Storage.commandCoolDown[player.uniqueId]!!) <= Settings.commandsCoolDown) {
-            player.sendMessage(
+            player.sendString(
                 Messages.getMessage(
                     "general.cool_down",
                     hashMapOf("{TIME}" to ((Settings.commandsCoolDown - (System.currentTimeMillis() - Storage.commandCoolDown[player.uniqueId]!!)) / 1000))
@@ -275,18 +288,21 @@ object Utils {
         return "https://${Settings.domain}:${Settings.serverPort}"
     }
 
+    fun hasPlaceholderAPI(): Boolean {
+        return MelodyMine.instance.server.pluginManager.getPlugin("PlaceholderAPI") != null
+    }
 
 
     fun sendMelodyFiglet() {
         val consoleSender = MelodyMine.instance.server.consoleSender
-        consoleSender.sendMessage("".toComponent())
-        consoleSender.sendMessage("<gradient:#F04FE7:#FFF4E4>    __  ___     __          __      __  ____          ".toComponent())
-        consoleSender.sendMessage("<gradient:#F04FE7:#FFF4E4>   /  |/  /__  / /___  ____/ /_  __/  |/  (_)___  ___ ".toComponent())
-        consoleSender.sendMessage("<gradient:#F04FE7:#FFF4E4>  / /|_/ / _ \\/ / __ \\/ __  / / / / /|_/ / / __ \\/ _ \\".toComponent())
-        consoleSender.sendMessage("<gradient:#F04FE7:#FFF4E4> / /  / /  __/ / /_/ / /_/ / /_/ / /  / / / / / /  __/".toComponent())
-        consoleSender.sendMessage("<gradient:#F04FE7:#FFF4E4>/_/  /_/\\___/_/\\____/\\__,_/\\__, /_/  /_/_/_/ /_/\\___/ ".toComponent())
-        consoleSender.sendMessage("<gradient:#F04FE7:#FFF4E4>                          /____/                      ".toComponent())
-        consoleSender.sendMessage("".toComponent())
+        consoleSender.sendString("")
+        consoleSender.sendString("<gradient:#F04FE7:#FFF4E4>    __  ___     __          __      __  ____          ")
+        consoleSender.sendString("<gradient:#F04FE7:#FFF4E4>   /  |/  /__  / /___  ____/ /_  __/  |/  (_)___  ___ ")
+        consoleSender.sendString("<gradient:#F04FE7:#FFF4E4>  / /|_/ / _ \\/ / __ \\/ __  / / / / /|_/ / / __ \\/ _ \\")
+        consoleSender.sendString("<gradient:#F04FE7:#FFF4E4> / /  / /  __/ / /_/ / /_/ / /_/ / /  / / / / / /  __/")
+        consoleSender.sendString("<gradient:#F04FE7:#FFF4E4>/_/  /_/\\___/_/\\____/\\__,_/\\__, /_/  /_/_/_/ /_/\\___/ ")
+        consoleSender.sendString("<gradient:#F04FE7:#FFF4E4>                          /____/                      ")
+        consoleSender.sendString("")
     }
 
 

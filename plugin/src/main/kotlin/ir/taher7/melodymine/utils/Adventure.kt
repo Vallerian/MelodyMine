@@ -2,6 +2,8 @@ package ir.taher7.melodymine.utils
 
 import ir.taher7.melodymine.MelodyMine
 import ir.taher7.melodymine.storage.Messages
+import ir.taher7.melodymine.utils.Adventure.sendString
+import me.clip.placeholderapi.PlaceholderAPI
 import net.kyori.adventure.audience.Audience
 import net.kyori.adventure.bossbar.BossBar
 import net.kyori.adventure.platform.bukkit.BukkitAudiences
@@ -27,10 +29,10 @@ object Adventure {
         miniMessage = MiniMessage.builder().tags(
             TagResolver.resolver(
                 TagResolver.standard(),
-                Placeholder.parsed("prefix", Messages.getMessageString("general.prefix")),
-                Placeholder.parsed("text_color", Messages.getMessageString("general.text_color")),
-                Placeholder.parsed("hover_color", Messages.getMessageString("general.hover_color")),
-                Placeholder.parsed("highlight_color", Messages.getMessageString("general.highlight_color")),
+                Placeholder.parsed("prefix", Messages.getMessage("general.prefix")),
+                Placeholder.parsed("text_color", Messages.getMessage("general.text_color")),
+                Placeholder.parsed("hover_color", Messages.getMessage("general.hover_color")),
+                Placeholder.parsed("highlight_color", Messages.getMessage("general.highlight_color")),
             ),
         ).build()
     }
@@ -40,13 +42,21 @@ object Adventure {
     }
 
 
-    fun CommandSender.sendMessage(component: Component) {
-        audience.sender(this).sendMessage(component)
+    fun CommandSender.sendString(string: String) {
+        var parseString = string
+        if (Utils.hasPlaceholderAPI()) {
+            parseString = PlaceholderAPI.setPlaceholders(if (this is Player) this else null, string)
+        }
+        audience.sender(this).sendMessage(parseString.toComponent())
     }
 
 
-    fun Player.sendActionbar(component: Component) {
-        this.audience().sendActionBar(component)
+    fun Player.sendActionbar(string: String) {
+        var parseString = string
+        if (Utils.hasPlaceholderAPI()) {
+            parseString = PlaceholderAPI.setPlaceholders(this, string)
+        }
+        this.audience().sendActionBar(parseString.toComponent())
     }
 
 

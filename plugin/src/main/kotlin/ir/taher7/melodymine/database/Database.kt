@@ -45,9 +45,9 @@ object Database {
             config.maximumPoolSize = 10
 
             hikari = HikariDataSource(config)
-            MelodyMine.instance.logger.info(Messages.getMessageString("success.database"))
+            MelodyMine.instance.logger.info(Messages.getMessage("success.database"))
         } catch (ex: Exception) {
-            MelodyMine.instance.logger.severe(Messages.getMessageString("errors.database"))
+            MelodyMine.instance.logger.severe(Messages.getMessage("errors.database"))
             ex.printStackTrace()
         }
     }

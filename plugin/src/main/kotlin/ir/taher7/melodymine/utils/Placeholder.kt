@@ -39,48 +39,48 @@ class Placeholder : PlaceholderExpansion() {
             }
 
             "web" -> {
-                if (melodyPlayer.webIsOnline) return Messages.getMessageString("placeholder.web_online_true")
-                return Messages.getMessageString("placeholder.web_online_false")
+                if (melodyPlayer.webIsOnline) return Messages.getMessage("placeholder.web_online_true")
+                return Messages.getMessage("placeholder.web_online_false")
             }
 
             "voice" -> {
-                if (melodyPlayer.isActiveVoice) return Messages.getMessageString("placeholder.voice_active_true")
-                return Messages.getMessageString("placeholder.voice_active_false")
+                if (melodyPlayer.isActiveVoice) return Messages.getMessage("placeholder.voice_active_true")
+                return Messages.getMessage("placeholder.voice_active_false")
             }
 
             "mute" -> {
-                if (melodyPlayer.isMute) return Messages.getMessageString("placeholder.server_mute_true")
-                return Messages.getMessageString("placeholder.server_mute_false")
+                if (melodyPlayer.isMute) return Messages.getMessage("placeholder.server_mute_true")
+                return Messages.getMessage("placeholder.server_mute_false")
             }
 
             "adminmode" -> {
-                if (melodyPlayer.isMute) return Messages.getMessageString("placeholder.adminmode_true")
-                return Messages.getMessageString("placeholder.adminmode_false")
+                if (melodyPlayer.isMute) return Messages.getMessage("placeholder.adminmode_true")
+                return Messages.getMessage("placeholder.adminmode_false")
             }
 
             "status" -> {
-                if (melodyPlayer.isMute) return Messages.getMessageString("placeholder.server_mute_true")
-                if (melodyPlayer.isActiveVoice) return Messages.getMessageString("placeholder.voice_active_true")
-                return Messages.getMessageString("placeholder.voice_active_false")
+                if (melodyPlayer.isMute) return Messages.getMessage("placeholder.server_mute_true")
+                if (melodyPlayer.isActiveVoice) return Messages.getMessage("placeholder.voice_active_true")
+                return Messages.getMessage("placeholder.voice_active_false")
             }
 
 
             "self_mute" -> {
-                if (!melodyPlayer.isActiveVoice || !melodyPlayer.isSelfMute) return Messages.getMessageString("placeholder.self_mute")
-                return Messages.getMessageString("placeholder.self_unmute")
+                if (!melodyPlayer.isActiveVoice || !melodyPlayer.isSelfMute) return Messages.getMessage("placeholder.self_mute")
+                return Messages.getMessage("placeholder.self_unmute")
             }
 
             "deafen" -> {
-                if (melodyPlayer.isDeafen) return Messages.getMessageString("placeholder.self_deafen")
-                return Messages.getMessageString("placeholder.self_undeafen")
+                if (melodyPlayer.isDeafen) return Messages.getMessage("placeholder.self_deafen")
+                return Messages.getMessage("placeholder.self_undeafen")
             }
 
             "control" -> {
                 if (!melodyPlayer.isActiveVoice) return ""
-                if (!melodyPlayer.isSelfMute && !melodyPlayer.isDeafen) return "${Messages.getMessageString("placeholder.self_deafen")} ${Messages.getMessageString("placeholder.self_mute")}"
-                if (!melodyPlayer.isDeafen) return Messages.getMessageString("placeholder.self_deafen")
-                if (!melodyPlayer.isSelfMute) return Messages.getMessageString("placeholder.self_mute")
-                return "${Messages.getMessageString("placeholder.self_undeafen")} ${Messages.getMessageString("placeholder.self_unmute")}"
+                if (!melodyPlayer.isSelfMute && !melodyPlayer.isDeafen) return "${Messages.getMessage("placeholder.self_deafen")} ${Messages.getMessage("placeholder.self_mute")}"
+                if (!melodyPlayer.isDeafen) return Messages.getMessage("placeholder.self_deafen")
+                if (!melodyPlayer.isSelfMute) return Messages.getMessage("placeholder.self_mute")
+                return "${Messages.getMessage("placeholder.self_undeafen")} ${Messages.getMessage("placeholder.self_unmute")}"
             }
 
             "call" -> {
@@ -94,8 +94,8 @@ class Placeholder : PlaceholderExpansion() {
             }
 
             "talk" -> {
-                if (melodyPlayer.isTalk) return Messages.getMessageString("placeholder.talk_true")
-                return Messages.getMessageString("placeholder.talk_false")
+                if (melodyPlayer.isTalk) return Messages.getMessage("placeholder.talk_true")
+                return Messages.getMessage("placeholder.talk_false")
             }
 
             else -> {}

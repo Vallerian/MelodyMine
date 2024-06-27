@@ -5,7 +5,7 @@ import ir.taher7.melodymine.core.MelodyManager
 import ir.taher7.melodymine.storage.Messages
 import ir.taher7.melodymine.storage.Settings
 import ir.taher7.melodymine.storage.Storage
-import ir.taher7.melodymine.utils.Adventure.sendMessage
+import ir.taher7.melodymine.utils.Adventure.sendString
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerSwapHandItemsEvent
@@ -46,7 +46,7 @@ class ShortcutListener : Listener {
                 if (!Storage.playerMuteShortcut.contains(event.player.uniqueId)) return
 
                 if (Storage.shortcutCoolDown.containsKey(player.uniqueId) && (System.currentTimeMillis() - Storage.shortcutCoolDown[player.uniqueId]!!) <= Settings.shortcutCoolDown) {
-                    player.sendMessage(
+                    player.sendString(
                         Messages.getMessage(
                             "commands.control.toggle_cool_down",
                             hashMapOf("{TIME}" to ((Settings.shortcutCoolDown - (System.currentTimeMillis() - Storage.shortcutCoolDown[player.uniqueId]!!)) / 1000))
@@ -57,9 +57,9 @@ class ShortcutListener : Listener {
 
                 MelodyManager.setPlayerSelfMute(melodyPlayer, !melodyPlayer.isSelfMute)
                 if (melodyPlayer.isSelfMute) {
-                    player.sendMessage(Messages.getMessage("commands.control.unmute"))
+                    player.sendString(Messages.getMessage("commands.control.unmute"))
                 } else {
-                    player.sendMessage(Messages.getMessage("commands.control.mute"))
+                    player.sendString(Messages.getMessage("commands.control.mute"))
                 }
                 Storage.shortcutCoolDown[player.uniqueId] = System.currentTimeMillis()
             }
