@@ -260,7 +260,7 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
 
     const onSetControlPluginReceive = (token: string) => {
         const data = decrypt(token) as IReceiveControl
-        if (data.uuid == user.uuid) {
+        if (data.uuid == user.uuid && data.uuid != uuid) {
             if (data.type == "mic") {
                 setIsSelfMute(data.value)
             } else {
@@ -465,7 +465,7 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
                 setUserStream(stream!)
             }
         }
-    }, [user])
+    }, [user, stream])
 
 
     const updatePannerPosition = (data: IVolume) => {
