@@ -77,7 +77,7 @@ const UserHead = ({
         }
 
 
-    }, [instant, uuid, isMute, isMute])
+    }, [instant, uuid, isMute])
 
 
     return (
