@@ -522,7 +522,6 @@ const SingleUser = ({user}: { user: IOnlineUsers }) => {
         const listener = audioContext?.listener
         if (!audioContext || !listener) return
         const {targetLocation, targetDirection} = data
-        if (!sound3D) return
         const {x, y, z} = targetLocation
         const {x: Dx, y: Dy, z: Dz} = targetDirection
         listener.setPosition(x, y, z)
