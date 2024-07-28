@@ -4,7 +4,7 @@ import ir.taher7.melodymine.commands.SubCommand
 import ir.taher7.melodymine.core.MelodyManager
 import ir.taher7.melodymine.storage.Messages
 import ir.taher7.melodymine.storage.Storage
-import ir.taher7.melodymine.utils.Adventure.sendString
+import ir.taher7.melodymine.utils.Adventure.sendComponent
 import ir.taher7.melodymine.utils.Utils
 import org.bukkit.entity.Player
 
@@ -23,10 +23,10 @@ class Toggle : SubCommand() {
 
         if (melodyPlayer.isToggle) {
             MelodyManager.toggleLogger(melodyPlayer.uuid)
-            player.sendString(Messages.getMessage("commands.toggle.disable"))
+            player.sendComponent(Messages.getMessage("commands.toggle.disable"))
         } else {
             MelodyManager.toggleLogger(melodyPlayer.uuid)
-            player.sendString(Messages.getMessage("commands.toggle.enable"))
+            player.sendComponent(Messages.getMessage("commands.toggle.enable"))
         }
         Utils.resetPlayerCoolDown(player)
     }

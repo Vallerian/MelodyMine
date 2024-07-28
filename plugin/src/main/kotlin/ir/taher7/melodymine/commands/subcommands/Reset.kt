@@ -4,7 +4,7 @@ import ir.taher7.melodymine.commands.SubCommand
 import ir.taher7.melodymine.database.Database
 import ir.taher7.melodymine.storage.Messages
 import ir.taher7.melodymine.storage.Storage
-import ir.taher7.melodymine.utils.Adventure.sendString
+import ir.taher7.melodymine.utils.Adventure.sendComponent
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 
@@ -23,14 +23,14 @@ class Reset : SubCommand() {
 
         Database.resetPlayerData(args[1].lowercase()) { result ->
             if (result) {
-                player.sendString(
+                player.sendComponent(
                     Messages.getMessage(
                         "commands.reset.success",
                         hashMapOf("{PLAYER}" to args[1])
                     )
                 )
             } else {
-                player.sendString(Messages.getMessage("errors.player_not_found"))
+                player.sendComponent(Messages.getMessage("errors.player_not_found"))
             }
         }
 
@@ -41,14 +41,14 @@ class Reset : SubCommand() {
     }
 
     private fun sendResetHelpMessage(player: Player) {
-        player.sendString(Messages.getMessage("general.content_header"))
+        player.sendComponent(Messages.getMessage("general.content_header"))
         Messages.getHelpMessage(
             "commands.reset.help_message",
             hashMapOf("{SYNTAX}" to syntax)
         ).forEach { message ->
-            player.sendString(message)
+            player.sendComponent(message)
         }
-        player.sendString(Messages.getMessage("general.content_footer"))
+        player.sendComponent(Messages.getMessage("general.content_footer"))
     }
 
 }

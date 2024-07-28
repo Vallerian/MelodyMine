@@ -7,6 +7,7 @@ import ir.taher7.melodymine.utils.Adventure.hideBossBar
 import ir.taher7.melodymine.utils.Adventure.showBossBar
 import ir.taher7.melodymine.utils.Adventure.toComponent
 import ir.taher7.melodymine.utils.Utils
+import ir.taher7.melodymine.utils.Utils.parsePlaceholder
 import me.clip.placeholderapi.PlaceholderAPI
 import net.kyori.adventure.bossbar.BossBar
 import org.bukkit.entity.Player
@@ -24,10 +25,7 @@ class TalkBossBar(val player: Player) {
     fun initTalkBossBar() {
         if (!Talk.isEnableBossBar) return
         val serverMute = Talk.bossbarConfigs["server_mute"] ?: return
-        var serverMuteText = serverMute.text
-        if (Utils.hasPlaceholderAPI()) {
-            serverMuteText = PlaceholderAPI.setPlaceholders(player, serverMuteText)
-        }
+        val serverMuteText = parsePlaceholder(player, serverMute.text)
         bossBar = BossBar.bossBar(
             if (melodyPlayer.isMute) serverMuteText.toComponent() else "".toComponent(),
             1f,
@@ -59,10 +57,7 @@ class TalkBossBar(val player: Player) {
         val color = BossBar.Color.NAMES.value(active.color.lowercase()) ?: BossBar.Color.WHITE
         if (active.enable) {
             showTalkBossBar()
-            var activeText = active.text
-            if (Utils.hasPlaceholderAPI()) {
-                activeText = PlaceholderAPI.setPlaceholders(player, activeText)
-            }
+            val activeText = parsePlaceholder(player, active.text)
             bossBar.name(activeText.toComponent())
             bossBar.color(color)
         } else {
@@ -76,10 +71,7 @@ class TalkBossBar(val player: Player) {
         val color = BossBar.Color.NAMES.value(inactive.color.lowercase()) ?: BossBar.Color.WHITE
         if (inactive.enable) {
             showTalkBossBar()
-            var inactiveText = inactive.text
-            if (Utils.hasPlaceholderAPI()) {
-                inactiveText = PlaceholderAPI.setPlaceholders(player, inactiveText)
-            }
+            val inactiveText = parsePlaceholder(player, inactive.text)
             bossBar.name(inactiveText.toComponent())
             bossBar.color(color)
         } else {
@@ -93,10 +85,7 @@ class TalkBossBar(val player: Player) {
         val color = BossBar.Color.NAMES.value(selfMute.color.lowercase()) ?: BossBar.Color.WHITE
         if (selfMute.enable) {
             showTalkBossBar()
-            var selfMuteText = selfMute.text
-            if (Utils.hasPlaceholderAPI()) {
-                selfMuteText = PlaceholderAPI.setPlaceholders(player, selfMuteText)
-            }
+            val selfMuteText = parsePlaceholder(player, selfMute.text)
             bossBar.name(selfMuteText.toComponent())
             bossBar.color(color)
         } else {
@@ -110,10 +99,7 @@ class TalkBossBar(val player: Player) {
         val color = BossBar.Color.NAMES.value(serverMute.color.lowercase()) ?: BossBar.Color.WHITE
         if (serverMute.enable) {
             showTalkBossBar()
-            var serverMuteText = serverMute.text
-            if (Utils.hasPlaceholderAPI()) {
-                serverMuteText = PlaceholderAPI.setPlaceholders(player, serverMuteText)
-            }
+            val serverMuteText = parsePlaceholder(player, serverMute.text)
             bossBar.name(serverMuteText.toComponent())
             bossBar.color(color)
         } else {
