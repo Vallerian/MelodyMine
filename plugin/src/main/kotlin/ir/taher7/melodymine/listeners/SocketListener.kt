@@ -12,7 +12,7 @@ import ir.taher7.melodymine.storage.Messages
 import ir.taher7.melodymine.storage.Settings
 import ir.taher7.melodymine.storage.Storage
 import ir.taher7.melodymine.utils.Adventure.sendActionbar
-import ir.taher7.melodymine.utils.Adventure.sendString
+import ir.taher7.melodymine.utils.Adventure.sendComponent
 import ir.taher7.melodymine.utils.Utils
 import org.bukkit.Bukkit
 import org.bukkit.scheduler.BukkitRunnable
@@ -46,7 +46,7 @@ class SocketListener(private val socket: Socket) {
             if (player != null) {
                 when (Settings.statusJoinWeb) {
                     "message" -> {
-                        player.sendString(Messages.getMessage("website.join"))
+                        player.sendComponent(Messages.getMessage("website.join"))
                     }
 
                     "actionbar" -> {
@@ -96,7 +96,7 @@ class SocketListener(private val socket: Socket) {
             if (player != null) {
                 when (Settings.statusLeaveWeb) {
                     "message" -> {
-                        player.sendString(Messages.getMessage("website.leave"))
+                        player.sendComponent(Messages.getMessage("website.leave"))
                     }
 
                     "actionbar" -> {
@@ -152,7 +152,7 @@ class SocketListener(private val socket: Socket) {
             if (player != null) {
                 when (Settings.statusStartVoice) {
                     "message" -> {
-                        player.sendString(Messages.getMessage("website.start"))
+                        player.sendComponent(Messages.getMessage("website.start"))
                     }
 
                     "actionbar" -> {
@@ -198,7 +198,7 @@ class SocketListener(private val socket: Socket) {
             if (player != null) {
                 when (Settings.statusEndVoice) {
                     "message" -> {
-                        player.sendString(Messages.getMessage("website.end"))
+                        player.sendComponent(Messages.getMessage("website.end"))
                     }
 
                     "actionbar" -> {

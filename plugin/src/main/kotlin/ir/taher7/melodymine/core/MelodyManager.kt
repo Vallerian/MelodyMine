@@ -14,7 +14,7 @@ import ir.taher7.melodymine.storage.Messages
 import ir.taher7.melodymine.storage.Settings
 import ir.taher7.melodymine.storage.Storage
 import ir.taher7.melodymine.storage.Talk
-import ir.taher7.melodymine.utils.Adventure.sendString
+import ir.taher7.melodymine.utils.Adventure.sendComponent
 import ir.taher7.melodymine.utils.QRCodeRenderer
 import ir.taher7.melodymine.utils.Utils
 import net.glxn.qrgen.javase.QRCode
@@ -86,11 +86,9 @@ object MelodyManager {
 
     fun sendStartLink(player: Player) {
         Database.getVerifyCode(player) { result ->
-            player.sendString(
+            player.sendComponent(
                 "<click:open_url:'${Utils.clientURL()}/login?verifyCode=${result}${if (Settings.autoStart) "&start=true" else ""}'>${
-                    Messages.getMessage(
-                        "website.open"
-                    )
+                    Messages.getMessage("website.open")
                 }</click>"
             )
         }
@@ -122,7 +120,7 @@ object MelodyManager {
                             player.inventory.heldItemSlot = slot
                         }
 
-                        player.sendString(Messages.getMessage("commands.start.scan_qrcode"))
+                        player.sendComponent(Messages.getMessage("commands.start.scan_qrcode"))
                         Bukkit.getServer().pluginManager.callEvent(PostSendQRCodeEvent(player))
                     }
                 }
@@ -358,17 +356,17 @@ object MelodyManager {
 
         if (preStartCallEvent.canSendMessage) {
             preStartCallEvent.canSendMessage = true
-            melodyPlayer.player?.sendMessage(Messages.getMessage("general.content_header"))
-            melodyPlayer.player?.sendMessage("")
-            melodyPlayer.player?.sendMessage(
+            melodyPlayer.player?.sendComponent(Messages.getMessage("general.content_header"))
+            melodyPlayer.player?.sendComponent("")
+            melodyPlayer.player?.sendComponent(
                 Messages.getMessage(
                     "commands.call.call_wait",
                     hashMapOf("{PLAYER}" to melodyPlayer.name)
                 )
             )
-            melodyPlayer.player?.sendMessage(Messages.getMessage("commands.call.accept_button"))
-            melodyPlayer.player?.sendMessage("")
-            melodyPlayer.player?.sendMessage(Messages.getMessage("general.content_footer"))
+            melodyPlayer.player?.sendComponent(Messages.getMessage("commands.call.accept_button"))
+            melodyPlayer.player?.sendComponent("")
+            melodyPlayer.player?.sendComponent(Messages.getMessage("general.content_footer"))
         }
 
         melodyPlayer.isStartCall = true
@@ -414,18 +412,18 @@ object MelodyManager {
 
         if (preStartCallEvent.canSendMessage) {
             preStartCallEvent.canSendMessage = true
-            targetPlayer.player?.sendMessage(Messages.getMessage("general.content_header"))
-            targetPlayer.player?.sendMessage("")
-            targetPlayer.player?.sendMessage(
+            targetPlayer.player?.sendComponent(Messages.getMessage("general.content_header"))
+            targetPlayer.player?.sendComponent("")
+            targetPlayer.player?.sendComponent(
                 Messages.getMessage(
                     "commands.call.call_receive",
                     hashMapOf("{PLAYER}" to melodyPlayer.name)
                 )
             )
-            targetPlayer.player?.sendMessage(Messages.getMessage("commands.call.call_accept"))
-            targetPlayer.player?.sendMessage(Messages.getMessage("commands.call.call_deny_button"))
-            targetPlayer.player?.sendMessage("")
-            targetPlayer.player?.sendMessage(Messages.getMessage("general.content_footer"))
+            targetPlayer.player?.sendComponent(Messages.getMessage("commands.call.call_accept"))
+            targetPlayer.player?.sendComponent(Messages.getMessage("commands.call.call_deny_button"))
+            targetPlayer.player?.sendComponent("")
+            targetPlayer.player?.sendComponent(Messages.getMessage("general.content_footer"))
         }
 
         Bukkit.getServer().pluginManager.callEvent(PostStartCallEvent(melodyPlayer, targetPlayer))
@@ -476,13 +474,13 @@ object MelodyManager {
         val player = melodyPlayer.player ?: return
         if (preEndCallEvent.canSendMessage) {
             preEndCallEvent.canSendMessage = true
-            player.sendString(
+            player.sendComponent(
                 Messages.getMessage(
                     "commands.call.call_end_target",
                     hashMapOf("{PLAYER}" to targetPlayer.name)
                 )
             )
-            targetPlayer.player?.sendMessage(
+            targetPlayer.player?.sendComponent(
                 Messages.getMessage(
                     "commands.call.call_end",
                     hashMapOf("{PLAYER}" to melodyPlayer.name)
@@ -535,13 +533,13 @@ object MelodyManager {
 
         if (prePendingCallEndEvent.canSendMessage) {
             prePendingCallEndEvent.canSendMessage = true
-            melodyPlayer.player?.sendMessage(
+            melodyPlayer.player?.sendComponent(
                 Messages.getMessage(
                     "commands.call.not_available",
                     hashMapOf("{PLAYER}" to targetPlayer.name)
                 )
             )
-            targetPlayer.player?.sendMessage(Messages.getMessage("commands.call.call_pending_end"))
+            targetPlayer.player?.sendComponent(Messages.getMessage("commands.call.call_pending_end"))
         }
 
         Bukkit.getServer().pluginManager.callEvent(PostPendingCallEndEvent(melodyPlayer, targetPlayer))
@@ -594,13 +592,13 @@ object MelodyManager {
         if (preAcceptChangeServerEvent.canSendMessage) {
             preAcceptChangeServerEvent.canSendMessage = true
             val player = melodyPlayer.player ?: return
-            player.sendString(
+            player.sendComponent(
                 Messages.getMessage(
                     "commands.call.call_start",
                     hashMapOf("{PLAYER}" to targetPlayer.name)
                 )
             )
-            targetPlayer.player?.sendMessage(
+            targetPlayer.player?.sendComponent(
                 Messages.getMessage(
                     "commands.call.call_start",
                     hashMapOf("{PLAYER}" to melodyPlayer.name)
@@ -654,8 +652,8 @@ object MelodyManager {
         if (preDenyCallEvent.canSendMessage) {
             preDenyCallEvent.canSendMessage = true
             val player = melodyPlayer.player ?: return
-            player.sendString(Messages.getMessage("commands.call.call_deny"))
-            targetPlayer.player?.sendMessage(
+            player.sendComponent(Messages.getMessage("commands.call.call_deny"))
+            targetPlayer.player?.sendComponent(
                 Messages.getMessage(
                     "commands.call.call_deny_others",
                     hashMapOf("{PLAYER}" to player.name)
@@ -674,9 +672,9 @@ object MelodyManager {
         if (preToggleCallEvent.canSendMessage) {
             preToggleCallEvent.canSendMessage = true
             if (!melodyPlayer.callToggle) {
-                player.sendString(Messages.getMessage("commands.call.call_request_disable"))
+                player.sendComponent(Messages.getMessage("commands.call.call_request_disable"))
             } else {
-                player.sendString(Messages.getMessage("commands.call.call_request_enable"))
+                player.sendComponent(Messages.getMessage("commands.call.call_request_enable"))
             }
         }
 

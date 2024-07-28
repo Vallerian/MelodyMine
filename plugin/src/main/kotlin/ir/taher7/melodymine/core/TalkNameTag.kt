@@ -15,6 +15,7 @@ import ir.taher7.melodymine.storage.Storage
 import ir.taher7.melodymine.storage.Talk
 import ir.taher7.melodymine.utils.Adventure.toComponent
 import ir.taher7.melodymine.utils.Utils
+import ir.taher7.melodymine.utils.Utils.parsePlaceholder
 import me.clip.placeholderapi.PlaceholderAPI
 import net.kyori.adventure.platform.bukkit.MinecraftComponentSerializer
 import org.bukkit.Bukkit
@@ -109,10 +110,7 @@ class TalkNameTag(val player: Player) {
         val packet = PacketContainer(PacketType.Play.Server.ENTITY_METADATA)
 
         packet.integers.writeSafely(0, id)
-        var text = config.text
-        if (Utils.hasPlaceholderAPI()) {
-            text = PlaceholderAPI.setPlaceholders(player, text)
-        }
+        val text = parsePlaceholder(player, config.text)
         if (ReflectionUtils.supports(19, 3)) {
 
             packet.dataValueCollectionModifier.writeSafely(

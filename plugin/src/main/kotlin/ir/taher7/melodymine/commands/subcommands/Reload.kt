@@ -8,7 +8,7 @@ import ir.taher7.melodymine.storage.Settings
 import ir.taher7.melodymine.storage.Storage
 import ir.taher7.melodymine.storage.Talk
 import ir.taher7.melodymine.utils.Adventure
-import ir.taher7.melodymine.utils.Adventure.sendString
+import ir.taher7.melodymine.utils.Adventure.sendComponent
 import org.bukkit.entity.Player
 
 class Reload : SubCommand() {
@@ -34,7 +34,7 @@ class Reload : SubCommand() {
         Talk.load()
 
         Adventure.initMiniMessage()
-        player.sendString(Messages.getMessage("commands.reload.reload_success"))
+        player.sendComponent(Messages.getMessage("commands.reload.reload_success"))
         Storage.onlinePlayers.values.forEach { melodyPlayer ->
             if (melodyPlayer.webIsOnline) {
                 MelodyManager.sendSoundSetting(melodyPlayer.socketID!!)

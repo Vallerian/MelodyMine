@@ -4,8 +4,7 @@ import ir.taher7.melodymine.commands.SubCommand
 import ir.taher7.melodymine.models.MelodyPlayer
 import ir.taher7.melodymine.storage.Messages
 import ir.taher7.melodymine.storage.Storage
-import ir.taher7.melodymine.utils.Adventure.sendString
-import ir.taher7.melodymine.utils.Adventure.toComponent
+import ir.taher7.melodymine.utils.Adventure.sendComponent
 import ir.taher7.melodymine.utils.Utils
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
@@ -26,7 +25,7 @@ class Status : SubCommand() {
         if (args.size == 1) {
 
             if (!melodyPlayer.isActiveVoice) {
-                player.sendString(Messages.getMessage("errors.active_voice"))
+                player.sendComponent(Messages.getMessage("errors.active_voice"))
                 return
             }
 
@@ -39,24 +38,24 @@ class Status : SubCommand() {
         if (args.size == 2) {
 
             if (!player.hasPermission("melodymine.status.others")) {
-                player.sendString(Messages.getMessage("errors.no_permission"))
+                player.sendComponent(Messages.getMessage("errors.no_permission"))
                 return
             }
 
             val targetMelodyPlayer = Bukkit.getPlayer(args[1])
             if (targetMelodyPlayer == null) {
-                player.sendString(Messages.getMessage("errors.player_not_found"))
+                player.sendComponent(Messages.getMessage("errors.player_not_found"))
                 return
             }
 
             val melodyTargetPlayer = Storage.onlinePlayers[targetMelodyPlayer.uniqueId.toString()]
             if (melodyTargetPlayer == null) {
-                player.sendString(Messages.getMessage("errors.player_not_found"))
+                player.sendComponent(Messages.getMessage("errors.player_not_found"))
                 return
             }
 
             if (!melodyTargetPlayer.isActiveVoice) {
-                player.sendString(
+                player.sendComponent(
                     Messages.getMessage(
                         "errors.active_voice_others",
                         hashMapOf("{PLAYER}" to melodyTargetPlayer.name)
@@ -75,31 +74,31 @@ class Status : SubCommand() {
     }
 
     private fun sendStatus(player: Player, melodyPlayer: MelodyPlayer) {
-        player.sendString(Messages.getMessage("general.content_header"))
-        player.sendString("")
-        player.sendString("<prefix><highlight_color>${melodyPlayer.name} <text_color>Voice Status:")
-        player.sendString("<prefix>Activate: <highlight_color>Online<text_color>.")
-        player.sendString("<prefix>Microphone: <highlight_color>${if (!melodyPlayer.isSelfMute) "Mute" else "Active"}<text_color>.")
-        player.sendString("<prefix>Speaker: <highlight_color>${if (!melodyPlayer.isDeafen) "Deafen" else "Active"}<text_color>.")
-        player.sendString("<prefix>Call: <hover_color>${if (melodyPlayer.isInCall) "You're In Call With <highlight_color>${melodyPlayer.callTarget?.name}" else "<highlight_color>OFF"}<text_color>.")
-        player.sendString(
+        player.sendComponent(Messages.getMessage("general.content_header"))
+        player.sendComponent("")
+        player.sendComponent("<prefix><highlight_color>${melodyPlayer.name} <text_color>Voice Status:")
+        player.sendComponent("<prefix>Activate: <highlight_color>Online<text_color>.")
+        player.sendComponent("<prefix>Microphone: <highlight_color>${if (!melodyPlayer.isSelfMute) "Mute" else "Active"}<text_color>.")
+        player.sendComponent("<prefix>Speaker: <highlight_color>${if (!melodyPlayer.isDeafen) "Deafen" else "Active"}<text_color>.")
+        player.sendComponent("<prefix>Call: <hover_color>${if (melodyPlayer.isInCall) "You're In Call With <highlight_color>${melodyPlayer.callTarget?.name}" else "<highlight_color>OFF"}<text_color>.")
+        player.sendComponent(
             "<prefix>Voice Connections: <highlight_color>${melodyPlayer.isSendOffer.size}<text_color>, Players: <highlight_color>${
                 melodyPlayer.isSendOffer.map { uuid -> Storage.onlinePlayers[uuid]?.name }
                     .joinToString("<text_color>, <highlight_color>")
             }<text_color>."
         )
-        player.sendString("")
-        player.sendString(Messages.getMessage("general.content_footer"))
+        player.sendComponent("")
+        player.sendComponent(Messages.getMessage("general.content_footer"))
     }
 
     private fun sendStatusHelpMessage(player: Player) {
-        player.sendString(Messages.getMessage("general.content_header"))
+        player.sendComponent(Messages.getMessage("general.content_header"))
         Messages.getHelpMessage(
             "commands.status.help_message",
             hashMapOf("{SYNTAX}" to syntax)
         ).forEach { message ->
-            player.sendString(message)
+            player.sendComponent(message)
         }
-        player.sendString(Messages.getMessage("general.content_footer"))
+        player.sendComponent(Messages.getMessage("general.content_footer"))
     }
 }

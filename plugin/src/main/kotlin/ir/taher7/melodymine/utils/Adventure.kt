@@ -2,7 +2,8 @@ package ir.taher7.melodymine.utils
 
 import ir.taher7.melodymine.MelodyMine
 import ir.taher7.melodymine.storage.Messages
-import ir.taher7.melodymine.utils.Adventure.sendString
+import ir.taher7.melodymine.utils.Adventure.sendComponent
+import ir.taher7.melodymine.utils.Utils.parsePlaceholder
 import me.clip.placeholderapi.PlaceholderAPI
 import net.kyori.adventure.audience.Audience
 import net.kyori.adventure.bossbar.BossBar
@@ -41,24 +42,15 @@ object Adventure {
         return audience.player(this)
     }
 
-
-    fun CommandSender.sendString(string: String) {
-        var parseString = string
-        if (Utils.hasPlaceholderAPI()) {
-            parseString = PlaceholderAPI.setPlaceholders(if (this is Player) this else null, string)
-        }
+    fun CommandSender.sendComponent(string: String) {
+        val parseString = parsePlaceholder(if (this is Player) this else null, string)
         audience.sender(this).sendMessage(parseString.toComponent())
     }
 
-
     fun Player.sendActionbar(string: String) {
-        var parseString = string
-        if (Utils.hasPlaceholderAPI()) {
-            parseString = PlaceholderAPI.setPlaceholders(this, string)
-        }
+        val parseString = parsePlaceholder(this, string)
         this.audience().sendActionBar(parseString.toComponent())
     }
-
 
     fun String.toComponent(vararg placeholders: TagResolver): Component {
         return miniMessage.deserialize(this, *placeholders)

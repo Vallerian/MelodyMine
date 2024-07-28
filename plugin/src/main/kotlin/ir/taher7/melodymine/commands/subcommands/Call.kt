@@ -5,7 +5,7 @@ import ir.taher7.melodymine.core.MelodyManager
 import ir.taher7.melodymine.storage.Messages
 import ir.taher7.melodymine.storage.Settings
 import ir.taher7.melodymine.storage.Storage
-import ir.taher7.melodymine.utils.Adventure.sendString
+import ir.taher7.melodymine.utils.Adventure.sendComponent
 import ir.taher7.melodymine.utils.Utils
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
@@ -30,7 +30,7 @@ class Call : SubCommand() {
             "start" -> {
 
                 if (!player.hasPermission("melodymine.call.start")) {
-                    player.sendString(Messages.getMessage("errors.no_permission"))
+                    player.sendComponent(Messages.getMessage("errors.no_permission"))
                     return
                 }
 
@@ -41,23 +41,23 @@ class Call : SubCommand() {
 
                 val bukkitPlayer = Bukkit.getPlayer(args[2])
                 if (bukkitPlayer == null) {
-                    player.sendString(Messages.getMessage("errors.player_not_found"))
+                    player.sendComponent(Messages.getMessage("errors.player_not_found"))
                     return
                 }
 
                 if (bukkitPlayer.uniqueId == player.uniqueId) {
-                    player.sendString(Messages.getMessage("commands.call.call_to_yourself"))
+                    player.sendComponent(Messages.getMessage("commands.call.call_to_yourself"))
                     return
                 }
 
                 val melodyPlayer = Storage.onlinePlayers[player.uniqueId.toString()] ?: return
                 if (!melodyPlayer.isActiveVoice) {
-                    player.sendString(Messages.getMessage("errors.active_voice"))
+                    player.sendComponent(Messages.getMessage("errors.active_voice"))
                     return
                 }
 
                 if (melodyPlayer.isInCall) {
-                    player.sendString(
+                    player.sendComponent(
                         Messages.getMessage(
                             "commands.call.in_call_start",
                             hashMapOf("{PLAYER}" to melodyPlayer.callTarget?.name!!)
@@ -67,7 +67,7 @@ class Call : SubCommand() {
                 }
 
                 if (melodyPlayer.isCallPending) {
-                    player.sendString(
+                    player.sendComponent(
                         Messages.getMessage(
                             "commands.call.in_pending",
                             hashMapOf("{PLAYER}" to melodyPlayer.callPendingTarget?.name!!)
@@ -77,17 +77,17 @@ class Call : SubCommand() {
                 }
 
                 if (melodyPlayer.callToggle) {
-                    player.sendString(Messages.getMessage("commands.call.is_toggle"))
+                    player.sendComponent(Messages.getMessage("commands.call.is_toggle"))
                     return
                 }
 
                 if (melodyPlayer.adminMode) {
-                    player.sendString(Messages.getMessage("commands.call.disable_adminmode"))
+                    player.sendComponent(Messages.getMessage("commands.call.disable_adminmode"))
                     return
                 }
 
                 if (Settings.disableWorlds.contains(player.world.name)) {
-                    player.sendString(Messages.getMessage("commands.call.disable_world"))
+                    player.sendComponent(Messages.getMessage("commands.call.disable_world"))
                     return
                 }
 
@@ -96,7 +96,7 @@ class Call : SubCommand() {
                         targetPlayer.player?.world?.name
                     )
                 ) {
-                    player.sendString(
+                    player.sendComponent(
                         Messages.getMessage(
                             "commands.call.not_available",
                             hashMapOf("{PLAYER}" to targetPlayer.name)
@@ -112,29 +112,29 @@ class Call : SubCommand() {
 
             "end" -> {
                 if (!player.hasPermission("melodymine.call.end")) {
-                    player.sendString(Messages.getMessage("errors.no_permission"))
+                    player.sendComponent(Messages.getMessage("errors.no_permission"))
                     return
                 }
 
                 val melodyPlayer = Storage.onlinePlayers[player.uniqueId.toString()] ?: return
                 if (!melodyPlayer.isActiveVoice) {
-                    player.sendString(Messages.getMessage("errors.active_voice"))
+                    player.sendComponent(Messages.getMessage("errors.active_voice"))
                     return
                 }
 
                 if (!melodyPlayer.isInCall) {
-                    player.sendString(Messages.getMessage("commands.call.not_in_call"))
+                    player.sendComponent(Messages.getMessage("commands.call.not_in_call"))
                     return
                 }
 
                 if (melodyPlayer.adminMode) {
-                    player.sendString(Messages.getMessage("commands.call.disable_adminmode"))
+                    player.sendComponent(Messages.getMessage("commands.call.disable_adminmode"))
                     return
                 }
 
                 val targetPlayer = Storage.onlinePlayers[melodyPlayer.callTarget?.uuid] ?: return
                 if (!targetPlayer.isActiveVoice || !targetPlayer.isInCall || targetPlayer.isCallPending) {
-                    player.sendString(
+                    player.sendComponent(
                         Messages.getMessage(
                             "commands.call.not_available",
                             hashMapOf("{PLAYER}" to targetPlayer.name)
@@ -151,18 +151,18 @@ class Call : SubCommand() {
 
             "accept" -> {
                 if (!player.hasPermission("melodymine.call.accept")) {
-                    player.sendString(Messages.getMessage("errors.no_permission"))
+                    player.sendComponent(Messages.getMessage("errors.no_permission"))
                     return
                 }
 
                 val melodyPlayer = Storage.onlinePlayers[player.uniqueId.toString()] ?: return
                 if (!melodyPlayer.isActiveVoice) {
-                    player.sendString(Messages.getMessage("errors.active_voice"))
+                    player.sendComponent(Messages.getMessage("errors.active_voice"))
                     return
                 }
 
                 if (melodyPlayer.isInCall) {
-                    player.sendString(
+                    player.sendComponent(
                         Messages.getMessage(
                             "commands.call.in_call_accept",
                             hashMapOf("{PLAYER}" to melodyPlayer.callTarget?.name!!)
@@ -172,22 +172,22 @@ class Call : SubCommand() {
                 }
 
                 if (!melodyPlayer.isCallPending) {
-                    player.sendString(Messages.getMessage("commands.call.call_request"))
+                    player.sendComponent(Messages.getMessage("commands.call.call_request"))
                     return
                 }
 
                 if (melodyPlayer.callToggle) {
-                    player.sendString(Messages.getMessage("commands.call.is_toggle"))
+                    player.sendComponent(Messages.getMessage("commands.call.is_toggle"))
                     return
                 }
 
                 if (melodyPlayer.adminMode) {
-                    player.sendString(Messages.getMessage("commands.call.disable_adminmode"))
+                    player.sendComponent(Messages.getMessage("commands.call.disable_adminmode"))
                     return
                 }
 
                 if (Settings.disableWorlds.contains(player.world.name)) {
-                    player.sendString(Messages.getMessage("commands.call.disable_world"))
+                    player.sendComponent(Messages.getMessage("commands.call.disable_world"))
                     return
                 }
 
@@ -196,7 +196,7 @@ class Call : SubCommand() {
                         targetPlayer.player?.world?.name
                     )
                 ) {
-                    player.sendString(
+                    player.sendComponent(
                         Messages.getMessage(
                             "commands.call.not_available",
                             hashMapOf("{PLAYER}" to targetPlayer.name)
@@ -213,18 +213,18 @@ class Call : SubCommand() {
 
             "deny" -> {
                 if (!player.hasPermission("melodymine.call.deny")) {
-                    player.sendString(Messages.getMessage("errors.no_permission"))
+                    player.sendComponent(Messages.getMessage("errors.no_permission"))
                     return
                 }
 
                 val melodyPlayer = Storage.onlinePlayers[player.uniqueId.toString()] ?: return
                 if (!melodyPlayer.isActiveVoice) {
-                    player.sendString(Messages.getMessage("errors.active_voice"))
+                    player.sendComponent(Messages.getMessage("errors.active_voice"))
                     return
                 }
 
                 if (melodyPlayer.isInCall) {
-                    player.sendString(
+                    player.sendComponent(
                         Messages.getMessage(
                             "commands.call.in_call_start",
                             hashMapOf("{PLAYER}" to melodyPlayer.callTarget?.name!!)
@@ -234,18 +234,18 @@ class Call : SubCommand() {
                 }
 
                 if (!melodyPlayer.isCallPending) {
-                    player.sendString(Messages.getMessage("commands.call.call_request"))
+                    player.sendComponent(Messages.getMessage("commands.call.call_request"))
                     return
                 }
 
                 if (melodyPlayer.callToggle) {
-                    player.sendString(Messages.getMessage("commands.call.is_toggle"))
+                    player.sendComponent(Messages.getMessage("commands.call.is_toggle"))
                     return
                 }
 
                 val targetPlayer = Storage.onlinePlayers[melodyPlayer.callPendingTarget?.uuid] ?: return
                 if (!targetPlayer.isActiveVoice || targetPlayer.isInCall || !targetPlayer.isCallPending || targetPlayer.callToggle) {
-                    player.sendString(
+                    player.sendComponent(
                          Messages.getMessage(
                              "commands.call.not_available",
                              hashMapOf("{PLAYER}" to targetPlayer.name)
@@ -262,7 +262,7 @@ class Call : SubCommand() {
 
             "toggle" -> {
                 if (!player.hasPermission("melodymine.call.toggle")) {
-                    player.sendString(Messages.getMessage("errors.no_permission"))
+                    player.sendComponent(Messages.getMessage("errors.no_permission"))
                     return
                 }
 
@@ -279,13 +279,13 @@ class Call : SubCommand() {
     }
 
     private fun sendCallHelpMessage(player: Player) {
-        player.sendString(Messages.getMessage("general.content_header"))
+        player.sendComponent(Messages.getMessage("general.content_header"))
         Messages.getHelpMessage(
             "commands.call.help_message",
             hashMapOf("{SYNTAX}" to syntax)
         ).forEach { message ->
-            player.sendString(message)
+            player.sendComponent(message)
         }
-        player.sendString(Messages.getMessage("general.content_footer"))
+        player.sendComponent(Messages.getMessage("general.content_footer"))
     }
 }

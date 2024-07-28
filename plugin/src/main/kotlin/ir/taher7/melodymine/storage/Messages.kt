@@ -1,8 +1,6 @@
 package ir.taher7.melodymine.storage
 
 import ir.taher7.melodymine.MelodyMine
-import ir.taher7.melodymine.utils.Adventure.toComponent
-import net.kyori.adventure.text.Component
 
 object Messages {
 

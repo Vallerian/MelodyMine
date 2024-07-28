@@ -4,7 +4,7 @@ import ir.taher7.melodymine.commands.SubCommand
 import ir.taher7.melodymine.core.MelodyManager
 import ir.taher7.melodymine.storage.Messages
 import ir.taher7.melodymine.storage.Storage
-import ir.taher7.melodymine.utils.Adventure.sendString
+import ir.taher7.melodymine.utils.Adventure.sendComponent
 import ir.taher7.melodymine.utils.Utils
 import org.bukkit.entity.Player
 
@@ -25,16 +25,16 @@ class Control : SubCommand() {
 
         val melodyPlayer = Storage.onlinePlayers[player.uniqueId.toString()] ?: return
         if (!melodyPlayer.isActiveVoice) {
-            player.sendString(Messages.getMessage("errors.active_voice"))
+            player.sendComponent(Messages.getMessage("errors.active_voice"))
             return
         }
 
         if (args[1].equals("mute", true)) {
             MelodyManager.setPlayerSelfMute(melodyPlayer, !melodyPlayer.isSelfMute)
             if (melodyPlayer.isSelfMute) {
-                player.sendString(Messages.getMessage("commands.control.unmute"))
+                player.sendComponent(Messages.getMessage("commands.control.unmute"))
             } else {
-                player.sendString(Messages.getMessage("commands.control.mute"))
+                player.sendComponent(Messages.getMessage("commands.control.mute"))
             }
             Utils.resetPlayerCoolDown(player)
             return
@@ -43,9 +43,9 @@ class Control : SubCommand() {
         if (args[1].equals("deafen", true)) {
             MelodyManager.setPlayerDeafen(melodyPlayer, !melodyPlayer.isDeafen)
             if (melodyPlayer.isDeafen) {
-                player.sendString(Messages.getMessage("commands.control.undeafen"))
+                player.sendComponent(Messages.getMessage("commands.control.undeafen"))
             } else {
-                player.sendString(Messages.getMessage("commands.control.deafen"))
+                player.sendComponent(Messages.getMessage("commands.control.deafen"))
             }
             Utils.resetPlayerCoolDown(player)
             return
@@ -55,13 +55,13 @@ class Control : SubCommand() {
     }
 
     private fun sendControlHelpMessage(player: Player) {
-        player.sendString(Messages.getMessage("general.content_header"))
+        player.sendComponent(Messages.getMessage("general.content_header"))
         Messages.getHelpMessage(
             "commands.control.help_message",
             hashMapOf("{SYNTAX}" to syntax)
         ).forEach { message ->
-            player.sendString(message)
+            player.sendComponent(message)
         }
-        player.sendString(Messages.getMessage("general.content_footer"))
+        player.sendComponent(Messages.getMessage("general.content_footer"))
     }
 }

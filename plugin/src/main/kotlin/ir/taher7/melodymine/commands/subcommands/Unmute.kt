@@ -4,7 +4,7 @@ import ir.taher7.melodymine.commands.SubCommand
 import ir.taher7.melodymine.core.MelodyManager
 import ir.taher7.melodymine.storage.Messages
 import ir.taher7.melodymine.storage.Storage
-import ir.taher7.melodymine.utils.Adventure.sendString
+import ir.taher7.melodymine.utils.Adventure.sendComponent
 import ir.taher7.melodymine.utils.Utils
 import org.bukkit.entity.Player
 
@@ -24,12 +24,12 @@ class Unmute : SubCommand() {
             melodyPlayer.name.equals(args[1], true)
         }
         if (filter.isEmpty()) {
-            player.sendString(Messages.getMessage("errors.player_not_found"))
+            player.sendComponent(Messages.getMessage("errors.player_not_found"))
             return
         }
         val targetPlayer = filter[0]
         if (!targetPlayer.isMute) {
-            player.sendString(
+            player.sendComponent(
                 Messages.getMessage(
                     "commands.unmute.not_mute",
                     hashMapOf("{PLAYER}" to targetPlayer.name)
@@ -39,8 +39,8 @@ class Unmute : SubCommand() {
         }
 
         MelodyManager.unMute(targetPlayer.uuid)
-        targetPlayer.player?.sendMessage(Messages.getMessage("commands.unmute.success_target"))
-        player.sendString(
+        targetPlayer.player?.sendComponent(Messages.getMessage("commands.unmute.success_target"))
+        player.sendComponent(
             Messages.getMessage(
                 "commands.unmute.success",
                 hashMapOf("{PLAYER}" to targetPlayer.name)
@@ -50,13 +50,13 @@ class Unmute : SubCommand() {
     }
 
     private fun sendStartHelpMessage(player: Player) {
-        player.sendString(Messages.getMessage("general.content_header"))
+        player.sendComponent(Messages.getMessage("general.content_header"))
         Messages.getHelpMessage(
             "commands.unmute.help_message",
             hashMapOf("{SYNTAX}" to syntax)
         ).forEach { message ->
-            player.sendString(message)
+            player.sendComponent(message)
         }
-        player.sendString(Messages.getMessage("general.content_footer"))
+        player.sendComponent(Messages.getMessage("general.content_footer"))
     }
 }
