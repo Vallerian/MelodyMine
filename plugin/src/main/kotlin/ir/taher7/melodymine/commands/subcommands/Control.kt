@@ -6,6 +6,7 @@ import ir.taher7.melodymine.storage.Messages
 import ir.taher7.melodymine.storage.Storage
 import ir.taher7.melodymine.utils.Adventure.sendComponent
 import ir.taher7.melodymine.utils.Utils
+import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
 class Control : SubCommand() {
@@ -15,7 +16,11 @@ class Control : SubCommand() {
     override var description = Messages.getMessage("commands.control.description")
     override var syntax = "/melodymine control"
     override var permission = "melodymine.control"
-    override fun handler(player: Player, args: Array<out String>) {
+    override fun handler(player: CommandSender, args: Array<out String>) {
+        if (player !is Player) {
+            player.sendComponent(Messages.getMessage("errors.only_players"))
+            return
+        }
         if (Utils.checkPlayerCoolDown(player)) return
 
         if (args.size != 2) {

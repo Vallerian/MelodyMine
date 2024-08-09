@@ -8,6 +8,7 @@ import ir.taher7.melodymine.storage.Storage
 import ir.taher7.melodymine.utils.Adventure.sendComponent
 import ir.taher7.melodymine.utils.Utils
 import org.bukkit.Bukkit
+import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
 class Call : SubCommand() {
@@ -17,7 +18,11 @@ class Call : SubCommand() {
     override var description = Messages.getMessage("commands.call.description")
     override var syntax = "/melodymine call"
     override var permission = "melodymine.call"
-    override fun handler(player: Player, args: Array<out String>) {
+    override fun handler(player: CommandSender, args: Array<out String>) {
+        if (player !is Player) {
+            player.sendComponent(Messages.getMessage("errors.only_players"))
+            return
+        }
         if (Utils.checkPlayerCoolDown(player)) return
 
         if (args.size > 3 || args.size < 2) {
@@ -246,11 +251,11 @@ class Call : SubCommand() {
                 val targetPlayer = Storage.onlinePlayers[melodyPlayer.callPendingTarget?.uuid] ?: return
                 if (!targetPlayer.isActiveVoice || targetPlayer.isInCall || !targetPlayer.isCallPending || targetPlayer.callToggle) {
                     player.sendComponent(
-                         Messages.getMessage(
-                             "commands.call.not_available",
-                             hashMapOf("{PLAYER}" to targetPlayer.name)
-                         )
-                     )
+                        Messages.getMessage(
+                            "commands.call.not_available",
+                            hashMapOf("{PLAYER}" to targetPlayer.name)
+                        )
+                    )
                     return
                 }
 

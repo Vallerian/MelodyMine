@@ -9,6 +9,7 @@ import ir.taher7.melodymine.storage.Storage
 import ir.taher7.melodymine.storage.Talk
 import ir.taher7.melodymine.utils.Adventure
 import ir.taher7.melodymine.utils.Adventure.sendComponent
+import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
 class Reload : SubCommand() {
@@ -17,7 +18,7 @@ class Reload : SubCommand() {
     override var syntax = "/melodymine reload"
     override var permission = "melodymine.reload"
 
-    override fun handler(player: Player, args: Array<out String>) {
+    override fun handler(player: CommandSender, args: Array<out String>) {
 
         Storage.onlinePlayers.values.forEach { melodyPlayer ->
             melodyPlayer.talkBossBar?.hideTalkBossBar()

@@ -7,6 +7,7 @@ import ir.taher7.melodymine.storage.Storage
 import ir.taher7.melodymine.utils.Adventure.sendComponent
 import ir.taher7.melodymine.utils.Utils
 import org.bukkit.Bukkit
+import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
 class Status : SubCommand() {
@@ -17,7 +18,12 @@ class Status : SubCommand() {
     override var syntax = "/melodymine status"
     override var permission = "melodymine.status"
 
-    override fun handler(player: Player, args: Array<out String>) {
+    override fun handler(player: CommandSender, args: Array<out String>) {
+        if (player !is Player) {
+            player.sendComponent(Messages.getMessage("errors.only_players"))
+            return
+        }
+
         if (Utils.checkPlayerCoolDown(player)) return
         val melodyPlayer = Storage.onlinePlayers[player.uniqueId.toString()] ?: return
 

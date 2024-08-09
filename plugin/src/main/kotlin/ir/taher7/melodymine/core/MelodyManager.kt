@@ -41,8 +41,10 @@ object MelodyManager {
         Bukkit.getServer().pluginManager.callEvent(prePlayerMuteEvent)
         if (prePlayerMuteEvent.isCancelled) return
 
-        targetPlayer.talkBossBar?.setBossBarServerMute()
-        targetPlayer.talkNameTag?.setNameTagServerMute()
+        if (targetPlayer.isActiveVoice) {
+            targetPlayer.talkBossBar?.setBossBarServerMute()
+            targetPlayer.talkNameTag?.setNameTagServerMute()
+        }
 
         targetPlayer.isMute = true
         Database.updatePlayer(targetPlayer, false)

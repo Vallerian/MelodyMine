@@ -4,7 +4,7 @@ import ir.taher7.melodymine.commands.subcommands.*
 import ir.taher7.melodymine.storage.Messages
 import ir.taher7.melodymine.storage.Storage
 import ir.taher7.melodymine.utils.Adventure.sendComponent
-import ir.taher7.melodymine.utils.Utils
+import ir.taher7.melodymine.utils.Utils.sendHelpMessage
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
@@ -22,18 +22,17 @@ class CommandManager : CommandExecutor {
         Storage.subCommands.add(Control())
         Storage.subCommands.add(Call())
         Storage.subCommands.add(Status())
-        Storage.subCommands.add(Reset())
     }
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
 
-        if (sender !is Player) {
-            sender.sendComponent(Messages.getMessage("errors.only_players"))
-            return true
-        }
 
         if (args.isEmpty()) {
-            Utils.sendHelpMessage(sender)
+            if (sender !is Player) {
+                sender.sendComponent(Messages.getMessage("errors.only_players"))
+                return true
+            }
+            sendHelpMessage(sender as Player)
             return true
         }
 
