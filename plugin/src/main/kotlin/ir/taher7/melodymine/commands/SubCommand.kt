@@ -1,6 +1,6 @@
 package ir.taher7.melodymine.commands
 
-import org.bukkit.entity.Player
+import org.bukkit.command.CommandSender
 
 abstract class SubCommand {
 
@@ -9,6 +9,6 @@ abstract class SubCommand {
     abstract var syntax: String
     abstract var permission: String
 
-    abstract fun handler(player: Player, args: Array<out String>)
+    abstract fun handler(sender: CommandSender, args: Array<out String>)
 
 }
