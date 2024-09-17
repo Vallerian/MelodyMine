@@ -1,6 +1,6 @@
 package ir.taher7.melodymine.commands
 
-import com.cryptomorin.xseries.ReflectionUtils
+import com.cryptomorin.xseries.reflection.XReflection
 import ir.taher7.melodymine.storage.Storage
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
@@ -23,7 +23,7 @@ class TabCompletionManager : TabCompleter {
 
             2 -> {
                 if (args[0].equals("start", true)) {
-                    return if (ReflectionUtils.supports(13) && sender.hasPermission("melodymine.qrcode")) {
+                    return if (XReflection.supports(13) && sender.hasPermission("melodymine.qrcode")) {
                         listOf("link", "qrcode").filter { item -> item.contains(args[1]) }
                     } else {
                         listOf("link").filter { item -> item.contains(args[1], true) }
