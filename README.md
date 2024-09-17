@@ -34,5 +34,4 @@
 - 💼 **Modrinth**: Find MelodyMine on [Modrinth](https://modrinth.com/plugin/melodymine)
 - 🌐 **Polymart**: Check out MelodyMine on [Polymart](https://polymart.org/resource/melodymine.4875)
 - 💬 **Hangar**: Discover MelodyMine on [Hangar](https://hangar.papermc.io/TAHER7/MelodyMine)
-- 📂 **BuiltByBit**: Find MelodyMine on [BuiltByBit](https://builtbybit.com/resources/melodymine.45916/)
 
