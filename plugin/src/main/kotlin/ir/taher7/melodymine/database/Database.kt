@@ -1,6 +1,7 @@
 package ir.taher7.melodymine.database
 
-import com.cryptomorin.xseries.ReflectionUtils
+
+import com.cryptomorin.xseries.reflection.XReflection
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import ir.taher7.melodymine.MelodyMine
@@ -23,11 +24,11 @@ object Database {
 
     init {
         try {
-             connect()
-             initialize()
-         } catch (ex: Exception) {
-             ex.printStackTrace()
-         }
+            connect()
+            initialize()
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+        }
     }
 
     private fun connect() {
@@ -35,7 +36,7 @@ object Database {
         try {
             val config = HikariConfig()
             config.setJdbcUrl("jdbc:mysql://${Settings.host}:${Settings.port}/${Settings.database}")
-            if (ReflectionUtils.supports(13)) {
+            if (XReflection.supports(13)) {
                 config.driverClassName = "com.mysql.cj.jdbc.Driver"
             } else {
                 config.driverClassName = "com.mysql.jdbc.Driver"
@@ -93,7 +94,6 @@ object Database {
                         "INSERT INTO melodymine(uuid,name,verifyCode,server,serverIsOnline) VALUES (?,?,?,?,?)",
                         Statement.RETURN_GENERATED_KEYS
                     )
-
 
                     val verifyCode = Utils.getVerifyCode()
 
@@ -212,11 +212,11 @@ object Database {
         closeConnection(connection)
     }
 
-
     fun updateSocketPlayer() {
         object : BukkitRunnable() {
             override fun run() {
                 try {
+                    if (!::hikari.isInitialized) return
                     val connection = createConnection() ?: return
                     val uuidList = arrayListOf<String>()
                     Bukkit.getOnlinePlayers().forEach { player: Player ->
@@ -244,6 +244,7 @@ object Database {
         object : BukkitRunnable() {
             override fun run() {
                 try {
+                    if (!::hikari.isInitialized) return
                     val connection = createConnection() ?: return
                     val statement = connection.prepareStatement(
                         "SELECT verifyCode FROM melodymine WHERE uuid = ?"

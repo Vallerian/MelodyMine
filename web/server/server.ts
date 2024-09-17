@@ -17,8 +17,8 @@ try {
                 credentials: false,
                 allowedHeaders: "*"
             },
-            pingInterval: 600000,
-            pingTimeout: 600000,
+            // pingInterval: 600000,
+            // pingTimeout: 600000,
             transports: ["websocket"],
             allowEIO3: true,
         })

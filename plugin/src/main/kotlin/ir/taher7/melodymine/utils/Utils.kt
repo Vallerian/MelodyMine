@@ -1,6 +1,7 @@
 package ir.taher7.melodymine.utils
 
-import com.cryptomorin.xseries.ReflectionUtils
+
+import com.cryptomorin.xseries.reflection.XReflection
 import ir.taher7.melodymine.MelodyMine
 import ir.taher7.melodymine.commands.SubCommand
 import ir.taher7.melodymine.core.MelodyManager
@@ -149,7 +150,7 @@ object Utils {
         mapMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS)
         mapMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS)
 
-        if (ReflectionUtils.supports(14)) {
+        if (XReflection.supports(14)) {
             mapMeta.persistentDataContainer.set(
                 NamespacedKey(MelodyMine.instance, "qrcode"),
                 PersistentDataType.INTEGER,
@@ -162,7 +163,7 @@ object Utils {
     }
 
     fun isMap(item: ItemStack): Boolean {
-        if (ReflectionUtils.supports(14)) {
+        if (XReflection.supports(14)) {
             val mapMeta = item.itemMeta ?: return false
             mapMeta.persistentDataContainer.get(
                 NamespacedKey(MelodyMine.instance, "qrcode"),
@@ -171,7 +172,7 @@ object Utils {
             return true
         } else {
 
-            if (ReflectionUtils.supports(13)) {
+            if (XReflection.supports(13)) {
                 if (item.type != Material.FILLED_MAP) return false
             } else {
                 if (item.type != Material.MAP) return false

@@ -5,14 +5,14 @@ plugins {
     kotlin("jvm") version "1.9.23"
     id("java-library")
     id("maven-publish")
-    id("com.github.johnrengelman.shadow") version "8.1.1"
+    id("com.gradleup.shadow") version "8.3.1"
     id("org.jetbrains.gradle.plugin.idea-ext") version "1.1.7"
     id("xyz.jpenilla.run-paper") version "2.1.0"
 }
 
 group = "ir.taher7"
 version = "${project.version}"
-description = "Minecraft server voice plugin"
+description = "Minecraft voice chat plugin"
 
 repositories {
     mavenLocal()
@@ -52,11 +52,11 @@ dependencies {
 
     implementation("com.google.code.gson:gson:2.10.1")
 
-    implementation("com.github.cryptomorin:XSeries:9.7.0") { isTransitive = false }
+    implementation("com.github.cryptomorin:XSeries:11.2.1")
 
-    implementation("net.kyori:adventure-api:4.16.0")
-    implementation("net.kyori:adventure-platform-bukkit:4.3.2")
-    implementation("net.kyori:adventure-text-minimessage:4.16.0")
+    implementation("net.kyori:adventure-api:4.17.0")
+    implementation("net.kyori:adventure-platform-bukkit:4.3.3")
+    implementation("net.kyori:adventure-text-minimessage:4.17.0")
 
 
     implementation("com.jeff_media:SpigotUpdateChecker:3.0.3")
@@ -69,9 +69,9 @@ dependencies {
 
     compileOnly("com.comphenix.protocol:ProtocolLib:5.1.0")
     implementation("org.slf4j:slf4j-api:1.7.25")
-    implementation("ch.qos.logback:logback-core:1.2.3")
-    implementation("ch.qos.logback:logback-classic:1.2.3")
-    implementation("xerces:xercesImpl:2.12.1")
+    implementation("ch.qos.logback:logback-core:1.4.14")
+    implementation("ch.qos.logback:logback-classic:1.4.12")
+    implementation("xerces:xercesImpl:2.12.2")
 }
 
 
@@ -99,7 +99,7 @@ java {
 
 tasks {
     runServer {
-        minecraftVersion("1.20.4")
+        minecraftVersion("1.21.1")
     }
 
     shadowJar {
@@ -120,6 +120,14 @@ tasks {
         filteringCharset = Charsets.UTF_8.name()
         filesMatching("plugin.yml") {
             expand("version" to version)
+        }
+    }
+
+    java {
+        if (gradle.startParameter.getTaskNames().isNotEmpty() && (gradle.startParameter.getTaskNames()
+                .contains("runServer") || gradle.startParameter.getTaskNames().contains("runFolia"))
+        ) {
+            toolchain.languageVersion = JavaLanguageVersion.of(21)
         }
     }
 

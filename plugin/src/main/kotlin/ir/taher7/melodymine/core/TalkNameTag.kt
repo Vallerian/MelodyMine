@@ -8,7 +8,7 @@ import com.comphenix.protocol.wrappers.Pair
 import com.comphenix.protocol.wrappers.WrappedDataValue
 import com.comphenix.protocol.wrappers.WrappedDataWatcher
 import com.comphenix.protocol.wrappers.WrappedDataWatcher.Registry
-import com.cryptomorin.xseries.ReflectionUtils
+import com.cryptomorin.xseries.reflection.XReflection
 import ir.taher7.melodymine.MelodyMine
 import ir.taher7.melodymine.models.NameTagConfig
 import ir.taher7.melodymine.storage.Storage
@@ -111,7 +111,7 @@ class TalkNameTag(val player: Player) {
 
         packet.integers.writeSafely(0, id)
         val text = parsePlaceholder(player, config.text)
-        if (ReflectionUtils.supports(19, 3)) {
+        if (XReflection.supports(19, 3)) {
 
             packet.dataValueCollectionModifier.writeSafely(
                 0, listOf(

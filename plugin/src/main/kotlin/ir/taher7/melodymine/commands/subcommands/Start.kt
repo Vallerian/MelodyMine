@@ -1,6 +1,7 @@
 package ir.taher7.melodymine.commands.subcommands
 
-import com.cryptomorin.xseries.ReflectionUtils
+
+import com.cryptomorin.xseries.reflection.XReflection
 import ir.taher7.melodymine.commands.SubCommand
 import ir.taher7.melodymine.core.MelodyManager
 import ir.taher7.melodymine.storage.Messages
@@ -26,7 +27,7 @@ class Start : SubCommand() {
         if (Utils.checkPlayerCoolDown(player)) return
         when (args.size) {
             2 -> {
-                if (ReflectionUtils.supports(13) && args[1].equals("qrcode", true)) {
+                if (XReflection.supports(13) && args[1].equals("qrcode", true)) {
                     if (!player.hasPermission("melodymine.qrcode")) {
                         player.sendComponent(Messages.getMessage("errors.no_permission"))
                         return
