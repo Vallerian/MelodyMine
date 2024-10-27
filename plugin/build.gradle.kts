@@ -37,14 +37,14 @@ repositories {
     maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
 
     // Update checker
-    maven("https://hub.jeff-media.com/nexus/repository/jeff-media-public/")
+    maven("https://repo.jeff-media.com/public/")
 
     // ProtocolLib
     maven("https://repo.dmulloy2.net/repository/public/")
 }
 
 dependencies {
-    compileOnly("org.spigotmc:spigot-api:1.21.3-R0.1-SNAPSHOT")
+    compileOnly("org.spigotmc:spigot-api:1.19.4-R0.1-SNAPSHOT")
     compileOnly("me.clip:placeholderapi:2.11.6")
 
     implementation("org.bstats:bstats-bukkit:3.0.2")
@@ -56,7 +56,6 @@ dependencies {
     implementation("net.kyori:adventure-api:4.17.0")
     implementation("net.kyori:adventure-platform-bukkit:4.3.4")
     implementation("net.kyori:adventure-text-minimessage:4.17.0")
-
 
     implementation("com.jeff_media:SpigotUpdateChecker:3.0.3")
 
@@ -199,52 +198,52 @@ configurations {
     }
 }
 
-publishing {
-    publications {
-        create<MavenPublication>("maven") {
-            artifactId = "melodymine"
-            shadow.component(this)
-            artifact(tasks["sourcesJar"])
-            version = "${project.version}-SNAPSHOT"
-            setPom(this)
-        }
-    }
-
-    repositories {
-        maven {
-            name = "sayandevelopment-repo"
-            url = uri("https://repo.sayandev.org/snapshots/")
-
-            credentials {
-                username = System.getenv("REPO_SAYAN_USER") ?: project.findProperty("repo.sayan.user") as String
-                password = System.getenv("REPO_SAYAN_TOKEN") ?: project.findProperty("repo.sayan.token") as String
-            }
-        }
-    }
-}
-
-fun setPom(publication: MavenPublication) {
-    publication.pom {
-        name.set("melodymine")
-        description.set(rootProject.description)
-        url.set("https://github.com/vallerian/melodymine")
-        licenses {
-            license {
-                name.set("Apache License 2.0")
-                url.set("https://github.com/Vallerian/MelodyMine/blob/master/LICENSE")
-            }
-        }
-        developers {
-            developer {
-                id.set("taher7")
-                name.set("taher moradi")
-                email.set("")
-            }
-        }
-        scm {
-            connection.set("scm:git:github.com/vallerian/melodymine.git")
-            developerConnection.set("scm:git:ssh://github.com/valleryan/melodymine.git")
-            url.set("https://github.com/vallerian/melodymine/tree/master")
-        }
-    }
-}
+//publishing {
+//    publications {
+//        create<MavenPublication>("maven") {
+//            artifactId = "melodymine"
+//            shadow.component(this)
+//            artifact(tasks["sourcesJar"])
+//            version = "${project.version}-SNAPSHOT"
+//            setPom(this)
+//        }
+//    }
+//
+//    repositories {
+//        maven {
+//            name = "sayandevelopment-repo"
+//            url = uri("https://repo.sayandev.org/snapshots/")
+//
+//            credentials {
+//                username = System.getenv("REPO_SAYAN_USER") ?: project.findProperty("repo.sayan.user") as String
+//                password = System.getenv("REPO_SAYAN_TOKEN") ?: project.findProperty("repo.sayan.token") as String
+//            }
+//        }
+//    }
+//}
+//
+//fun setPom(publication: MavenPublication) {
+//    publication.pom {
+//        name.set("melodymine")
+//        description.set(rootProject.description)
+//        url.set("https://github.com/vallerian/melodymine")
+//        licenses {
+//            license {
+//                name.set("Apache License 2.0")
+//                url.set("https://github.com/Vallerian/MelodyMine/blob/master/LICENSE")
+//            }
+//        }
+//        developers {
+//            developer {
+//                id.set("taher7")
+//                name.set("taher moradi")
+//                email.set("")
+//            }
+//        }
+//        scm {
+//            connection.set("scm:git:github.com/vallerian/melodymine.git")
+//            developerConnection.set("scm:git:ssh://github.com/valleryan/melodymine.git")
+//            url.set("https://github.com/vallerian/melodymine/tree/master")
+//        }
+//    }
+//}
