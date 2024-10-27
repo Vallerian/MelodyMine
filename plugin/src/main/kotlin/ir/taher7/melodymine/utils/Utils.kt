@@ -233,17 +233,9 @@ object Utils {
 
     fun removePlayerCoolDown(player: Player) = Storage.commandCoolDown.remove(player.uniqueId)
 
-    fun serverURL(): String {
-        val locals = listOf("localhost", "0.0.0.0", "127.1.1.0")
-        if (locals.contains(Settings.serverDomain)) return "http://${locals[locals.indexOf(Settings.serverDomain)]}:${Settings.serverPort}"
-        return "https://${Settings.serverDomain}:${Settings.serverPort}"
-    }
+    fun clientURL() = "http${if (Settings.domain in setOf("localhost", "0.0.0.0", "127.1.1.0")) "" else "s"}://${Settings.domain}:${Settings.serverPort}"
 
-    fun clientURL(): String {
-        val locals = listOf("localhost", "0.0.0.0", "127.1.1.0")
-        if (locals.contains(Settings.clientDomain)) return "http://${locals[locals.indexOf(Settings.clientDomain)]}:${Settings.clientPort}"
-        return "https://${Settings.clientDomain}:${Settings.clientPort}"
-    }
+    fun serverURL() = "http${if (Settings.serverDomain in setOf("localhost", "0.0.0.0", "127.1.1.0")) "" else "s"}://${Settings.serverDomain}:${Settings.clientPort}"
 
     fun parsePlaceholder(player: Player?, string: String): String {
         if (MelodyMine.instance.server.pluginManager.getPlugin("PlaceholderAPI") == null) return string

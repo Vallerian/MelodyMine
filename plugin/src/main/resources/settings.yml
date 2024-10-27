@@ -34,25 +34,19 @@ initial_configs:
   server: Lobby
 
   #
-  # The 'server_domain' configuration is related to your server's domain and must necessarily match the value set for 'DOMAIN' in the '.env' file located at 'web/docker/.env'.
+  # The 'domain' configuration is related to your server's domain and must necessarily match the value set for 'DOMAIN' in the '.env' file located at 'web/docker/.env'.
   # If you are running MelodyMine in a development environment on your localhost, use 'localhost' instead of a domain.
   #
   ### Similar value in the '.env' file in the directory 'web/docker/.env':
   ### DOMAIN= 'domain'
   #
-  server_domain: localhost
+  domain: localhost
 
   #
-  ### OPTIONAL
-  ### If you want to use a separate domain for your client remove the # and put in your client domain after
+  # If you want to use a separate domain for your webserver, remove the # behind `server_domain` and put your desired domain after
+  # Otherwise your server domain will be same as your domain
   #
-  # The 'client_domain' configuration is related to your client's domain and must necessarily match the value set for 'DOMAIN' in the '.env' file located at 'web/docker/.env'.
-  # If you are running MelodyMine in a development environment on your localhost, use 'localhost' instead of a domain.
-  #
-  ### Similar value in the '.env' file in the directory 'web/docker/.env':
-  ### DOMAIN= 'domain'
-  #
-  #client_domain: localhost
+  #server_domain: localhost
 
   #
   # The 'client_port' configuration is related to the port of the website used by players to connect to the voice feature.
