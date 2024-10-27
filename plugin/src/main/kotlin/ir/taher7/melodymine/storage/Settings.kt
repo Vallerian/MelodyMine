@@ -12,7 +12,8 @@ object Settings {
     lateinit var language: String
 
     lateinit var server: String
-    lateinit var domain: String
+    lateinit var serverDomain: String
+    lateinit var clientDomain: String
     lateinit var clientPort: String
     lateinit var serverPort: String
     lateinit var pluginKey: String
@@ -61,11 +62,11 @@ object Settings {
         password = mySQL.getString("password") ?: ""
         database = mySQL.getString("database") ?: ""
 
-
         language = config.getString("language") ?: "en_US"
 
         server = config.getString("initial_configs.server") ?: "Lobby"
-        domain = config.getString("initial_configs.domain") ?: "localhost"
+        serverDomain = config.getString("initial_configs.server_domain") ?: "localhost"
+        clientDomain = config.getString("initial_configs.client_domain") ?: serverDomain
         clientPort = config.getString("initial_configs.client_port") ?: "3000"
         serverPort = config.getString("initial_configs.server_port") ?: "4000"
         pluginKey = config.getString("initial_configs.plugin_key") ?: ""

@@ -233,16 +233,16 @@ object Utils {
 
     fun removePlayerCoolDown(player: Player) = Storage.commandCoolDown.remove(player.uniqueId)
 
-    fun clientURL(): String {
-        val locals = listOf("localhost", "0.0.0.0", "127.1.1.0")
-        if (locals.contains(Settings.domain)) return "http://${locals[locals.indexOf(Settings.domain)]}:${Settings.clientPort}"
-        return "https://${Settings.domain}:${Settings.clientPort}"
-    }
-
     fun serverURL(): String {
         val locals = listOf("localhost", "0.0.0.0", "127.1.1.0")
-        if (locals.contains(Settings.domain)) return "http://${locals[locals.indexOf(Settings.domain)]}:${Settings.serverPort}"
-        return "https://${Settings.domain}:${Settings.serverPort}"
+        if (locals.contains(Settings.serverDomain)) return "http://${locals[locals.indexOf(Settings.serverDomain)]}:${Settings.serverPort}"
+        return "https://${Settings.serverDomain}:${Settings.serverPort}"
+    }
+
+    fun clientURL(): String {
+        val locals = listOf("localhost", "0.0.0.0", "127.1.1.0")
+        if (locals.contains(Settings.clientDomain)) return "http://${locals[locals.indexOf(Settings.clientDomain)]}:${Settings.clientPort}"
+        return "https://${Settings.clientDomain}:${Settings.clientPort}"
     }
 
     fun parsePlaceholder(player: Player?, string: String): String {
