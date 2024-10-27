@@ -33,9 +33,8 @@ repositories {
     maven("https://oss.sonatype.org/content/repositories/snapshots")
     maven("https://oss.sonatype.org/content/repositories/central")
 
-//    PlaceholderAPI
+    // PlaceholderAPI
     maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
-
 
     // Update checker
     maven("https://hub.jeff-media.com/nexus/repository/jeff-media-public/")
@@ -45,32 +44,32 @@ repositories {
 }
 
 dependencies {
-    compileOnly("org.spigotmc:spigot-api:1.19.4-R0.1-SNAPSHOT")
-    compileOnly("me.clip:placeholderapi:2.11.3")
+    compileOnly("org.spigotmc:spigot-api:1.21.3-R0.1-SNAPSHOT")
+    compileOnly("me.clip:placeholderapi:2.11.6")
 
     implementation("org.bstats:bstats-bukkit:3.0.2")
 
-    implementation("com.google.code.gson:gson:2.10.1")
+    implementation("com.google.code.gson:gson:2.11.0")
 
-    implementation("com.github.cryptomorin:XSeries:11.2.1")
+    implementation("com.github.cryptomorin:XSeries:11.3.0")
 
     implementation("net.kyori:adventure-api:4.17.0")
-    implementation("net.kyori:adventure-platform-bukkit:4.3.3")
+    implementation("net.kyori:adventure-platform-bukkit:4.3.4")
     implementation("net.kyori:adventure-text-minimessage:4.17.0")
 
 
     implementation("com.jeff_media:SpigotUpdateChecker:3.0.3")
 
     // Socket Io
-    implementation("io.socket:socket.io-client:2.1.0")
+    implementation("io.socket:socket.io-client:2.1.1")
     implementation("com.github.kenglxn.QRGen:javase:3.0.1")
 
     implementation("com.zaxxer:HikariCP:4.0.3")
 
     compileOnly("com.comphenix.protocol:ProtocolLib:5.1.0")
     implementation("org.slf4j:slf4j-api:1.7.25")
-    implementation("ch.qos.logback:logback-core:1.4.14")
-    implementation("ch.qos.logback:logback-classic:1.4.12")
+    implementation("ch.qos.logback:logback-core:1.5.12")
+    implementation("ch.qos.logback:logback-classic:1.5.12")
     implementation("xerces:xercesImpl:2.12.2")
 }
 
@@ -81,7 +80,7 @@ val relocations = mapOf(
     "net.kyori" to "ir.taher7.melodymine.lib.kyori",
     "kotlin" to "ir.taher7.melodymine.lib.kotlin",
     "com.zaxxer" to "ir.taher7.melodymine.lib.zaxxer",
-//    "com.google" to "ir.taher7.melodymine.lib.google",
+//  "com.google" to "ir.taher7.melodymine.lib.google",
     "com.cryptomorin" to "ir.taher7.melodymine.lib.cryptomorin",
     "okio" to "ir.taher7.melodymine.lib.okio",
     "okhttp3" to "ir.taher7.melodymine.lib.okhttp3",
