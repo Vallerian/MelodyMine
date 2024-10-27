@@ -5,14 +5,12 @@ import org.bukkit.event.Cancellable
 import org.bukkit.event.Event
 import org.bukkit.event.HandlerList
 
-class PreEndPendingCallEvent (
+class PreEndPendingCallEvent(
     val melodyPlayer: MelodyPlayer,
     val targetPlayer: MelodyPlayer,
 ) : Event(), Cancellable {
     private var cancelled = false
     var canSendMessage = true
-
-
 
     override fun isCancelled(): Boolean {
         return cancelled
@@ -30,5 +28,4 @@ class PreEndPendingCallEvent (
         @JvmStatic
         val handlerList = HandlerList()
     }
-
 }

@@ -3,7 +3,6 @@ package ir.taher7.melodymine.storage
 import ir.taher7.melodymine.MelodyMine
 
 object Messages {
-
     val messages: HashMap<String, String> = hashMapOf()
     val defaultMessages: HashMap<String, String> = hashMapOf()
 
@@ -47,7 +46,6 @@ object Messages {
 //            MelodyMine.instance.logger.info(messages[key])
 //        }
 
-
         val qrcodeSection = config.getConfigurationSection("qrcode") ?: return
         qrcodeDisplayName = qrcodeSection.getString("display_name") ?: ""
         qrcodeLore = qrcodeSection.getStringList("lore")
@@ -90,6 +88,4 @@ object Messages {
 
         return helpMessage.map { message -> message }
     }
-
-
 }

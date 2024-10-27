@@ -1,20 +1,15 @@
 package ir.taher7.melodymine.core
 
-
 import ir.taher7.melodymine.storage.Storage
 import ir.taher7.melodymine.storage.Talk
 import ir.taher7.melodymine.utils.Adventure.hideBossBar
 import ir.taher7.melodymine.utils.Adventure.showBossBar
 import ir.taher7.melodymine.utils.Adventure.toComponent
-import ir.taher7.melodymine.utils.Utils
 import ir.taher7.melodymine.utils.Utils.parsePlaceholder
-import me.clip.placeholderapi.PlaceholderAPI
 import net.kyori.adventure.bossbar.BossBar
 import org.bukkit.entity.Player
 
-
 class TalkBossBar(val player: Player) {
-
     lateinit var bossBar: BossBar
     val melodyPlayer = Storage.onlinePlayers[player.uniqueId.toString()]!!
 
@@ -38,7 +33,6 @@ class TalkBossBar(val player: Player) {
         } else {
             hideTalkBossBar()
         }
-
     }
 
     fun showTalkBossBar() {
@@ -106,6 +100,4 @@ class TalkBossBar(val player: Player) {
             hideTalkBossBar()
         }
     }
-
-
 }

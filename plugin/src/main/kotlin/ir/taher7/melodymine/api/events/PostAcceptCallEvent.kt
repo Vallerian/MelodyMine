@@ -16,5 +16,4 @@ class PostAcceptCallEvent(
         @JvmStatic
         val handlerList = HandlerList()
     }
-
 }

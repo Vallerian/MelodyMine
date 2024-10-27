@@ -23,7 +23,6 @@ import org.bukkit.Location
 import org.bukkit.entity.Player
 import org.bukkit.scheduler.BukkitRunnable
 
-
 object MelodyManager {
     private var gson: Gson
 
@@ -32,7 +31,6 @@ object MelodyManager {
         builder.excludeFieldsWithoutExposeAnnotation()
         gson = builder.create()
     }
-
 
     fun mute(uuid: String) {
         val targetPlayer = Storage.onlinePlayers[uuid] ?: return

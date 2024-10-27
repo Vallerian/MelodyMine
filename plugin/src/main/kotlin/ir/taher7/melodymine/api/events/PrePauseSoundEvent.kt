@@ -7,12 +7,12 @@ import org.bukkit.event.Event
 import org.bukkit.event.HandlerList
 
 class PrePauseSoundEvent(val soundName: String, val sendToAll: Boolean, val socketID: String?) : Event(), Cancellable {
-
     private var cancelled = false
 
     fun getPlayer(): MelodyPlayer? {
         return Storage.onlinePlayers.values.find { online -> online.socketID == socketID }
     }
+
     override fun isCancelled(): Boolean {
         return cancelled
     }

@@ -12,7 +12,6 @@ import org.bukkit.scheduler.BukkitRunnable
 import java.text.DecimalFormat
 import java.util.concurrent.Executors
 
-
 class WebsocketRenewData {
     init {
         startConnectionTrack()
@@ -26,12 +25,9 @@ class WebsocketRenewData {
 
     val connectionThreadPool = Executors.newFixedThreadPool(10, threadFactory)
 
-
     private fun startConnectionTrack() {
-
         object : BukkitRunnable() {
             override fun run() {
-
                 connectionThreadPool.submit {
                     if (Storage.onlinePlayers.isNotEmpty() && Websocket.socket.isActive) {
                         val players: MutableList<RenewPlayer> = mutableListOf()
@@ -77,7 +73,6 @@ class WebsocketRenewData {
                                                     }
                                                 }
                                             }
-
 
                                             if (distance < (Settings.renewVolume)) {
 
@@ -125,7 +120,6 @@ class WebsocketRenewData {
                                     volume.ifEmpty { null }
                                 )
                             )
-
                     }
                 }
             }
@@ -133,8 +127,6 @@ class WebsocketRenewData {
     }
 
     private fun createRenewPlayer(melodyPlayer: MelodyPlayer): RenewPlayer {
-
-
         return RenewPlayer(
             id = melodyPlayer.id,
             l = listOf(
@@ -149,6 +141,4 @@ class WebsocketRenewData {
             )
         )
     }
-
-
 }

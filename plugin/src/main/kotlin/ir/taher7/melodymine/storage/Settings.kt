@@ -3,7 +3,6 @@ package ir.taher7.melodymine.storage
 import ir.taher7.melodymine.MelodyMine
 
 object Settings {
-
     lateinit var host: String
     lateinit var port: String
     lateinit var username: String
@@ -104,7 +103,5 @@ object Settings {
         statusEndVoice = config.getString("show_status_type.end_voice") ?: "message"
 
         commandsCoolDown = config.getInt("commands_cool_down")
-
-
     }
 }

@@ -38,5 +38,4 @@ class PreEnableVoiceEvent(
         @JvmStatic
         val handlerList = HandlerList()
     }
-
 }

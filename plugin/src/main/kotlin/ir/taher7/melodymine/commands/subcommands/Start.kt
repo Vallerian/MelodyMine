@@ -1,6 +1,5 @@
 package ir.taher7.melodymine.commands.subcommands
 
-
 import com.cryptomorin.xseries.reflection.XReflection
 import ir.taher7.melodymine.commands.SubCommand
 import ir.taher7.melodymine.core.MelodyManager
@@ -11,8 +10,6 @@ import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
 class Start : SubCommand() {
-
-
     override var name = "start"
     override var description = Messages.getMessage("commands.start.description")
     override var syntax = "/melodymine start"
@@ -25,6 +22,7 @@ class Start : SubCommand() {
         }
 
         if (Utils.checkPlayerCoolDown(player)) return
+
         when (args.size) {
             2 -> {
                 if (XReflection.supports(13) && args[1].equals("qrcode", true)) {
@@ -59,9 +57,7 @@ class Start : SubCommand() {
                 sendStartHelpMessage(player)
             }
 
-            else -> {
-                sendStartHelpMessage(player)
-            }
+            else -> sendStartHelpMessage(player)
         }
     }
 

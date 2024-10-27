@@ -12,7 +12,6 @@ class PreEndCallEvent(
     private var cancelled = false
     var canSendMessage = true
 
-
     override fun isCancelled(): Boolean {
         return cancelled
     }
@@ -29,5 +28,4 @@ class PreEndCallEvent(
         @JvmStatic
         val handlerList = HandlerList()
     }
-
 }

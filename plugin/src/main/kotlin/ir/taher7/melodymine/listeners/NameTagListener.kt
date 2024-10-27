@@ -17,5 +17,4 @@ class NameTagListener : Listener {
         if (!melodyPlayer.isActiveVoice) return
         event.to?.let { melodyPlayer.talkNameTag?.moveNameTag(event.from, it) }
     }
-
 }

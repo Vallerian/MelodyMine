@@ -4,7 +4,7 @@ import ir.taher7.melodymine.models.MelodyPlayer
 import org.bukkit.event.Event
 import org.bukkit.event.HandlerList
 
-class PostToggleCallEvent (
+class PostToggleCallEvent(
     val melodyPlayer: MelodyPlayer,
 ) : Event() {
     override fun getHandlers(): HandlerList {
@@ -15,5 +15,4 @@ class PostToggleCallEvent (
         @JvmStatic
         val handlerList = HandlerList()
     }
-
 }

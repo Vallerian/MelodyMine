@@ -23,7 +23,6 @@ import org.bukkit.scheduler.BukkitRunnable
 import org.slf4j.LoggerFactory
 
 class MelodyMine : JavaPlugin() {
-
     lateinit var settingsConfig: YamlConfig
     lateinit var databaseConfig: YamlConfig
     lateinit var talkConfig: YamlConfig
@@ -33,16 +32,14 @@ class MelodyMine : JavaPlugin() {
         "fa_IR"
     )
 
-
     override fun onEnable() {
         instance = this
         loadConfig()
         Utils.sendMelodyFiglet()
         if (!XReflection.supports(13)) {
             val logger = LoggerFactory.getLogger("com.zaxxer.hikari") as ch.qos.logback.classic.Logger
-            logger.setLevel(Level.ERROR)
+            logger.level = Level.ERROR
         }
-
 
         Database.resetDate()
         Websocket.connect()
@@ -59,18 +56,14 @@ class MelodyMine : JavaPlugin() {
         getCommand("melodymine")?.setExecutor(CommandManager())
         getCommand("melodymine")?.tabCompleter = TabCompletionManager()
 
-
         Metrics(this, 20020)
         checkUpdate()
-
     }
-
 
     override fun onDisable() {
         Database.resetDate()
         Database.hikari.close()
     }
-
 
     private fun loadConfig() {
         dataFolder.mkdir()
@@ -82,10 +75,10 @@ class MelodyMine : JavaPlugin() {
         shortLang.forEach { lang ->
             languages[lang] = YamlConfig(dataFolder, "languages/${lang}.yml")
         }
+
         Settings.load()
         Messages.load()
         Talk.load()
-
     }
 
     private fun checkUpdate() {
@@ -113,7 +106,6 @@ class MelodyMine : JavaPlugin() {
         }.runTaskAsynchronously(this)
 
     }
-
 
     companion object {
         lateinit var instance: MelodyMine

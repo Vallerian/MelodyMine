@@ -13,7 +13,6 @@ class PrePlaySoundEvent(
     val socketID: String?,
     val volume: Double?,
 ) : Event(), Cancellable {
-
     private var cancelled = false
 
     fun getPlayer(): MelodyPlayer? {

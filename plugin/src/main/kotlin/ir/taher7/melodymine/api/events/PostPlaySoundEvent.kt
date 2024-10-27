@@ -11,7 +11,6 @@ class PostPlaySoundEvent(
     val socketID: String?,
     val volume: Double?,
 ) : Event() {
-
     fun getPlayer(): MelodyPlayer? {
         return Storage.onlinePlayers.values.find { online -> online.socketID == socketID }
     }
