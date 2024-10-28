@@ -34,7 +34,6 @@ data class MelodyPlayer(
     @Expose(deserialize = false) var talkNameTag: TalkNameTag? = null,
     @Expose(deserialize = false) var isSendOffer: ArrayList<String> = arrayListOf(),
 ) {
-
     fun updateWebData(player: MelodyPlayer) {
         socketID = player.socketID
         isActiveVoice = player.isActiveVoice
@@ -59,9 +58,6 @@ data class MelodyPlayer(
             "sound" -> {
                 isDeafen = control.value
             }
-
-            else -> {}
         }
     }
-
 }

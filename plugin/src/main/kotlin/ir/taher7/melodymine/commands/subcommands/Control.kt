@@ -10,8 +10,6 @@ import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
 class Control : SubCommand() {
-
-
     override var name = "control"
     override var description = Messages.getMessage("commands.control.description")
     override var syntax = "/melodymine control"

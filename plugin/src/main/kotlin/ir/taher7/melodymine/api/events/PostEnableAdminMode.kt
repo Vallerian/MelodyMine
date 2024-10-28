@@ -4,7 +4,7 @@ import ir.taher7.melodymine.models.MelodyPlayer
 import org.bukkit.event.Event
 import org.bukkit.event.HandlerList
 
-class PostEnableAdminMode (val melodyPlayer: MelodyPlayer) : Event() {
+class PostEnableAdminMode(val melodyPlayer: MelodyPlayer) : Event() {
     override fun getHandlers(): HandlerList {
         return handlerList
     }

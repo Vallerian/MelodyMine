@@ -5,13 +5,12 @@ import ir.taher7.melodymine.models.MelodyPlayer
 import org.bukkit.event.Event
 import org.bukkit.event.HandlerList
 
-class PostChangeSoundVolumeEvent (
+class PostChangeSoundVolumeEvent(
     val soundName: String,
     val sendToAll: Boolean,
     val socketID: String?,
     val volume: Double?,
 ) : Event() {
-
     fun getPlayer(): MelodyPlayer? {
         return socketID?.let { MelodyManager.getMelodyPlayerFromSocketID(it) }
     }

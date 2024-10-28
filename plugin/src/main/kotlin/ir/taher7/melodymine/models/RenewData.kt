@@ -15,7 +15,6 @@ data class RenewPlayer(
     @Expose val d: List<Double>,
 )
 
-
 data class SoundSettings(
     @Expose val lazyHear: Boolean,
     @Expose val maxDistance: Int,
@@ -25,7 +24,6 @@ data class SoundSettings(
     @Expose val rolloffFactor: Int,
     @Expose val outerVolume: Double,
 )
-
 
 data class PlayerStatus(
     @Expose val uuid: String,

@@ -9,7 +9,6 @@ class PlayerChangeControlWebEvent(
     val melodyPlayer: MelodyPlayer,
     val melodyControl: MelodyControl,
 ) : Event() {
-
     override fun getHandlers(): HandlerList {
         return handlerList
     }

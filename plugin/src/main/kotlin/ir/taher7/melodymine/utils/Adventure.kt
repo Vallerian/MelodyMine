@@ -2,9 +2,7 @@ package ir.taher7.melodymine.utils
 
 import ir.taher7.melodymine.MelodyMine
 import ir.taher7.melodymine.storage.Messages
-import ir.taher7.melodymine.utils.Adventure.sendComponent
 import ir.taher7.melodymine.utils.Utils.parsePlaceholder
-import me.clip.placeholderapi.PlaceholderAPI
 import net.kyori.adventure.audience.Audience
 import net.kyori.adventure.bossbar.BossBar
 import net.kyori.adventure.platform.bukkit.BukkitAudiences
@@ -17,10 +15,8 @@ import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
 object Adventure {
-
     private val audience = BukkitAudiences.create(MelodyMine.instance)
     private lateinit var miniMessage: MiniMessage
-
 
     init {
         initMiniMessage()
@@ -67,6 +63,4 @@ object Adventure {
     fun Player.hideBossBar(bossBar: BossBar) {
         audience.sender(this).hideBossBar(bossBar)
     }
-
-
 }

@@ -8,17 +8,13 @@ import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.inventory.*
 import org.bukkit.event.player.*
 
-
 class QRCodeListener : Listener {
-
     @EventHandler
     fun onPlayerJoin(event: PlayerJoinEvent) {
         val player = event.player
         if (player.inventory.firstEmpty() != -1) {
             player.inventory.forEach { itemStack ->
-                if (itemStack != null && Utils.isMap(itemStack)) {
-                    player.inventory.remove(itemStack)
-                }
+                if (itemStack != null && Utils.isMap(itemStack)) player.inventory.remove(itemStack)
             }
         }
     }
@@ -28,9 +24,7 @@ class QRCodeListener : Listener {
         val player = event.player
         if (player.inventory.firstEmpty() != -1) {
             player.inventory.forEach { itemStack ->
-                if (itemStack != null && Utils.isMap(itemStack)) {
-                    player.inventory.remove(itemStack)
-                }
+                if (itemStack != null && Utils.isMap(itemStack)) player.inventory.remove(itemStack)
             }
         }
     }
@@ -39,9 +33,7 @@ class QRCodeListener : Listener {
     fun onInventoryInteract(event: InventoryInteractEvent) {
         if (event.inventory.firstEmpty() != -1) {
             event.inventory.forEach { itemStack ->
-                if (itemStack != null && Utils.isMap(itemStack)) {
-                    event.inventory.remove(itemStack)
-                }
+                if (itemStack != null && Utils.isMap(itemStack)) event.inventory.remove(itemStack)
             }
         }
     }
@@ -96,9 +88,7 @@ class QRCodeListener : Listener {
     fun onInventoryCreative(event: InventoryCreativeEvent) {
         if (event.inventory.firstEmpty() != -1) {
             event.inventory.forEach { itemStack ->
-                if (itemStack != null && Utils.isMap(itemStack)) {
-                    event.inventory.remove(itemStack)
-                }
+                if (itemStack != null && Utils.isMap(itemStack)) event.inventory.remove(itemStack)
             }
         }
     }
@@ -107,9 +97,7 @@ class QRCodeListener : Listener {
     fun onOpenInventory(event: InventoryOpenEvent) {
         if (event.inventory.firstEmpty() != -1) {
             event.inventory.forEach { itemStack ->
-                if (itemStack != null && Utils.isMap(itemStack)) {
-                    event.inventory.remove(itemStack)
-                }
+                if (itemStack != null && Utils.isMap(itemStack)) event.inventory.remove(itemStack)
             }
         }
     }
@@ -143,9 +131,7 @@ class QRCodeListener : Listener {
     fun onInventory(event: InventoryEvent) {
         if (event.inventory.firstEmpty() != -1) {
             event.inventory.forEach { itemStack ->
-                if (itemStack != null && Utils.isMap(itemStack)) {
-                    event.inventory.remove(itemStack)
-                }
+                if (itemStack != null && Utils.isMap(itemStack)) event.inventory.remove(itemStack)
             }
         }
     }
@@ -155,9 +141,7 @@ class QRCodeListener : Listener {
     fun onInventoryPickupItem(event: InventoryPickupItemEvent) {
         if (event.inventory.firstEmpty() != -1) {
             event.inventory.forEach { itemStack ->
-                if (itemStack != null && Utils.isMap(itemStack)) {
-                    event.inventory.remove(itemStack)
-                }
+                if (itemStack != null && Utils.isMap(itemStack)) event.inventory.remove(itemStack)
             }
         }
     }
@@ -166,5 +150,4 @@ class QRCodeListener : Listener {
     fun onPlayerInteract(event: PlayerInteractEvent) {
         Utils.removeMap(event.player)
     }
-
 }

@@ -5,8 +5,8 @@ import org.bukkit.event.Event
 import org.bukkit.event.HandlerList
 
 class PreSendSoundSettingsEvent(val socketID: String) : Event(), Cancellable {
-
     private var cancelled = false
+
     override fun isCancelled(): Boolean {
         return cancelled
     }

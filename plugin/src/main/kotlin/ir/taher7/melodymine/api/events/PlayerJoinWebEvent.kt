@@ -5,7 +5,6 @@ import org.bukkit.event.Event
 import org.bukkit.event.HandlerList
 
 class PlayerJoinWebEvent(val melodyPlayer: MelodyPlayer) : Event() {
-
     override fun getHandlers(): HandlerList {
         return handlerList
     }
@@ -14,5 +13,4 @@ class PlayerJoinWebEvent(val melodyPlayer: MelodyPlayer) : Event() {
         @JvmStatic
         val handlerList = HandlerList()
     }
-
 }

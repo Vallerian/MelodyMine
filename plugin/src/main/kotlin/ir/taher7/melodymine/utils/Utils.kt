@@ -1,6 +1,5 @@
 package ir.taher7.melodymine.utils
 
-
 import com.cryptomorin.xseries.reflection.XReflection
 import ir.taher7.melodymine.MelodyMine
 import ir.taher7.melodymine.commands.SubCommand
@@ -17,7 +16,6 @@ import net.kyori.adventure.title.Title
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
-import org.bukkit.command.CommandSender
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemFlag
@@ -33,12 +31,8 @@ import java.time.Duration
 import kotlin.random.Random
 
 object Utils {
-
-
     fun sendHelpMessage(player: Player) {
-
         player.sendComponent(Messages.getMessage("general.content_header"))
-
         player.sendComponent("")
         Storage.subCommands.forEach { subCommand: SubCommand ->
             if (player.hasPermission(subCommand.permission)) {
@@ -56,14 +50,7 @@ object Utils {
         player.sendComponent(Messages.getMessage("general.content_footer"))
     }
 
-    fun getVerifyCode(length: Int = 20): String {
-        val stringBuilder = StringBuilder(length)
-        repeat(length) {
-            val digit = Random.nextInt(10)
-            stringBuilder.append(digit)
-        }
-        return stringBuilder.toString()
-    }
+    fun getVerifyCode(length: Int = 20): String = (1..length).joinToString("") { Random.nextInt(10).toString() }
 
     fun forceVoice(melodyPlayer: MelodyPlayer) {
         if (checkPlayerForce(melodyPlayer)) return
@@ -79,11 +66,8 @@ object Utils {
                     cancel()
                 } else {
                     if (Settings.forceVoiceTitle) {
-
-                        val forceVoiceTitleText =
-                            parsePlaceholder(player.player, Messages.getMessage("force_voice.title"))
-                        val forceVoiceSubTitleText =
-                            parsePlaceholder(player.player, Messages.getMessage("force_voice.subtitle"))
+                        val forceVoiceTitleText = parsePlaceholder(player.player, Messages.getMessage("force_voice.title"))
+                        val forceVoiceSubTitleText = parsePlaceholder(player.player, Messages.getMessage("force_voice.subtitle"))
 
                         player.player?.showTitle(
                             Title.title(
@@ -171,38 +155,20 @@ object Utils {
             ) ?: return false
             return true
         } else {
-
-            if (XReflection.supports(13)) {
-                if (item.type != Material.FILLED_MAP) return false
-            } else {
-                if (item.type != Material.MAP) return false
-            }
+            if ((XReflection.supports(13) && item.type != Material.FILLED_MAP) || (!XReflection.supports(13) && item.type != Material.MAP)) return false
             val itemMeta = item.itemMeta ?: return false
-            if (itemMeta.displayName != ChatColor.translateAlternateColorCodes(
-                    '&',
-                    Messages.qrcodeDisplayName
-                )
-            ) return false
+            if (itemMeta.displayName != ChatColor.translateAlternateColorCodes('&', Messages.qrcodeDisplayName)) return false
             if (itemMeta.lore != Messages.qrcodeLore) return false
             return true
         }
     }
 
     fun removeMap(player: Player) {
-        if (isMap(player.inventory.itemInOffHand)) {
-            player.inventory.setItemInOffHand(ItemStack(Material.AIR))
+        if (isMap(player.inventory.itemInOffHand)) player.inventory.setItemInOffHand(ItemStack(Material.AIR))
+        if (isMap(player.inventory.itemInMainHand)) player.inventory.setItemInMainHand(ItemStack(Material.AIR))
+        if (player.inventory.firstEmpty() != -1) player.inventory.forEach { itemStack ->
+            if (itemStack != null && isMap(itemStack)) player.inventory.remove(itemStack)
         }
-        if (isMap(player.inventory.itemInMainHand)) {
-            player.inventory.setItemInMainHand(ItemStack(Material.AIR))
-        }
-        if (player.inventory.firstEmpty() != -1) {
-            player.inventory.forEach { itemStack ->
-                if (itemStack != null && isMap(itemStack)) {
-                    player.inventory.remove(itemStack)
-                }
-            }
-        }
-
     }
 
     fun clearUpCall(melodyPlayer: MelodyPlayer?, isQuit: Boolean = false) {
@@ -265,32 +231,16 @@ object Utils {
         Storage.commandCoolDown[player.uniqueId] = System.currentTimeMillis()
     }
 
+    fun removePlayerCoolDown(player: Player) = Storage.commandCoolDown.remove(player.uniqueId)
 
-    fun removePlayerCoolDown(player: Player) {
-        Storage.commandCoolDown.remove(player.uniqueId)
-    }
+    fun clientURL() = "http${if (Settings.domain !in setOf("localhost", "0.0.0.0", "127.1.1.0")) "s" else ""}://${Settings.domain}:${Settings.clientPort}\""
 
-    fun clientURL(): String {
-        val locals = listOf("localhost", "0.0.0.0", "127.1.1.0")
-        if (locals.contains(Settings.domain)) {
-            return "http://${locals[locals.indexOf(Settings.domain)]}:${Settings.clientPort}"
-        }
-        return "https://${Settings.domain}:${Settings.clientPort}"
-    }
-
-    fun serverURL(): String {
-        val locals = listOf("localhost", "0.0.0.0", "127.1.1.0")
-        if (locals.contains(Settings.domain)) {
-            return "http://${locals[locals.indexOf(Settings.domain)]}:${Settings.serverPort}"
-        }
-        return "https://${Settings.domain}:${Settings.serverPort}"
-    }
+    fun serverURL() = "http${if (Settings.ssl && Settings.wsDomain !in setOf("localhost", "0.0.0.0", "127.1.1.0")) "s" else ""}://${Settings.wsDomain}:${Settings.serverPort}"
 
     fun parsePlaceholder(player: Player?, string: String): String {
         if (MelodyMine.instance.server.pluginManager.getPlugin("PlaceholderAPI") == null) return string
         return PlaceholderAPI.setPlaceholders(player, string)
     }
-
 
     fun sendMelodyFiglet() {
         val consoleSender = MelodyMine.instance.server.consoleSender
@@ -303,6 +253,4 @@ object Utils {
         consoleSender.sendComponent("<gradient:#F04FE7:#FFF4E4>                          /____/                      ")
         consoleSender.sendComponent("")
     }
-
-
 }

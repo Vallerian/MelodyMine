@@ -9,8 +9,8 @@ class PrePlayerSetDeafenEvent(
     val melodyPlayer: MelodyPlayer,
     val value: Boolean,
 ) : Event(), Cancellable {
-
     private var cancelled = false
+
     override fun isCancelled(): Boolean {
         return cancelled
     }

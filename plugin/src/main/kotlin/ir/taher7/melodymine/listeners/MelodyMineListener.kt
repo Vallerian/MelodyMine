@@ -4,11 +4,11 @@ import io.socket.client.SocketIOException
 import ir.taher7.melodymine.MelodyMine
 import ir.taher7.melodymine.core.MelodyManager
 import ir.taher7.melodymine.core.TalkBossBar
+import ir.taher7.melodymine.core.TalkNameTag
 import ir.taher7.melodymine.database.Database
 import ir.taher7.melodymine.services.Websocket
-import ir.taher7.melodymine.storage.Storage
-import ir.taher7.melodymine.core.TalkNameTag
 import ir.taher7.melodymine.storage.Settings
+import ir.taher7.melodymine.storage.Storage
 import ir.taher7.melodymine.utils.Utils
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
@@ -21,7 +21,6 @@ import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerMoveEvent
 import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.scheduler.BukkitRunnable
-
 
 class MelodyMineListener : Listener {
     @EventHandler
@@ -98,7 +97,6 @@ class MelodyMineListener : Listener {
         }.runTaskLater(MelodyMine.instance, 60L)
     }
 
-
     @EventHandler
     fun onPlayerMove(event: PlayerMoveEvent) {
         val melodyPlayer = Storage.onlinePlayers[event.player.uniqueId.toString()] ?: return
@@ -166,6 +164,4 @@ class MelodyMineListener : Listener {
         if (melodyPlayer.isActiveVoice) return
         event.isCancelled = true
     }
-
 }
-

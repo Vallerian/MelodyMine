@@ -10,8 +10,6 @@ import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
 class Toggle : SubCommand() {
-
-
     override var name = "toggle"
     override var description = Messages.getMessage("commands.toggle.description")
     override var syntax = "/melodymine toggle"

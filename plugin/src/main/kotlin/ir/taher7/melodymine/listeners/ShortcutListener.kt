@@ -13,8 +13,6 @@ import org.bukkit.event.player.PlayerToggleSneakEvent
 import org.bukkit.scheduler.BukkitRunnable
 
 class ShortcutListener : Listener {
-
-
     @EventHandler
     fun onPressShift(event: PlayerToggleSneakEvent) {
         object : BukkitRunnable() {
@@ -65,5 +63,4 @@ class ShortcutListener : Listener {
             }
         }.runTask(MelodyMine.instance)
     }
-
 }

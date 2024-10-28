@@ -25,5 +25,4 @@ class PostSetVolumeEvent(
         @JvmStatic
         val handlerList = HandlerList()
     }
-
 }

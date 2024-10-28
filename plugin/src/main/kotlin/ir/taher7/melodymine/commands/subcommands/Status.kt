@@ -11,8 +11,6 @@ import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
 class Status : SubCommand() {
-
-
     override var name = "status"
     override var description = Messages.getMessage("commands.status.description")
     override var syntax = "/melodymine status"
@@ -27,9 +25,7 @@ class Status : SubCommand() {
         if (Utils.checkPlayerCoolDown(player)) return
         val melodyPlayer = Storage.onlinePlayers[player.uniqueId.toString()] ?: return
 
-
         if (args.size == 1) {
-
             if (!melodyPlayer.isActiveVoice) {
                 player.sendComponent(Messages.getMessage("errors.active_voice"))
                 return
@@ -42,7 +38,6 @@ class Status : SubCommand() {
         }
 
         if (args.size == 2) {
-
             if (!player.hasPermission("melodymine.status.others")) {
                 player.sendComponent(Messages.getMessage("errors.no_permission"))
                 return

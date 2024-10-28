@@ -16,7 +16,6 @@ import ir.taher7.melodymine.storage.Talk
 import ir.taher7.melodymine.utils.Adventure.toComponent
 import ir.taher7.melodymine.utils.Utils
 import ir.taher7.melodymine.utils.Utils.parsePlaceholder
-import me.clip.placeholderapi.PlaceholderAPI
 import net.kyori.adventure.platform.bukkit.MinecraftComponentSerializer
 import org.bukkit.Bukkit
 import org.bukkit.Location
@@ -29,14 +28,12 @@ import java.lang.reflect.InvocationTargetException
 import java.util.*
 import kotlin.properties.Delegates
 
-
 class TalkNameTag(val player: Player) {
     var nameTagId by Delegates.notNull<Int>()
     lateinit var nameTagUUID: UUID
     lateinit var nameTagType: String
 
     val melodyPlayer = Storage.onlinePlayers[player.uniqueId.toString()]!!
-
 
     init {
         initNameTags()
@@ -87,7 +84,6 @@ class TalkNameTag(val player: Player) {
         }
 
     }
-
 
     private fun createNameTagPacket(id: Int, uuid: UUID, player: Player, config: NameTagConfig): PacketContainer? {
         if (!config.enable) return null
@@ -271,12 +267,9 @@ class TalkNameTag(val player: Player) {
         } catch (e: InvocationTargetException) {
             e.printStackTrace()
         }
-
     }
 
     private fun getConfig(): NameTagConfig? {
         return Talk.nameTagConfigs[nameTagType]
     }
-
-
 }

@@ -11,7 +11,6 @@ import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
 class CommandManager : CommandExecutor {
-
     init {
         Storage.subCommands.add(Reload())
         Storage.subCommands.add(Start())
@@ -25,8 +24,6 @@ class CommandManager : CommandExecutor {
     }
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
-
-
         if (args.isEmpty()) {
             if (sender !is Player) {
                 sender.sendComponent(Messages.getMessage("errors.only_players"))
@@ -48,5 +45,4 @@ class CommandManager : CommandExecutor {
 
         return true
     }
-
 }

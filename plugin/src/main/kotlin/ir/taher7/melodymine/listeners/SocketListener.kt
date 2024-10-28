@@ -17,9 +17,7 @@ import ir.taher7.melodymine.utils.Utils
 import org.bukkit.Bukkit
 import org.bukkit.scheduler.BukkitRunnable
 
-
 class SocketListener(private val socket: Socket) {
-
     init {
         initListeners()
     }
@@ -52,8 +50,6 @@ class SocketListener(private val socket: Socket) {
                     "actionbar" -> {
                         player.sendActionbar(Messages.getMessage("website.join"))
                     }
-
-                    else -> {}
                 }
                 object : BukkitRunnable() {
                     override fun run() {
@@ -102,8 +98,6 @@ class SocketListener(private val socket: Socket) {
                     "actionbar" -> {
                         player.sendActionbar(Messages.getMessage("website.leave"))
                     }
-
-                    else -> {}
                 }
             }
             object : BukkitRunnable() {
@@ -158,8 +152,6 @@ class SocketListener(private val socket: Socket) {
                     "actionbar" -> {
                         player.sendActionbar(Messages.getMessage("website.start"))
                     }
-
-                    else -> {}
                 }
                 if (Settings.forceVoice && !player.hasPermission("melodymine.force")) {
                     Storage.onlinePlayers[melodyPlayer.uuid]?.let { Utils.clearForceVoice(it) }
@@ -204,8 +196,6 @@ class SocketListener(private val socket: Socket) {
                     "actionbar" -> {
                         player.sendActionbar(Messages.getMessage("website.end"))
                     }
-
-                    else -> {}
                 }
             }
             object : BukkitRunnable() {
@@ -276,5 +266,4 @@ class SocketListener(private val socket: Socket) {
             Storage.onlinePlayers[melodyPlayer.uuid]?.updateWebData(melodyPlayer)
         }
     }
-
 }

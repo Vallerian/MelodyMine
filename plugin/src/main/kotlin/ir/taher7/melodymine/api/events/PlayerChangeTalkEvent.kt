@@ -10,7 +10,6 @@ class PlayerChangeTalkEvent(
     val melodyPlayer: MelodyPlayer,
     val melodyTalk: MelodyTalk,
 ) : Event() {
-
     override fun getHandlers(): HandlerList {
         return handlerList
     }
