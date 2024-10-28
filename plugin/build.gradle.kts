@@ -198,52 +198,52 @@ configurations {
     }
 }
 
-//publishing {
-//    publications {
-//        create<MavenPublication>("maven") {
-//            artifactId = "melodymine"
-//            shadow.component(this)
-//            artifact(tasks["sourcesJar"])
-//            version = "${project.version}-SNAPSHOT"
-//            setPom(this)
-//        }
-//    }
-//
-//    repositories {
-//        maven {
-//            name = "sayandevelopment-repo"
-//            url = uri("https://repo.sayandev.org/snapshots/")
-//
-//            credentials {
-//                username = System.getenv("REPO_SAYAN_USER") ?: project.findProperty("repo.sayan.user") as String
-//                password = System.getenv("REPO_SAYAN_TOKEN") ?: project.findProperty("repo.sayan.token") as String
-//            }
-//        }
-//    }
-//}
-//
-//fun setPom(publication: MavenPublication) {
-//    publication.pom {
-//        name.set("melodymine")
-//        description.set(rootProject.description)
-//        url.set("https://github.com/vallerian/melodymine")
-//        licenses {
-//            license {
-//                name.set("Apache License 2.0")
-//                url.set("https://github.com/Vallerian/MelodyMine/blob/master/LICENSE")
-//            }
-//        }
-//        developers {
-//            developer {
-//                id.set("taher7")
-//                name.set("taher moradi")
-//                email.set("")
-//            }
-//        }
-//        scm {
-//            connection.set("scm:git:github.com/vallerian/melodymine.git")
-//            developerConnection.set("scm:git:ssh://github.com/valleryan/melodymine.git")
-//            url.set("https://github.com/vallerian/melodymine/tree/master")
-//        }
-//    }
-//}
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            artifactId = "melodymine"
+            shadow.component(this)
+            artifact(tasks["sourcesJar"])
+            version = "${project.version}-SNAPSHOT"
+            setPom(this)
+        }
+    }
+
+    repositories {
+        maven {
+            name = "sayandevelopment-repo"
+            url = uri("https://repo.sayandev.org/snapshots/")
+
+            credentials {
+                username = System.getenv("REPO_SAYAN_USER") ?: project.findProperty("repo.sayan.user") as String
+                password = System.getenv("REPO_SAYAN_TOKEN") ?: project.findProperty("repo.sayan.token") as String
+            }
+        }
+    }
+}
+
+fun setPom(publication: MavenPublication) {
+    publication.pom {
+        name.set("melodymine")
+        description.set(rootProject.description)
+        url.set("https://github.com/vallerian/melodymine")
+        licenses {
+            license {
+                name.set("Apache License 2.0")
+                url.set("https://github.com/Vallerian/MelodyMine/blob/master/LICENSE")
+            }
+        }
+        developers {
+            developer {
+                id.set("taher7")
+                name.set("taher moradi")
+                email.set("")
+            }
+        }
+        scm {
+            connection.set("scm:git:github.com/vallerian/melodymine.git")
+            developerConnection.set("scm:git:ssh://github.com/valleryan/melodymine.git")
+            url.set("https://github.com/vallerian/melodymine/tree/master")
+        }
+    }
+}
