@@ -24,7 +24,6 @@ class Mute : SubCommand() {
             }
         }
 
-
         val targetPlayer = Bukkit.getPlayer(args[1])
         if (targetPlayer == null) {
             player.sendComponent(Messages.getMessage("errors.player_not_found"))
@@ -66,5 +65,4 @@ class Mute : SubCommand() {
         }
         player.sendComponent(Messages.getMessage("general.content_footer"))
     }
-
 }

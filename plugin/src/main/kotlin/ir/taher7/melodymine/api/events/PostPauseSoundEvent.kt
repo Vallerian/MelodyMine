@@ -6,7 +6,6 @@ import org.bukkit.event.Event
 import org.bukkit.event.HandlerList
 
 class PostPauseSoundEvent(val soundName: String, val sendToAll: Boolean, val socketID: String?) : Event() {
-
     fun getPlayer(): MelodyPlayer? {
         return Storage.onlinePlayers.values.find { online -> online.socketID == socketID }
     }

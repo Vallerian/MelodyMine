@@ -7,8 +7,8 @@ import org.bukkit.event.Event
 import org.bukkit.event.HandlerList
 
 class PreRenewDataEvent(val data: RenewData) : Event(), Cancellable {
-
     private var cancelled = false
+
     override fun isCancelled(): Boolean {
         return cancelled
     }

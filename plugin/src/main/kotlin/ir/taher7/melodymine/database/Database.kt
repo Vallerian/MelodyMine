@@ -1,6 +1,5 @@
 package ir.taher7.melodymine.database
 
-
 import com.cryptomorin.xseries.reflection.XReflection
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
@@ -16,10 +15,7 @@ import java.sql.Connection
 import java.sql.Statement
 import java.util.function.Consumer
 
-
 object Database {
-
-
     lateinit var hikari: HikariDataSource
 
     init {
@@ -32,7 +28,6 @@ object Database {
     }
 
     private fun connect() {
-
         try {
             val config = HikariConfig()
             config.setJdbcUrl("jdbc:mysql://${Settings.host}:${Settings.port}/${Settings.database}")
@@ -270,6 +265,4 @@ object Database {
             }
         }.runTaskAsynchronously(MelodyMine.instance)
     }
-
-
 }

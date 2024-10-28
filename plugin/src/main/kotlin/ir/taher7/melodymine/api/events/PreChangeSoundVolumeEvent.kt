@@ -1,18 +1,17 @@
 package ir.taher7.melodymine.api.events
 
-import ir.taher7.melodymine.models.MelodyPlayer
 import org.bukkit.event.Cancellable
 import org.bukkit.event.Event
 import org.bukkit.event.HandlerList
 
-class PreChangeSoundVolumeEvent (
+class PreChangeSoundVolumeEvent(
     val soundName: String,
     val sendToAll: Boolean,
     val socketID: String?,
-    val volume: Double?,
-
+    val volume: Double?
 ) : Event(), Cancellable {
     private var cancelled = false
+
     override fun isCancelled(): Boolean {
         return cancelled
     }

@@ -12,8 +12,6 @@ import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
 class Call : SubCommand() {
-
-
     override var name = "call"
     override var description = Messages.getMessage("commands.call.description")
     override var syntax = "/melodymine call"

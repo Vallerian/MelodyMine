@@ -7,10 +7,8 @@ import ir.taher7.melodymine.models.NameTagConfig
 import ir.taher7.melodymine.models.Position
 
 object Talk {
-
     val bossbarConfigs = hashMapOf<String, BossBarConfig>()
     val nameTagConfigs = hashMapOf<String, NameTagConfig>()
-
     var isEnableBossBar: Boolean = true
     var isEnableNameTag: Boolean = true
 
@@ -24,7 +22,6 @@ object Talk {
 
         val bossBarImagesSection = bossBarSection.getConfigurationSection("images") ?: return
         val nameTagImagesSection = nameTagSection.getConfigurationSection("images") ?: return
-
 
         for (key in bossBarImagesSection.getKeys(false)) {
             val config = bossBarImagesSection.getConfigurationSection(key) ?: continue
@@ -43,7 +40,7 @@ object Talk {
                 text = config.getString("text") ?: "",
                 position = Position(
                     x = config.getConfigurationSection("position")?.getDouble("x") ?: 0.0,
-                    y = config. getConfigurationSection("position")?.getDouble("y") ?: 2.1,
+                    y = config.getConfigurationSection("position")?.getDouble("y") ?: 2.1,
                     z = config.getConfigurationSection("position")?.getDouble("z") ?: 0.0,
                 ),
                 item = Item(

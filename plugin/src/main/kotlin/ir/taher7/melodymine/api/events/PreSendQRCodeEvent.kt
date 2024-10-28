@@ -6,8 +6,8 @@ import org.bukkit.event.Event
 import org.bukkit.event.HandlerList
 
 class PreSendQRCodeEvent(val player: Player) : Event(), Cancellable {
-
     private var cancelled = false
+
     override fun isCancelled(): Boolean {
         return cancelled
     }

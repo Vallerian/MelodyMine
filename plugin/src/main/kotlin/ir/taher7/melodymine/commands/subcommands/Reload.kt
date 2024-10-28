@@ -10,7 +10,6 @@ import ir.taher7.melodymine.storage.Talk
 import ir.taher7.melodymine.utils.Adventure
 import ir.taher7.melodymine.utils.Adventure.sendComponent
 import org.bukkit.command.CommandSender
-import org.bukkit.entity.Player
 
 class Reload : SubCommand() {
     override var name = "reload"
@@ -19,7 +18,6 @@ class Reload : SubCommand() {
     override var permission = "melodymine.reload"
 
     override fun handler(player: CommandSender, args: Array<out String>) {
-
         Storage.onlinePlayers.values.forEach { melodyPlayer ->
             melodyPlayer.talkBossBar?.hideTalkBossBar()
         }
@@ -37,12 +35,8 @@ class Reload : SubCommand() {
         Adventure.initMiniMessage()
         player.sendComponent(Messages.getMessage("commands.reload.reload_success"))
         Storage.onlinePlayers.values.forEach { melodyPlayer ->
-            if (melodyPlayer.webIsOnline) {
-                MelodyManager.sendSoundSetting(melodyPlayer.socketID!!)
-            }
-            if (melodyPlayer.isActiveVoice) {
-                melodyPlayer.talkBossBar?.initTalkBossBar()
-            }
+            if (melodyPlayer.webIsOnline) MelodyManager.sendSoundSetting(melodyPlayer.socketID!!)
+            if (melodyPlayer.isActiveVoice) melodyPlayer.talkBossBar?.initTalkBossBar()
         }
     }
 }

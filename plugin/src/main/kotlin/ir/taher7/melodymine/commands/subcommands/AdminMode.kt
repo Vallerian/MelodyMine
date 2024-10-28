@@ -1,6 +1,5 @@
 package ir.taher7.melodymine.commands.subcommands
 
-
 import ir.taher7.melodymine.commands.SubCommand
 import ir.taher7.melodymine.core.MelodyManager
 import ir.taher7.melodymine.storage.Messages
@@ -11,7 +10,6 @@ import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
 class AdminMode : SubCommand() {
-
     override var name = "adminmode"
     override var description = Messages.getMessage("commands.adminmode.description")
     override var syntax = "/melodymine adminmode"

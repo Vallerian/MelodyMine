@@ -51,11 +51,8 @@ class TabCompletionManager : TabCompleter {
                     }
                 }
             }
-
-            else -> {}
         }
 
         return null
     }
-
 }

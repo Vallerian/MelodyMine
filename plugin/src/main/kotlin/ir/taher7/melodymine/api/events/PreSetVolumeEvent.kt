@@ -36,5 +36,4 @@ class PreSetVolumeEvent(
         @JvmStatic
         val handlerList = HandlerList()
     }
-
 }

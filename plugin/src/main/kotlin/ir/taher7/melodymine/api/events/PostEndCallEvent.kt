@@ -4,7 +4,7 @@ import ir.taher7.melodymine.models.MelodyPlayer
 import org.bukkit.event.Event
 import org.bukkit.event.HandlerList
 
-class PostEndCallEvent (
+class PostEndCallEvent(
     val melodyPlayer: MelodyPlayer,
     val targetPlayer: MelodyPlayer,
 ) : Event() {

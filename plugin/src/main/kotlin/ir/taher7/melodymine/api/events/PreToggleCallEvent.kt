@@ -27,5 +27,4 @@ class PreToggleCallEvent(
         @JvmStatic
         val handlerList = HandlerList()
     }
-
 }

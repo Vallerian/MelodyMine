@@ -6,8 +6,8 @@ import org.bukkit.event.Event
 import org.bukkit.event.HandlerList
 
 class PreUnMutePlayerEvent(val melodyPlayer: MelodyPlayer) : Event(), Cancellable {
-
     private var cancelled = false
+
     override fun isCancelled(): Boolean {
         return cancelled
     }

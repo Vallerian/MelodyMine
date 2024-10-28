@@ -4,7 +4,7 @@ import ir.taher7.melodymine.models.RenewData
 import org.bukkit.event.Event
 import org.bukkit.event.HandlerList
 
-class PostRenewDataEvent (val data:RenewData) : Event() {
+class PostRenewDataEvent(val data: RenewData) : Event() {
     override fun getHandlers(): HandlerList {
         return handlerList
     }

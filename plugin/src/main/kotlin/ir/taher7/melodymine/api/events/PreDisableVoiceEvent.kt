@@ -38,5 +38,4 @@ class PreDisableVoiceEvent(
         @JvmStatic
         val handlerList = HandlerList()
     }
-
 }

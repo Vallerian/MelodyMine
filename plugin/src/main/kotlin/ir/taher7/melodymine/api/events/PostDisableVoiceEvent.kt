@@ -11,7 +11,6 @@ class PostDisableVoiceEvent(
     val playerServer: String,
     val targetSocketID: String
 ) : Event() {
-
     fun getPlayer(): MelodyPlayer? {
         return Storage.onlinePlayers[playerUuid]
     }
@@ -28,5 +27,4 @@ class PostDisableVoiceEvent(
         @JvmStatic
         val handlerList = HandlerList()
     }
-
 }

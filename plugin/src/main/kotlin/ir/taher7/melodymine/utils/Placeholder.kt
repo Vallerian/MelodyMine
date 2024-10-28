@@ -7,8 +7,6 @@ import me.clip.placeholderapi.expansion.PlaceholderExpansion
 import org.bukkit.OfflinePlayer
 
 class Placeholder : PlaceholderExpansion() {
-
-
     override fun getIdentifier(): String {
         return "melodymine"
     }
@@ -97,10 +95,7 @@ class Placeholder : PlaceholderExpansion() {
                 if (melodyPlayer.isTalk) return Messages.getMessage("placeholder.talk_true")
                 return Messages.getMessage("placeholder.talk_false")
             }
-
-            else -> {}
         }
         return null
     }
-
 }

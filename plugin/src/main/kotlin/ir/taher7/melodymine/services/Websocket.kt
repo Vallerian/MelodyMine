@@ -1,6 +1,5 @@
 package ir.taher7.melodymine.services
 
-
 import io.socket.client.IO
 import io.socket.client.Socket
 import io.socket.client.SocketIOException
@@ -11,7 +10,6 @@ import ir.taher7.melodymine.storage.Messages
 import ir.taher7.melodymine.storage.Settings
 import ir.taher7.melodymine.utils.Utils
 import java.net.URI
-
 
 object Websocket {
     lateinit var socket: Socket
@@ -33,19 +31,16 @@ object Websocket {
             socket.connect()
             SocketListener(socket)
 
-
             socket.on(Socket.EVENT_CONNECT) {
                 MelodyMine.instance.logger.info(Messages.getMessage("success.websocket"))
                 Database.updateSocketPlayer()
             }
-            
+
             socket.on(Socket.EVENT_DISCONNECT) {
                 MelodyMine.instance.logger.severe(Messages.getMessage("errors.websocket"))
                 Database.updateSocketPlayer()
                 if (!socket.isActive) connect()
             }
-
-
         } catch (ex: SocketIOException) {
             MelodyMine.instance.logger.info(Messages.getMessage("errors.websocket_failed"))
             if (!socket.isActive) connect()

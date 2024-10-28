@@ -4,7 +4,7 @@ import ir.taher7.melodymine.models.MelodyPlayer
 import org.bukkit.event.Event
 import org.bukkit.event.HandlerList
 
-class PostDenyCallEvent (
+class PostDenyCallEvent(
     val melodyPlayer: MelodyPlayer,
     val targetPlayer: MelodyPlayer,
 ) : Event() {
@@ -16,5 +16,4 @@ class PostDenyCallEvent (
         @JvmStatic
         val handlerList = HandlerList()
     }
-
 }
