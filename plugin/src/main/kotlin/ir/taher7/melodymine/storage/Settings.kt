@@ -13,11 +13,12 @@ object Settings {
 
     lateinit var server: String
     lateinit var domain: String
-    lateinit var serverDomain: String
+    lateinit var wsDomain: String
     lateinit var clientPort: String
     lateinit var serverPort: String
     lateinit var pluginKey: String
     var autoStart: Boolean = true
+    var ssl: Boolean = true
 
     var forceVoice: Boolean = false
     var forceVoiceTitle: Boolean = true
@@ -64,9 +65,10 @@ object Settings {
 
         language = config.getString("language") ?: "en_US"
 
+        ssl = config.getBoolean("initial_configs.ssl")
         server = config.getString("initial_configs.server") ?: "Lobby"
         domain = config.getString("initial_configs.domain") ?: "localhost"
-        serverDomain = config.getString("initial_configs.server_domain") ?: domain
+        wsDomain = config.getString("initial_configs.server_domain") ?: domain
         clientPort = config.getString("initial_configs.client_port") ?: "3000"
         serverPort = config.getString("initial_configs.server_port") ?: "4000"
         pluginKey = config.getString("initial_configs.plugin_key") ?: ""

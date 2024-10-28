@@ -2,12 +2,12 @@ import java.net.URL
 import java.util.concurrent.Executors
 
 plugins {
-    kotlin("jvm") version "1.9.23"
+    kotlin("jvm") version "2.0.21"
     id("java-library")
     id("maven-publish")
-    id("com.gradleup.shadow") version "8.3.1"
-    id("org.jetbrains.gradle.plugin.idea-ext") version "1.1.7"
-    id("xyz.jpenilla.run-paper") version "2.1.0"
+    id("com.gradleup.shadow") version "8.3.3"
+    id("org.jetbrains.gradle.plugin.idea-ext") version "1.1.9"
+    id("xyz.jpenilla.run-paper") version "2.3.1"
 }
 
 group = "ir.taher7"

@@ -49,6 +49,12 @@ initial_configs:
   #server_domain: localhost
 
   #
+  # While using a separate domain for your webserver, you also can specify the ssl state
+  # Remove the # behind `ssl` and put your desired state after (true/false)
+  #
+  #ssl: false
+
+  #
   # The 'client_port' configuration is related to the port of the website used by players to connect to the voice feature.
   # This value must match the value set for CLIENT_PORT in the .env file located at web/docker/.env.
   #
