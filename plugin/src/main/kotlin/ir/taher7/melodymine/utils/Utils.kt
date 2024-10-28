@@ -233,7 +233,7 @@ object Utils {
 
     fun removePlayerCoolDown(player: Player) = Storage.commandCoolDown.remove(player.uniqueId)
 
-    fun clientURL() = "http${if (Settings.domain !in setOf("localhost", "0.0.0.0", "127.1.1.0")) "s" else ""}://${Settings.domain}:${Settings.clientPort}\""
+    fun clientURL() = "http${if (Settings.domain !in setOf("localhost", "0.0.0.0", "127.1.1.0")) "s" else ""}://${Settings.domain}:${Settings.clientPort}"
 
     fun serverURL() = "http${if (Settings.ssl && Settings.wsDomain !in setOf("localhost", "0.0.0.0", "127.1.1.0")) "s" else ""}://${Settings.wsDomain}:${Settings.serverPort}"
 
