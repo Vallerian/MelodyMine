@@ -17,6 +17,9 @@ data class SettingsConfig(
     val callPendingTime: Long = 600,
     val soundConfigs: SoundConfigs = SoundConfigs(),
     val renewConfigs: RenewConfigs = RenewConfigs(),
+    val disableWorlds: List<String> = listOf<String>("world_nether"),
+    val showStatusType: ShowStatusType = ShowStatusType(),
+    val commandsCoolDown: Long = 3000,
 
     ) : Config(pluginDirectory, FILE_NAME) {
 
@@ -62,6 +65,14 @@ data class SettingsConfig(
         val connectDistance: Int = 15,
         val volumeDistance: Int = 30,
         val disconnectDistance: Int = 80,
+    )
+
+    @ConfigSerializable
+    data class ShowStatusType(
+        val joinWebsite: String = "message",
+        val leaveWebsite: String = "message",
+        val startVoice: String = "message",
+        val endVoice: String = "message",
     )
 
     companion object {

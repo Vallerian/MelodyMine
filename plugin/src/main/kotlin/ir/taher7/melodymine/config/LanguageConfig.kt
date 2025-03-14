@@ -17,10 +17,6 @@ data class LanguageConfig(
         val reloaded: String = "<green>Configuration successfully reloaded.",
     )
 
-//    @ConfigSerializabl
-//    data class Errors(
-//
-//    )
 
     enum class Language(val id: String) {
         EN_US("en_US"),

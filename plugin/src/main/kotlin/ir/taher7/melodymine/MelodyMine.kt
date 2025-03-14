@@ -6,6 +6,10 @@ import com.jeff_media.updatechecker.UpdateCheckSource
 import com.jeff_media.updatechecker.UpdateChecker
 import ir.taher7.melodymine.commands.CommandManager
 import ir.taher7.melodymine.commands.TabCompletionManager
+import ir.taher7.melodymine.config.LanguageConfig
+import ir.taher7.melodymine.config.SettingsConfig
+import ir.taher7.melodymine.config.StorageConfig
+import ir.taher7.melodymine.config.TalkConfig
 import ir.taher7.melodymine.database.Database
 import ir.taher7.melodymine.listeners.*
 import ir.taher7.melodymine.services.Websocket
@@ -35,7 +39,6 @@ class MelodyMine : JavaPlugin() {
 
     override fun onEnable() {
         instance = this
-
         try {
             StickyNoteBukkitLoader(this)
         } catch (e: Exception) {
@@ -46,6 +49,8 @@ class MelodyMine : JavaPlugin() {
             server.pluginManager.disablePlugin(this)
             return
         }
+
+
 
         loadConfig()
         Utils.sendMelodyFiglet()
@@ -79,6 +84,11 @@ class MelodyMine : JavaPlugin() {
     }
 
     private fun loadConfig() {
+        StorageConfig.reload()
+        SettingsConfig.reload()
+        LanguageConfig.reload()
+        TalkConfig.reload()
+
         dataFolder.mkdir()
 
         settingsConfig = YamlConfig(dataFolder, "settings.yml")
