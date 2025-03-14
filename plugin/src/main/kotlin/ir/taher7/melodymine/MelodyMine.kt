@@ -20,6 +20,7 @@ import org.bstats.bukkit.Metrics
 import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.scheduler.BukkitRunnable
+import org.sayandev.stickynote.loader.bukkit.StickyNoteBukkitLoader
 import org.slf4j.LoggerFactory
 
 class MelodyMine : JavaPlugin() {
@@ -34,6 +35,18 @@ class MelodyMine : JavaPlugin() {
 
     override fun onEnable() {
         instance = this
+
+        try {
+            StickyNoteBukkitLoader(this)
+        } catch (e: Exception) {
+            logger.severe("Could not download libraries. The plugin requires its external libraries to function.")
+            logger.severe("This happens if your server's network is unstable. You can try restarting the server.")
+            logger.severe("You can also try to delete plugins/stickynote/lib directory and restarting the server.")
+            logger.severe("For more detailed help, please contact us.")
+            server.pluginManager.disablePlugin(this)
+            return
+        }
+
         loadConfig()
         Utils.sendMelodyFiglet()
         if (!XReflection.supports(13)) {

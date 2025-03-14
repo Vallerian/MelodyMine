@@ -98,7 +98,7 @@ export const useControlStore = createWithEqualityFn(
         }),
         {
             name: 'control-storage',
-            storage: createJSONStorage(() => sessionStorage),
+            storage: createJSONStorage(() => localStorage),
         },
     ), shallow
 )
