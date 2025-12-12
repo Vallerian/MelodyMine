@@ -32,7 +32,7 @@
     "formik": "^2.4.5",
     "framer-motion": "^11.1.8",
     "howler": "^2.2.4",
-    "next": "^14.2.3",
+    "next": "14.2.35",
     "next-auth": "^4.24.3",
     "nprogress": "^0.2.0",
     "postcss": "8.4.31",
